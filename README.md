@@ -46,4 +46,10 @@ RecOpcSalir=0
 
 ------
 
+links de referencia:
 
+- https://typora.io
+
+- https://www.lazarus-ide.org
+
+    
