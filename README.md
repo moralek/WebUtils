@@ -1,11 +1,11 @@
 ## WebUtils (for GX wars)
 *Utilidades para generación de war Gx*
 
+**Contenido**
+
 [TOCM]
 
 [TOC]
-
-
 
 ## <u>Archivos .fde:</u> 
 
