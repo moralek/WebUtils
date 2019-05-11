@@ -7,7 +7,7 @@
 
 
 
-<u>Archivos .fde:</u> 
+## <u>Archivos .fde:</u> 
 
 Los archivos .fde son archivos xml con estructura y deben crearse con el editor incluido dentro del mismo programa
 
@@ -23,7 +23,7 @@ Los archivos .fde son archivos xml con estructura y deben crearse con el editor 
 
 
 
-<u>Reglas para validación del archivo web.xml:</u>
+## <u>Reglas para validación del archivo web.xml:</u>
 
 Las reglas se aplican al archivo [./WEB-INF/web.xml] de cada subdirectorio seleccionado.
 
@@ -41,19 +41,19 @@ Los campos del "StringGrid" son :
 
 
 
-<u>Comodines:</u>
+## <u>Comodines:</u>
 
 Se requirió en algunos casos utilizar comodines con el fin de poder resolver valores que son dinámicos:
 
-| *Etiqueta* | *Descripción*                                                | *Válido en*         | 
-| ---------- | ------------------------------------------------------------ | ------------------- | 
-| **{MOD}**  | Muestra el nombre del modulo extraído del nombre de carpeta por ejemplo si el nombre de carpeta es **Adquisiciones-tst**: el nombre del modulo será: **Adquisiciones** | **Valor** webapps   | 
-| **{M}**    | Muestra Mensaje por defecto                                  | **Mensaje** web.xml | 
-| **{Q}**    | Cantidad de Veces                                            | **Mensaje** web.xml | 
+| *Etiqueta* | *Descripción*                                                | *Válido en*         |
+| ---------- | ------------------------------------------------------------ | ------------------- |
+| **{MOD}**  | Muestra el nombre del modulo extraído del nombre de carpeta por ejemplo si el nombre de carpeta es **Adquisiciones-tst**: el nombre del modulo será: **Adquisiciones** | **Valor** webapps   |
+| **{M}**    | Muestra Mensaje por defecto                                  | **Mensaje** web.xml |
+| **{Q}**    | Cantidad de Veces                                            | **Mensaje** web.xml |
 
 
 
-<u>fde.Ini:</u>
+## <u>fde.Ini:</u>
 
 El archivo fde.ini se encuentra junto con el ejecutable posee la configuración de opciones de delfind.exe. En caso de no existir , se creará uno por defecto.
 
@@ -82,7 +82,7 @@ RecOpcSalir=0
 
 ------
 
-links de referencia:
+## links de referencia:
 
 - https://typora.io
 
