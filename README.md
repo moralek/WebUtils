@@ -1,6 +1,12 @@
 ## WebUtils (for GX wars)
 *Utilidades para generación de war Gx*
 
+[TOCM]
+
+[TOC]
+
+
+
 <u>Archivos .fde:</u> 
 
 Los archivos .fde son archivos xml con estructura y deben crearse con el editor incluido dentro del mismo programa
