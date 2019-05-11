@@ -2,7 +2,7 @@
 *Utilidades para generación de war Gx*
 
   - [Archivos .fde](#Archivos-.fde)
-  - [Reglas para validar web.xml](#Reglas para validación del archivo web.xml)
+  - [Reglas para validar web.xml](#Reglas-para-validación-del-archivo-web.xml)
   - [Comodines](#Comodines:)
   - [Fde.ini](#fde.Ini:)
   - [Links](#links:)
