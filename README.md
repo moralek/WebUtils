@@ -11,7 +11,7 @@
 
 
 
-## <u>Archivos .fde:</u> ## {#Archivos-fde}
+## <u>Archivos .fde:</u> {#Archivos-fde}
 
 Los archivos .fde son archivos xml con estructura y deben crearse con el editor incluido dentro del mismo programa
 
