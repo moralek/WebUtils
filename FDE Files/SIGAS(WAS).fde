@@ -64,7 +64,7 @@
       <value>hexterno</value>
       <consider>Etiqueta y Valor</consider>
       <found>MENOS O MAS de [X] veces</found>
-      <X>1</X>
+      <X>2</X>
       <msgtxt>error en las clases del archivo web.xml (hexterno se encuentra {Q} veces)</msgtxt>
       <msgcolor>Error (Rojo)</msgcolor>
     </rule>

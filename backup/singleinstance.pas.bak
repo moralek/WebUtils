@@ -1,0 +1,197 @@
+unit ddee;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, Buttons, ExtCtrls, UGlobales, ShellApi,
+  LCLType, Graphics,FileUtil,LazFileUtils,Dialogs;
+type
+  Tddee=class
+Public
+  Procedure LoadApps(
+    var BtnApp1:TBitBtn; var ImgApp1:TImage;
+    var BtnApp2:TBitBtn; var ImgApp2:TImage;
+    var BtnApp3:TBitBtn; var ImgApp3:TImage;
+    var BtnApp4:TBitBtn; var ImgApp4:TImage;
+    var BtnApp5:TBitBtn; var ImgApp5:TImage;
+    var BtnApp6:TBitBtn; var ImgApp6:TImage;
+    var BtnApp7:TBitBtn; var ImgApp7:TImage;
+    var BtnApp8:TBitBtn; var ImgApp8:TImage;
+    var BtnApp9:TBitBtn; var ImgApp9:TImage;
+    var BtnApp10:TBitBtn; var ImgApp10:TImage);
+  Procedure addApp(APP:String;var BtnEdApp:TBitBtn;var ImgApp: TImage);
+  Procedure DelApp(APP:String;var BtnEdApp:TBitBtn;var ImgApp: TImage);
+  Function retImgApp(APP:String):TPicture;
+  Constructor Create;
+  Procedure OrderUsoAPP();
+Private
+
+var
+Private
+ VarGlobales:TGlobales;
+end;
+
+implementation
+Constructor TMyApps.create();
+begin
+   VarGlobales:=TGlobales.Create;
+end;
+Procedure TMyApps.OrderUsoAPP();
+ var  Us1,Us2,Uso1,x,y:integer;
+      FileName1,Imagen1,APP1,APP2,Nombre1:String;
+Begin
+  For y:=1 to 10 do
+  Begin
+    for x := 2 to 10 do
+    Begin
+      APP1:='APP'+trim((x-1).ToString());
+      APP2:='APP'+trim(x.ToString());
+      Us1:=VarGlobales.getAppUso(APP1);
+      Us2:=VarGlobales.getAppUso(APP2);
+      If (Trim(VarGlobales.getApp(APP1))).IsEmpty Then Us1:=-1;
+      If (Trim(VarGlobales.getApp(APP2))).IsEmpty Then Us2:=-1;
+      If (Us2>Us1) then
+      begin
+        //1-->tmp
+        Filename1:=VarGlobales.getApp(APP1);
+        Nombre1:=VarGlobales.getAPPNombre(APP1);
+        Imagen1:=VarGlobales.getImgApp(APP1);
+        Uso1:= VarGlobales.getAppUso(APP1);
+        //2-->1
+        VarGlobales.setApp(APP1,VarGlobales.getApp(APP2));
+        Varglobales.setAPPNombre(APP1,VarGlobales.getAPPNombre(APP2));
+        varglobales.setImgApp(APP1,VarGlobales.getImgApp(APP2));
+        VarGlobales.setAPPuso(APP1,VarGlobales.getAppUso(APP2));
+        //tmp-->2
+        If Not FileExists(Trim(FileName1)) Then
+           VarGlobales.delAPP(APP2)
+           else
+          begin
+            VarGlobales.setApp(APP2,FileName1);
+            Varglobales.setAPPNombre(APP2,Nombre1);
+            varglobales.setImgApp(APP2,Imagen1);
+            VarGlobales.setAPPuso(APP2,Uso1);
+          end;
+      end;
+    end;
+  end;
+end;
+
+Procedure TMyApps.LoadApps(
+    var BtnApp1:TBitBtn; var ImgApp1:TImage;
+    var BtnApp2:TBitBtn; var ImgApp2:TImage;
+    var BtnApp3:TBitBtn; var ImgApp3:TImage;
+    var BtnApp4:TBitBtn; var ImgApp4:TImage;
+    var BtnApp5:TBitBtn; var ImgApp5:TImage;
+    var BtnApp6:TBitBtn; var ImgApp6:TImage;
+    var BtnApp7:TBitBtn; var ImgApp7:TImage;
+    var BtnApp8:TBitBtn; var ImgApp8:TImage;
+    var BtnApp9:TBitBtn; var ImgApp9:TImage;
+    var BtnApp10:TBitBtn; var ImgApp10:TImage);
+Begin
+  If VarGlobales.getOrderByUso() Then OrderUsoAPP();
+  If FileExists(varGlobales.getApp('APP1')) Then
+     addApp('APP1',BtnApp1,ImgApp1)
+   else
+     DelApp('APP1',BtnApp1,ImgApp1);
+
+   If FileExists(varGlobales.getApp('APP2')) Then
+     addApp('APP2',BtnApp2,ImgApp2)
+   else
+     DelApp('APP2',BtnApp2,ImgApp2);
+
+   If FileExists(varGlobales.getApp('APP3')) Then
+     addApp('APP3',BtnApp3,ImgApp3)
+   else
+     DelApp('APP3',BtnApp3,ImgApp3);
+
+   If FileExists(varGlobales.getApp('APP4')) Then
+     addApp('APP4',BtnApp4,ImgApp4)
+   else
+     DelApp('APP4',BtnApp4,ImgApp4);
+
+   If FileExists(varGlobales.getApp('APP5')) Then
+     addApp('APP5',BtnApp5,ImgApp5)
+   else
+    DelApp('APP5',BtnApp5,ImgApp5);
+
+   If FileExists(varGlobales.getApp('APP6')) Then
+     addApp('APP6',BtnApp6,ImgApp6)
+   else
+     DelApp('APP6',BtnApp6,ImgApp6);
+
+   If FileExists(varGlobales.getApp('APP7')) Then
+     addApp('APP7',BtnApp7,ImgApp7)
+   else
+     DelApp('APP7',BtnApp7,ImgApp7);
+
+   If FileExists(varGlobales.getApp('APP8')) Then
+     addApp('APP8',BtnApp8,ImgApp8)
+   else
+     DelApp('APP8',BtnApp8,ImgApp8);
+
+   If FileExists(varGlobales.getApp('APP9')) Then
+     addApp('APP9',BtnApp9,ImgApp9)
+   else
+     DelApp('APP9',BtnApp9,ImgApp9);
+
+   If FileExists(varGlobales.getApp('APP10')) Then
+     addApp('APP10',BtnApp10,ImgApp10)
+   else
+     DelApp('APP10',BtnApp10,ImgApp10);
+end;
+Procedure TMyApps.addApp(APP:String;var BtnEdApp:TBitBtn;var ImgApp: TImage);
+ var
+   Nombre,Filename:String;
+ begin
+   FileName:=varGlobales.getApp(APP);
+   Nombre:=VarGlobales.getAPPNombre(APP);
+   If Trim(Nombre).IsEmpty then Nombre:=ExtractFileNameOnly(Filename);
+   BtnEdApp.Caption:=Nombre;
+   ImgApp.Picture:=retImgApp(APP);
+ end;
+Procedure TMyApps.DelApp(APP:String;var BtnEdApp:TBitBtn;var ImgApp: TImage);
+Begin
+  VarGlobales.delAPP(APP);
+  VarGlobales.delAPP(APP+'IMG');
+  VarGlobales.delAPP(APP+'USO');
+  VarGlobales.delAPP(APP+'NOM');
+  BtnEdApp.Caption:='[...]';
+  ImgApp.Picture:=nil;
+end;
+
+Function TMyApps.retImgApp(APP:String):TPicture;
+var ext,Filename,FilenameImg:String;
+     LargeIco, SmallIco : hIcon;
+     myIcon : TIcon;
+Begin
+  Filename:=VarGlobales.getApp(APP);
+  FilenameImg:=VarGlobales.getImgApp(APP);
+  Result:=TPicture.Create;
+  If Not FileExists(FileNameImg) Then FileNameImg:=FileName;
+  ext:=UpperCase(FilenameImg.Substring((FilenameImg.Length-4)));
+  If (ext='.EXE') then
+   Begin
+    if ExtractIconEx(PChar(FilenameImg), 0, LargeIco, SmallIco, 1) > null then
+     begin
+       myIcon := TIcon.Create;
+       try
+         myIcon.Transparent := True;
+         myIcon.Masked := True;
+         If LargeIco.Size>0 then
+            myIcon.Handle := LargeIco
+         else
+            myIcon.Handle := SmallIco;
+         Result.Icon.Assign(myIcon);
+       finally
+         myIcon.Free;
+       end;
+     end;
+   end
+  else
+  If FileExists(FileNameImg) Then Result.LoadFromFile(FileNameImg);
+end;
+end.
+

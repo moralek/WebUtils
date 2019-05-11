@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules date="2019-04-14" title="Script de ejemplo">
+  <webappsRules>
+    <MSGRUN>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Chequear QrCode.jar</MSGRUN>
+    <CLRDIR>WEB-INF\lib\hola</CLRDIR>
+    <MSGRUN>dasdas</MSGRUN>
+    <MSGRUN>dasdsad</MSGRUN>
+    <MSGRUN>werwe</MSGRUN>
+    <MSGRUN>rerewrwe</MSGRUN>
+    <MSGRUN>rwerwer</MSGRUN>
+    <MSGRUN>rwer345345</MSGRUN>
+    <MSGRUN>rwerwe</MSGRUN>
+    <MSGRUN>535345</MSGRUN>
+    <MSGRUN>5345345</MSGRUN>
+    <MSGRUN>6756756</MSGRUN>
+    <MSGRUN>56756756</MSGRUN>
+    <MSGRUN>756756</MSGRUN>
+    <MSGRUN>utyuty</MSGRUN>
+    <MSGRUN>tyutyutyu</MSGRUN>
+    <MSGRUN>yutyutyu</MSGRUN>
+    <MSGRUN>tyuytuty</MSGRUN>
+    <MSGRUN>test</MSGRUN>
+    <MSGRUN>utyuyt</MSGRUN>
+    <MSGRUN/>
+    <MSGRUN/>
+  </webappsRules>
+  <webxmlrules/>
+</rules>

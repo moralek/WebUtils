@@ -1,0 +1,22 @@
+object Form1: TForm1
+  Left = 763
+  Height = 300
+  Top = 394
+  Width = 400
+  BorderStyle = bsDialog
+  Caption = 'Actualizando WEBUTILS'
+  ClientHeight = 300
+  ClientWidth = 400
+  DesignTimePPI = 120
+  FormStyle = fsStayOnTop
+  OnActivate = FormActivate
+  LCLVersion = '2.0.2.0'
+  object Label1: TLabel
+    Left = 24
+    Height = 20
+    Top = 24
+    Width = 311
+    Caption = 'Buscando una nueva versión, por favor espere...'
+    ParentColor = False
+  end
+end

@@ -1,0 +1,21 @@
+unit MyApps;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils;
+type
+  TMyUtils=class
+Private
+Public
+
+end;
+
+
+
+implementation
+
+end.
+

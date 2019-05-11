@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="11"/>
+    <PathDelim Value="\"/>
+    <General>
+      <SessionStorage Value="InProjectDir"/>
+      <MainUnit Value="0"/>
+      <Title Value="FDE - WEB UTILS"/>
+      <Scaled Value="True"/>
+      <UseAppBundle Value="False"/>
+      <ResourceType Value="res"/>
+      <UseXPManifest Value="True"/>
+      <XPManifest>
+        <DpiAware Value="True"/>
+      </XPManifest>
+      <Icon Value="0"/>
+    </General>
+    <i18n>
+      <EnableI18N LFM="False"/>
+    </i18n>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <MajorVersionNr Value="1"/>
+      <MinorVersionNr Value="4"/>
+      <BuildNr Value="3"/>
+      <Language Value="080A"/>
+      <StringTable OriginalFilename="[WEB UTILS] Del-Find Files" ProductName="WEB UTILS" ProductVersion="1.4.0.3"/>
+    </VersionInfo>
+    <BuildModes Count="1">
+      <Item1 Name="Default" Default="True"/>
+    </BuildModes>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="1">
+        <Mode0 Name="default"/>
+      </Modes>
+    </RunParams>
+    <RequiredPackages Count="8">
+      <Item1>
+        <PackageName Value="ATShapeLine_package"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="callight_pkg"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="SynEdit"/>
+      </Item3>
+      <Item4>
+        <PackageName Value="uniqueinstance_package"/>
+      </Item4>
+      <Item5>
+        <PackageName Value="RunTimeTypeInfoControls"/>
+      </Item5>
+      <Item6>
+        <PackageName Value="LazControls"/>
+      </Item6>
+      <Item7>
+        <PackageName Value="richmemopackage"/>
+      </Item7>
+      <Item8>
+        <PackageName Value="LCL"/>
+      </Item8>
+    </RequiredPackages>
+    <Units Count="13">
+      <Unit0>
+        <Filename Value="project1.lpr"/>
+        <IsPartOfProject Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit1"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="uinireader.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UIniReader"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="uglobales.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UGlobales"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="ufdefile.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UFdeFile"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="umyutils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UMyUtils"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="umygridstring.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UMyGridString"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="uayuda.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UAyuda"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="umyapps.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UMyApps"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="varregenv.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="VarRegEnv"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="umyclpbrd.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UMyClpBrd"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="umywin.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UMyWin"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="umyrcs.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UMyRCS"/>
+      </Unit12>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <PathDelim Value="\"/>
+    <Target>
+      <Filename Value="DelFind"/>
+    </Target>
+    <SearchPaths>
+      <IncludeFiles Value="$(ProjOutDir)"/>
+      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
+    <Linking>
+      <Debugging>
+        <GenerateDebugInfo Value="False"/>
+        <StripSymbols Value="True"/>
+        <UseExternalDbgSyms Value="True"/>
+      </Debugging>
+      <LinkSmart Value="True"/>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
+    </Linking>
+    <Other>
+      <Verbosity>
+        <ShoLineNum Value="True"/>
+      </Verbosity>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="3">
+      <Item1>
+        <Name Value="EAbort"/>
+      </Item1>
+      <Item2>
+        <Name Value="ECodetoolError"/>
+      </Item2>
+      <Item3>
+        <Name Value="EFOpenError"/>
+      </Item3>
+    </Exceptions>
+  </Debugging>
+</CONFIG>
