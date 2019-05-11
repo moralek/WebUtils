@@ -1,7 +1,7 @@
 ## WebUtils (for GX wars)
 *Utilidades para generación de war Gx*
 
-  - [Archivos .fde](#<u>Archivos-.fde:</u>)
+  - [Archivos .fde](#<u>Archivos-fde</u>)
   - [Reglas para validar web.xml](#Reglas-para-validación-del-archivo-web-xml)
   - [Comodines](#Comodines:)
   - [Fde.ini](#fde.Ini:)
