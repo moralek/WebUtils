@@ -17,7 +17,7 @@ Los archivos .fde son simples archivos de texto plano con extensión .fde. Estos
 
 
 
-**<u>FDE.Ini</u>**: 
+<u>fde.Ini:</u>
 
 El archivo fde.ini se encuentra junto con el ejecutable posee la configuración de opciones de delfind.exe. En caso de no existir , se creará uno por defecto.
 
