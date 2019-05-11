@@ -1,9 +1,13 @@
 ## WebUtils (for GX wars)
 *Utilidades para generación de war Gx*
 
-[TOCM]
+  - [Archivos .fde](#Archivos-.fde)
+  - [Reglas para validar web.xml](#Reglas para validación del archivo web.xml)
+  - [Comodines](#Comodines:)
+  - [Fde.ini](#fde.Ini:)
+  - [Links](#links:)
 
-[TOC]
+
 
 
 
@@ -82,7 +86,7 @@ RecOpcSalir=0
 
 ------
 
-## links de referencia:
+## links:
 
 - https://typora.io
 
