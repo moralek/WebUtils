@@ -1,7 +1,7 @@
 ## WebUtils (for GX wars)
 *Utilidades para generación de war Gx*
 
-  - [Archivos .fde](#<u>Archivos-fde</u>)
+  - [Archivos .fde](#Archivos-fde)
   - [Reglas para validar web.xml](#Reglas-para-validación-del-archivo-web-xml)
   - [Comodines](#Comodines:)
   - [Fde.ini](#fde.Ini:)
@@ -11,7 +11,7 @@
 
 
 
-## <u>Archivos .fde:</u> ##
+## <u>Archivos .fde:</u> ## {#Archivos-fde}
 
 Los archivos .fde son archivos xml con estructura y deben crearse con el editor incluido dentro del mismo programa
 
