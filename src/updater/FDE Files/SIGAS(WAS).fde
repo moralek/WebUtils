@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules date="2019-03-17" title="(SIGAS) Script para WAS">
+  <webappsRules>
+    <MSGRUN>#Borra Librerias Conectores (DATASOURCE)#</MSGRUN>
+    <DELFIL>WEB-INF\lib\jtds-1.2.jar</DELFIL>
+    <DELFIL>WEB-INF\lib\mysql-connector-java-5.1.11-bin.jar</DELFIL>
+    <DELFIL>WEB-INF\lib\ojdbc6.jar</DELFIL>
+    <DELFIL>WEB-INF\lib\postgresql-9.1-902.jdbc3.jar</DELFIL>
+    <DELFIL>WEB-INF\lib\sqlitejdbc-v056.jar</DELFIL>
+    <DELFIL>WEB-INF\lib\sqljdbc4.jar</DELFIL>
+    <MSGRUN>#Limpia Carpetas PUBLICTEMPSTORAGE y PRIVATETEMPSTORAGE#</MSGRUN>
+    <CREDIR>PrivateTempStorage</CREDIR>
+    <CREDIR>PublicTempStorage</CREDIR>
+    <CLRDIR>PrivateTempStorage</CLRDIR>
+    <CLRDIR>PublicTempStorage</CLRDIR>
+    <MSGRUN>#Borra Archivos UPLOADIFY Antiguos#</MSGRUN>
+    <DELFIL>WEB-INF\lib\upload.jar</DELFIL>
+    <DELFIL>WEB-INF\lib\commons-fileupload-1.2.1.jar</DELFIL>
+    <DELFIL>WEB-INF\lib\JsonJava.jar</DELFIL>
+    <MSGRUN>#Clase Uploadify REST(aplica a AFX-ADX-CA-PAS-TF-MA)#</MSGRUN>
+    <CHKFIL>WEB-INF\classes\cgu\services\FileUploadService.class</CHKFIL>
+    <MSGRUN>#Uploadify REST(aplica a AFX-ADX-CA-PAS-TF-MA)#</MSGRUN>
+    <CHKFIL>WEB-INF\lib\jersey-servlet-1.17.1.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\jettison-1.1.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\stax-api-1.0.1.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\jaxb-impl-2.1.12.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\jaxb-api-2.1.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\stax-api-1.0-2.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\activation-1.1.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\jackson-xc-1.5.5.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\jersey-multipart-1.4.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\mimepull-1.4.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\javax.json-1.0.4.jar</CHKFIL>
+    <MSGRUN>#Chequea Librerias para Uploadify REST(GX)#</MSGRUN>
+    <CHKFIL>WEB-INF\lib\servlet-api.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\gxclassR.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\jersey-server-1.4.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\jersey-core-1.4.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\asm-3.1.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\jersey-json-1.4.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\jackson-core-asl-1.5.5.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\jackson-mapper-asl-1.5.5.jar</CHKFIL>
+    <CHKFIL>WEB-INF\lib\jackson-jaxrs-1.5.5.jar</CHKFIL>
+    <MSGRUN>#Borra war(s) de la carpeta#</MSGRUN>
+    <DELFIL>*.war</DELFIL>
+    <MSGRUN>#WebSocket api(Aplica a AFX-MN)#</MSGRUN>
+    <CHKFIL>WEB-INF\lib\websocket-api.jar</CHKFIL>
+    <MSGRUN>#Borra Bat#</MSGRUN>
+    <DELFIL>WEB-INF\lib\*.bat</DELFIL>
+    <MSGRUN>#QRCODE (Aplica a AFX-GA)#</MSGRUN>
+    <CHKFIL>WEB-INF\lib\QRCode.jar</CHKFIL>
+    <MSGRUN>#CHK PDFREPORT, ELIMINA CARPETA FONTS#</MSGRUN>
+    <CHKFIL>WEB-INF\PDFREPORT.INI</CHKFIL>
+    <DELDIR>WEB-INF\FONTS</DELDIR>
+    <MSGRUN>#Chk Resources#</MSGRUN>
+    <CHKFIL>static\calendar.js</CHKFIL>
+    <CHKFIL>static\Resources\*.png</CHKFIL>
+    <MSGRUN>#Chk classes#</MSGRUN>
+    <CHKFIL>WEB-INF\classes\*.class</CHKFIL>
+  </webappsRules>
+  <webxmlrules>
+    <rule>
+      <tag>servlet-name</tag>
+      <value>hexterno</value>
+      <consider>Etiqueta y Valor</consider>
+      <found>MENOS O MAS de [X] veces</found>
+      <X>1</X>
+      <msgtxt>error en las clases del archivo web.xml (hexterno se encuentra {Q} veces)</msgtxt>
+      <msgcolor>Error (Rojo)</msgcolor>
+    </rule>
+    <rule>
+      <tag>param-name</tag>
+      <value>javax.ws.rs.core.Application</value>
+      <consider>Etiqueta y Valor</consider>
+      <found>MENOS O MAS de [X] veces</found>
+      <X>1</X>
+      <msgtxt>(aplica a AFX-ADX-CA-PAS-TF-MA) UPLOADIFY error en web.xml</msgtxt>
+      <msgcolor>Error (Rojo)</msgcolor>
+    </rule>
+    <rule>
+      <tag>resource-ref</tag>
+      <value/>
+      <consider>Etiqueta</consider>
+      <found>MENOS O MAS de [X] veces</found>
+      <X>1</X>
+      <msgtxt>Error en DataSource</msgtxt>
+      <msgcolor>Error (Rojo)</msgcolor>
+    </rule>
+    <rule>
+      <tag>servlet-class</tag>
+      <value>QRCode</value>
+      <consider>Etiqueta y Valor</consider>
+      <found>MENOS O MAS de [X] veces</found>
+      <X>1</X>
+      <msgtxt>(Aplica AFX-GA) QRCode error en web.xml ({Q})</msgtxt>
+      <msgcolor>Error (Rojo)</msgcolor>
+    </rule>
+    <rule>
+      <tag>servlet-class</tag>
+      <value>com.genexus.internet.websocket.GXWebSocket</value>
+      <consider>Etiqueta y Valor</consider>
+      <found>MENOS O MAS de [X] veces</found>
+      <X>1</X>
+      <msgtxt>(Aplica a AFX-MN) error WEBSOCKET en el web.xml</msgtxt>
+      <msgcolor>Error (Rojo)</msgcolor>
+    </rule>
+    <rule>
+      <tag>res-ref-name</tag>
+      <value>jdbc/CGU</value>
+      <consider>Etiqueta y Valor</consider>
+      <found>MENOS O MAS de [X] veces</found>
+      <X>1</X>
+      <msgtxt>Datasource para WAS no esta correctamente definido en web.xml</msgtxt>
+      <msgcolor>Error (Rojo)</msgcolor>
+    </rule>
+  </webxmlrules>
+</rules>

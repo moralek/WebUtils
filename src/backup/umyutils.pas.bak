@@ -1,0 +1,423 @@
+unit UMyUtils;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+    Classes, SysUtils, Forms, Controls, Graphics, Dialogs,
+    RichMemo, LazFileUtils, FileUtil, Grids,
+    LCLIntf, ExtCtrls, CheckLst, StdCtrls, UGlobales,
+    zipper, LCLType, Buttons, VarRegEnv,registry,ShellApi,Process,
+    Clipbrd,ComCtrls;
+type
+  TMyUtils=class
+Public
+  Procedure addToRichMemo(Texto:String;var Memo:TRichMemo;var StatusBar1:TStatusBar;color:Tcolor = clDefault);
+  Function  getAppPath():String;
+  function  clearDirPath(path:String):String;
+  function  clearFilePath(path:String):String;
+  Function  RemoveFolder(Folder: String):Boolean;
+  Procedure test();
+  Function  CheckDir(DirPath:String):Boolean;
+  Function  CheckNoMaskName(FileName:String):Boolean;
+  function  LastDirName(path:String):String;
+  Procedure MostrarCarpeta(Dir:String);
+  Procedure FiltrarDirs(FilePath,Filtertxt:String; var CheckListBox1: TCheckListBox);
+  procedure FilDirGrid(FilePath,Filtertxt:String; var StringGrid1: TStringGrid);
+  Procedure InvertChecklist(var CheckListBox1: TCheckListBox);
+  Procedure InvertStringGrid(var StringGrid1: TStringGrid);
+  Procedure SelAllStringGrid(var StringGrid1: TStringGrid);
+  Procedure SelNoneStringGrid(var StringGrid1: TStringGrid);
+  Procedure DelAllRowsGrid(var StringGrid1: TStringGrid);
+  Function  getDatoFDE(FilaRead:String):String;
+  Function  getTipoFDE(FilaRead:String):String;
+  Procedure GenWar(StringGrid1:TStringGrid;javahome:String;var Memo:TRichMemo;var TrayIcon1:TTrayIcon;var StatusBar1:TStatusBar);
+  Function retJavaHome():String;
+  Function JavaHomeOk(ruta:String):Boolean;
+  Procedure runProgram(APP,runIn:String;parms:TStrings);
+  Procedure ClipboardCopy(Text:String);
+  Procedure goNotebookPage(Page1:TPage;var Notebook1:TNotebook);
+
+Private
+  Procedure GenWarDir(RutaBase,javahome:String;var Memo:TRichMemo;var TrayIcon1:TTrayIcon;var StausBar1:TStatusBar;nomwar:String='');
+
+end;
+
+implementation
+Procedure TMyUtils.addToRichMemo(Texto:String;var Memo:TRichMemo;var StatusBar1:TStatusBar; color:Tcolor = clDefault);
+var largoText,LargoMemo:Integer;
+Begin
+    largoText:=Texto.Length+1;
+    Memo.Lines.Add(Texto);
+    LargoMemo:=Memo.Lines.Text.Length;
+    Memo.SetRangeColor((LargoMemo-largoText),largoText,color);
+    StatusBar1.SimpleText:=Texto;
+    Application.ProcessMessages;
+end;
+
+Function TMyUtils.getAppPath():String;
+begin
+     Result:=ExtractFilePath(Application.ExeName)
+end;
+
+function TMyUtils.clearDirPath(path:String):String;
+begin
+     ForcePathDelims(path); //cambia '/' por '\'
+     path:=stringReplace(path , '\\',  '\' ,[rfReplaceAll, rfIgnoreCase]);
+     LazFileUtils.CleanAndExpandDirectory(path); //limpia directorio agrega /al final
+     path:=LazFileUtils.AppendPathDelim(path);
+     Result:=path;
+end;
+function TMyUtils.LastDirName(path:String):String;
+begin
+     Path:=clearDirPath(Path);
+     if Path[Path.Length]=DirectorySeparator then
+          Path:=Path.Substring(0,Path.Length-1);
+     Result:=Path.Substring(Path.LastIndexOf(DirectorySeparator)+1);
+end;
+function TMyUtils.clearFilePath(path:String):String;
+begin
+     Result:='';
+     IF Trim(Path).IsEmpty then
+          exit;
+     ForcePathDelims(path); //cambia '/' por '\'
+     LazFileUtils.CleanAndExpandFilename(path);
+     path:=stringReplace(path , '\\',  '\' ,[rfReplaceAll, rfIgnoreCase]);
+     If path[path.Length]='\' then
+     path:=trim(path).substring(0,path.Length-1);
+     Result:=path;
+end;
+
+Function TMyUtils.RemoveFolder(Folder: String):Boolean;
+begin
+   Result:=DeleteDirectory(Folder,false);
+   Result:= not CheckDir(Folder);
+end;
+
+Procedure TMyUtils.test();
+var texto:String;
+begin
+     texto:='Hola_Mundo';
+     If texto[texto.Length]='\' then
+    ShowMessage('['+texto+']'+texto[texto.Length]);
+end;
+
+Function TMyUtils.CheckDir(DirPath:String):Boolean;
+var
+ Directorios: TStringList;
+begin
+ Directorios := TStringList.Create;
+ if DirPath.Substring((DirPath.Length-2)) = '\*' then
+  begin
+    DirPath:=DirPath.Substring(0,(DirPath.Length-1));
+    FindAllDirectories(Directorios, DirPath, False);
+    Result:=Directorios.Count>0;
+  end
+ else
+  begin
+    DirPath:=clearDirPath(DirPath);
+    Result:=DirectoryExists(DirPath);
+  end;
+ Directorios.Free;
+end;
+Function TMyUtils.CheckNoMaskName(FileName:String):Boolean;
+ //:*?"<>|
+begin
+ Result:=True;
+ If (FileName.IndexOf(':')>1)  Or (FileName.IndexOf('*')>-1) Or
+    (FileName.IndexOf('*')>-1) Or (FileName.IndexOf('?')>-1) Or
+    (FileName.IndexOf('"')>-1) Or (FileName.IndexOf('<')>-1) Or
+    (FileName.IndexOf('>')>-1) Or (FileName.IndexOf('|')>-1) Then
+      Result:=False;
+end;
+
+procedure TMyUtils.MostrarCarpeta(Dir:String);
+begin
+  If (DirectoryExists(ClearDirPath(Dir))) then
+        OpenDocument(Dir);
+end;
+procedure TMyUtils.FiltrarDirs(FilePath,Filtertxt:String; var CheckListBox1: TCheckListBox);
+ var
+  Directorios: TStringList;
+  i:Integer;
+  dirtmp:String;
+begin
+   Directorios:=TStringList.Create;
+   CheckListBox1.Clear;
+   FindAllDirectories(Directorios,FilePath,false);
+   for i := 0 to Directorios.Count - 1 do
+     begin
+       dirtmp:=LowerCase(LastDirName(Directorios[i]));
+       If (Trim(Filtertxt).IsEmpty) Or (AnsiPos(Filtertxt,dirtmp)>0) then
+          CheckListBox1.Items.Add(Directorios[i]);
+     end;
+   CheckListBox1.CheckAll(cbChecked,True,True);
+   Directorios.Free;
+  end;
+Procedure TMyUtils.DelAllRowsGrid(var StringGrid1: TStringGrid);
+   var i,x:Integer;
+begin
+  x:=StringGrid1.RowCount-1;
+   for i:=1 to x do
+   begin
+     StringGrid1.DeleteRow(1);
+   end;
+end;
+
+procedure TMyUtils.FilDirGrid(FilePath,Filtertxt:String; var StringGrid1: TStringGrid);
+ var
+  Directorios: TStringList;
+  i,x:Integer;
+  dirfull,dirtmp:String;
+begin
+   x:=0;
+   Directorios:=TStringList.Create;
+   DelAllRowsGrid(StringGrid1);
+   FindAllDirectories(Directorios,FilePath,false);
+   for i := 0 to Directorios.Count - 1 do
+     begin
+       dirfull:=clearDirPath(Directorios[i]);
+       dirtmp:=LastDirName(dirfull);
+       If (Trim(Filtertxt).IsEmpty) Or (AnsiPos(Filtertxt,LowerCase(dirtmp))>0) then
+        Begin
+          x:=x+1;
+          StringGrid1.InsertRowWithValues((x),['1',dirtmp,dirfull,dirtmp]);
+        end;
+     end;
+   Directorios.Free;
+  end;
+
+
+Procedure TMyUtils.InvertChecklist(var CheckListBox1: TCheckListBox);
+ var
+   I:Integer;
+ begin
+    for I := 0 to CheckListBox1.Items.Count - 1 do
+      begin
+       CheckListBox1.Checked[I]:=Not CheckListBox1.Checked[I];
+      end;
+ end;
+ Procedure TMyUtils.SelAllStringGrid(var StringGrid1: TStringGrid);
+  var
+    I:Integer;
+  begin
+     for I := 1 to StringGrid1.RowCount - 1 do
+      StringGrid1.Cells[0,i]:='1'
+  end;
+
+Procedure TMyUtils.SelNoneStringGrid(var StringGrid1: TStringGrid);
+ var
+   I:Integer;
+ begin
+    for I := 1 to StringGrid1.RowCount - 1 do
+     StringGrid1.Cells[0,i]:='0'
+ end;
+
+Procedure TMyUtils.InvertStringGrid(var StringGrid1: TStringGrid);
+ var
+   I:Integer;
+ begin
+    for I := 1 to StringGrid1.RowCount - 1 do
+      begin
+       If StringGrid1.Cells[0,I]='1' Then
+       StringGrid1.Cells[0,i]:='0'
+       else
+       StringGrid1.Cells[0,i]:='1';
+      end;
+ end;
+Function TMyUtils.getTipoFDE(FilaRead:String):String;
+begin
+   Filaread:=Trim(FilaRead);
+   Result:=FilaRead.Substring(0,6).ToUpper;
+end;
+Function TMyUtils.getDatoFDE(FilaRead:String):String;
+begin
+   Filaread:=Trim(FilaRead);
+   Result:=Trim(FilaRead.Substring(7));
+end;
+Procedure TMyUtils.GenWar(StringGrid1:TStringGrid;javahome:String;var Memo:TRichMemo;var TrayIcon1:TTrayIcon;var StatusBar1:TStatusBar);
+ var
+  QErrores,DirCount,I:Integer;
+  VarGlo:TGlobales;
+  nomwar:String;
+ begin
+    VarGlo:=TGlobales.Create;
+    QErrores:=0;
+    DirCount:=0;
+    addToRichMemo('Inicio ('+TimeToStr(Time)+')',Memo,StatusBar1);
+    TrayIcon1.Hint:=('Inicio ('+TimeToStr(Time)+')');
+    for I:= 1 to StringGrid1.RowCount - 1 do
+      Begin
+       If StringGrid1.Cells[0,i]='1' then
+        Begin
+          DirCount+=1;
+          nomwar:= StringGrid1.Cells[3,i];
+          GenWarDir(clearDirPath(StringGrid1.Cells[2,i]),javahome,Memo,TrayIcon1,StatusBar1,nomwar);
+        end;
+     end;
+
+    If DirCount=0 then
+     begin
+       QErrores:=QErrores+1;
+       addToRichMemo('Ningun Directorio Seleccionado.',Memo,StatusBar1,clRed);
+       TrayIcon1.Hint:='Ningun Directorio Seleccionado.';
+     end;
+    addToRichMemo('Fin ('+TimeToStr(Time)+'), '+QErrores.ToString()+' error(es).',Memo,StatusBar1);
+    TrayIcon1.Hint:=('Fin ('+TimeToStr(Time)+'), '+QErrores.ToString()+' error(es).');
+    If (VarGlo.getBeep()) Then Beep;
+    VarGlo.Free;
+end;
+Function TMyUtils.retJavaHome():String;
+var SL: TStringList;
+  x:integer;
+  FolderKey,ruta, variable:String;
+  Env:TVarRegEnv;
+begin
+  Result:=GetEnvironmentVariable('JAVA_HOME');
+  If JavaHomeOk(Result) Then Exit(Result);
+
+  //JAVA 32
+  Result:='';
+  variable:='JavaHome';
+  Ruta:='\SOFTWARE\JavaSoft\Java Development Kit';
+  FolderKey:=ruta;
+  env:=TVarRegEnv.Create;
+  SL:= env.retfolders(HKEY_LOCAL_MACHINE,FolderKey);
+  for x:=0 to pred(SL.Count) do
+   begin
+     FolderKey:=Ruta+'\'+SL.Strings[x];
+     Result:=env.retkeyval(HKEY_LOCAL_MACHINE,FolderKey,variable);
+     If JavaHomeOk(Result) Then Exit(Result);
+   end;
+
+  //JAVA 64
+  Result:='';
+  variable:='JavaHome';
+  Ruta:='\SOFTWARE\WOW6432Node\JavaSoft\Java Development Kit';
+  FolderKey:=ruta;
+  env:=TVarRegEnv.Create;
+  SL:= env.retfolders(HKEY_LOCAL_MACHINE,FolderKey);
+  for x:=0 to pred(SL.Count) do
+   begin
+     FolderKey:=Ruta+'\'+SL.Strings[x];
+     Result:=env.retkeyval(HKEY_LOCAL_MACHINE,FolderKey,variable);
+     If JavaHomeOk(Result) Then Exit(Result);
+   end;
+
+   Result:='';
+   env.Free;
+end;
+
+Function TMyUtils.JavaHomeOk(ruta:String):Boolean;
+var folder:string;
+begin
+     Result:=False;
+     If DirectoryExists(ruta) Then
+     begin
+         folder:=clearDirPath(ruta)+'bin\jar.exe';
+         If FileExists(folder) then Result:=True;
+     end;
+end;
+
+Procedure TMyUtils.GenWarDir(RutaBase,javahome:String;var Memo:TRichMemo;var TrayIcon1:TTrayIcon;var StausBar1:TStatusBar;nomwar:String='');
+ var
+   parms:TStrings;
+   rutajar,FilePath:String;
+ begin
+   parms:=TStringList.Create;
+   If Trim(nomwar).IsEmpty then nomwar:=LastDirName(RutaBase)+'.war' else nomwar:=nomwar+'.war';
+   addToRichMemo('Generando '+nomwar+'...',Memo,StausBar1);
+   TrayIcon1.Hint:='Generando '+nomwar+'...';
+   FilePath:=clearDirPath(RutaBase)+nomwar;
+   rutajar:=clearDirPath(javahome)+'bin\jar.exe';
+
+   parms.Add('cfM');
+   parms.Add(nomwar);
+   parms.Add('.');
+
+   If FileExists(rutajar) Then
+   begin
+      If FileExists(FilePath) then DeleteFile(FilePath);
+      runProgram(clearFilePath(clearDirPath(javahome)+'bin\jar.exe'),RutaBase,parms);
+   end;
+    parms.Free;
+ end;
+
+Procedure TMyUtils.runProgram(APP,runIn:String;parms:TStrings);
+var
+  AProcess: TProcess;
+begin
+  // Now we will create the TProcess object, and
+  // assign it to the var AProcess.
+  AProcess := TProcess.Create(nil);
+
+  // Tell the new AProcess what the command to execute is.
+  // Let's use the Free Pascal compiler (i386 version that is)
+  //AProcess.Environment.Text:='PATH='+RutaAPP;
+  AProcess.Executable:= APP;
+  AProcess.CurrentDirectory:=runIn;
+  AProcess.Parameters:=parms;
+  // We will define an option for when the program
+  // is run. This option will make sure that our program
+  // does not continue until the program we will launch
+  // has stopped running.                vvvvvvvvvvvvvv
+  AProcess.Options := AProcess.Options + [poWaitOnExit, poNoConsole];
+  //AProcess.ShowWindow:=swoHIDE;
+
+  // Now let AProcess run the program
+     //showmessage('[PATH='+RutaAPP+']['+runIn+']['+APP+']['+parms.DelimitedText+']') ;
+  AProcess.Execute;
+  // This is not reached until ppc386 stops running.
+  AProcess.Free;
+end;
+
+Procedure TMyUtils.ClipboardCopy(Text:String);
+Begin
+  Clipboard.Clear;
+  Clipboard.AsText:=Text;
+end;
+Procedure TMyUtils.goNotebookPage(Page1:TPage;var Notebook1:TNotebook);
+var i:Integer;
+begin
+ Notebook1.PageIndex:=Notebook1.Pages.IndexOfObject(Page1);
+{   for i := 0 to Notebook1.Pages.Count - 1 do
+    begin
+      If UpperCase(NoteBook1.Page[i].Name)=UpperCase(Page1.Name) Then
+         Begin
+           Notebook1.PageIndex:=i;
+           exit;
+         end;
+    end;}
+end;
+
+end.
+
+//====================================== ZIPPER
+  // AZipper := TZipper.Create;
+  // AZipper.Filename := FilePath;
+  // DeleteFile(FilePath);
+  // DeleteFile(FilePath.Substring(0,(FilePath.Length-4))+'.tmp');
+  // DirList:=TstringList.Create;
+  // try
+  //   //Agrega Directorios =====
+  //   DirList:=FindAllDirectories(RutaBase);
+  //   for i:=0 to pred(DirList.Count) do
+  //       Begin
+  //         AZipper.Entries.AddFileEntry(DirList[i],DirList[i].Substring(RutaBase.Length));
+  //         Application.ProcessMessages;
+  //       end;
+  //   //Agrega Archivos =====
+  //   FileList:=FindAllFiles(RutaBase);
+  //   for i:=0 to pred(FileList.Count) do
+  //       Begin
+  //         AZipper.Entries.AddFileEntry(FileList[i],FileList[i].Substring(RutaBase.Length));
+  //       end;
+  //   AZipper.ZipAllFiles;
+  // finally
+  //   FileList.Free;
+  //   AZipper.Free;
+  // end;
+  // end;
+  //======================================
+

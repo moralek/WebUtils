@@ -1,0 +1,19 @@
+{Variables del sistema}
+unit UGlobales;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, IniFiles,
+  UIniRead;
+type
+  TGlobales=class
+
+  end;
+
+implementation
+
+end.
+

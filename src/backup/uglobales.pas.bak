@@ -1,0 +1,415 @@
+//Variables globales y lectura de archivos INI
+unit UGlobales;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
+  IniFiles,VarRegEnv;
+type
+  TGlobales=class
+
+private
+    Procedure setInteger(variable:String;Valor:Integer);
+    Function getInteger(variable:String;Valordefault:Integer):Integer;
+    Procedure setVarstr(variable,Valor:String);
+    Function  getVarStr(variable,Valordefault:String):String;
+    Procedure setBoolean(variable:String;Valor:Boolean);
+    Function  getBoolean(variable:String;Valordefault:Boolean):Boolean;
+public
+    COLOROK:TColor;
+    FicheroIni:TIniFile;
+    pathini:string;
+    Seccion:string;
+    Constructor Create;
+
+    Procedure setFdeFilePath(Valor:String);
+    Procedure setWebappsDir(Valor:String);
+    Procedure setJavaHome(Valor:String);
+    Procedure setApp(App:String='APP1';Valor:String='');
+    Procedure setImgApp(App:String='APP1';Valor:String='');
+    Procedure setMostrarOK(Valor:Boolean);
+    Procedure setConfirmDel(Valor:Boolean);
+    Procedure setClrMemo(Valor:Boolean);
+    Procedure setMostrarERR(Valor:Boolean);
+    Procedure setMostrarMSJ(Valor:Boolean);
+    Procedure setSoloDir(Valor:Boolean);
+    Procedure setTrayMinimize(Valor:Boolean);
+    Procedure setTrayScriptFDE(Valor:Boolean);
+    Procedure setTrayGenWar(Valor:Boolean);
+    Procedure setTrayRunAPP(Valor:Boolean);
+    Procedure setBeep(Valor:Boolean);
+    Procedure setOpcSalir(Valor:Boolean);
+    Procedure setOrderByUso(Valor:Boolean);
+    Procedure setPageIndex(Valor:Integer);
+    Procedure setAPPuso(APP:String;Valor:Integer);
+    Procedure setAPPNombre(APP:String;Valor:String);
+    Procedure setAPPPar(APP:String;Valor:String);
+    procedure delAPP(App:String);
+
+
+    Function getFdeIni():String;
+    Function getFdeDir():String;
+    Function getWebappsDir():String;
+    Function getAppPath():String;
+    Function getFdeFilepath():String;
+    Function getApp(App:String='APP1'):String;
+    Function getImgApp(App:String='APP1'):String;
+    Function getAPPNombre(APP:String):String;
+    Function getJavaHome():String;
+    Function getMostrarOK():Boolean;
+    Function getConfirmDel():Boolean;
+    Function getClrMemo():Boolean;
+    Function getMostrarERR():Boolean;
+    Function getMostrarMSJ():Boolean;
+    Function getSoloDir():Boolean;
+    Function getTrayMinimize():Boolean;
+    Function getTrayScriptFDE():Boolean;
+    Function getBeep():Boolean;
+    Function getOpcSalir():Boolean;
+    Function getOrderByUso():Boolean;
+    Function getTrayGenWar():Boolean;
+    Function getTrayRunAPP():Boolean;
+    Function getPageIndex():Integer;
+    Function getAppUso(App:String='APP1'):Integer;
+    Function getAPPPar(APP:String):String;
+end;
+
+implementation
+Constructor TGlobales.Create;
+Begin
+ inherited;
+ //CREAR INI
+  If trim(pathini).IsEmpty then
+       pathini := ExtractFilePath(Application.ExeName)+'fde.ini';
+  If trim(Seccion).IsEmpty then
+       Seccion := 'CONFIG';
+  FicheroIni:=TIniFile.Create(pathini);
+end;
+
+Procedure TGlobales.setInteger(variable:String;Valor:Integer);
+Begin
+  FicheroIni.WriteInteger(Seccion,variable,Valor);
+end;
+
+Function TGlobales.getInteger(variable:String;Valordefault:Integer):Integer;
+Begin
+   FicheroIni.Free;
+   FicheroIni:=TIniFile.Create(pathini);
+   Result:=FicheroIni.ReadInteger(Seccion,variable,Valordefault);
+end;
+
+Function TGlobales.getVarStr(variable,Valordefault:String):String;
+begin
+   FicheroIni.Free;
+   FicheroIni:=TIniFile.Create(pathini);
+   Result:=FicheroIni.ReadString(Seccion,variable,Valordefault);
+end;
+
+Procedure TGlobales.setVarstr(variable,Valor:String);
+begin
+  If not trim(Valor).IsEmpty then
+  FicheroIni.WriteString(Seccion,variable,Valor);
+end;
+Procedure TGlobales.setBoolean(variable:String;Valor:Boolean);
+begin
+  If not Valor then Valor:=False;
+  FicheroIni.WriteBool(Seccion,Variable,Valor);
+end;
+Function TGlobales.getBoolean(variable:String;Valordefault:Boolean):Boolean;
+begin
+   FicheroIni.Free;
+   FicheroIni:=TIniFile.Create(pathini);
+   Result:=FicheroIni.ReadBool(Seccion,variable,Valordefault);
+end;
+procedure TGlobales.delAPP(App:String);
+begin
+   FicheroIni.Free;
+   FicheroIni:=TIniFile.Create(pathini);
+   Seccion:='APPS';
+   FicheroIni.DeleteKey(Seccion,App);
+end;
+
+    {SETTER - GETTER}
+Procedure TGlobales.setMostrarOK(Valor:Boolean);
+begin
+   Seccion:='MEMO_CONSOLE';
+   setBoolean('MostrarOK',Valor);
+end;
+Procedure TGlobales.setConfirmDel(Valor:Boolean);
+begin
+   Seccion:='MEMO_CONSOLE';
+   setBoolean('ConfirmDEL',Valor);
+end;
+Procedure TGlobales.setClrMemo(Valor:Boolean);
+begin
+   Seccion:='MEMO_CONSOLE';
+   setBoolean('ClrMemo',Valor);
+end;
+
+
+Procedure TGlobales.setMostrarERR(Valor:Boolean);
+begin
+   Seccion:='MEMO_CONSOLE';
+   setBoolean('MostrarERR',Valor);
+end;
+
+Procedure TGlobales.setMostrarMSJ(Valor:Boolean);
+begin
+    Seccion:='MEMO_CONSOLE';
+   setBoolean('MostrarMSJ',Valor);
+end;
+
+Procedure TGlobales.setFdeFilePath(Valor:String);
+begin
+  Seccion:='CONFIG';
+   setVarstr('FdeFile',Valor);
+end;
+
+Procedure TGlobales.setWebappsDir(Valor:String);
+begin
+   Seccion:='CONFIG';
+   setVarstr('WebappsDir',Valor);
+end;
+Procedure TGlobales.setJavaHome(Valor:String);
+begin
+   Seccion:='OPCIONES';
+   If Trim(Valor).IsEmpty Then
+   begin
+      FicheroIni.Free;
+      FicheroIni:=TIniFile.Create(pathini);
+      FicheroIni.DeleteKey(Seccion,'JAVA_HOME');
+   end
+   else setVarstr('JAVA_HOME',Valor);
+
+end;
+
+Procedure TGlobales.setApp(App:String='APP1';Valor:String='');
+begin
+   Seccion:='APPS';
+   If Trim(Valor).IsEmpty Then delAPP(APP) else setVarstr(App,Valor);
+end;
+Procedure TGlobales.setImgApp(App:String='APP1';Valor:String='');
+begin
+  Seccion:='APPS';
+  If Trim(Valor).IsEmpty Then delAPP(APP+'IMG') else setVarstr((App+'IMG'),Valor);
+end;
+
+Function TGlobales.getWebappsDir():String;
+begin
+   Seccion:='CONFIG';
+   Result:=getVarStr('WebappsDir',ExtractFilePath(Application.ExeName));
+end;
+Function TGlobales.getJavaHome():String;
+begin
+   Seccion:='OPCIONES';
+   Result:=getVarStr('JAVA_HOME','');
+end;
+
+Function TGlobales.getFdeFilepath():String;
+begin
+   Seccion:='CONFIG';
+   Result:=getVarStr('FdeFile',' ');
+end;
+
+Function TGlobales.getFdeDir():String;
+begin
+   Seccion:='CONFIG';
+   Result:=ExtractFilePath(Application.ExeName)+'FDE Files\';
+   If not DirectoryExists(Result) then
+      CreateDir(Result);
+end;
+
+Function TGlobales.getFdeIni():String;
+begin
+   Seccion:='CONFIG';
+   Result:=pathini;
+end;
+
+Function TGlobales.getAppPath():String;
+begin
+   Seccion:='CONFIG';
+   Result:=ExtractFilePath(Application.ExeName)
+end;
+
+Function TGlobales.getApp(App:String='APP1'):String;
+begin
+   Seccion:='APPS';
+   Result:=getVarStr(App,'');
+end;
+Function TGlobales.getImgApp(App:String='APP1'):String;
+begin
+   Seccion:='APPS';
+   Result:=getVarStr((App+'IMG'),'');
+end;
+Function TGlobales.getAppUso(App:String='APP1'):Integer;
+begin
+   Seccion:='APPS';
+   Result:=getInteger((App+'USO'),0);
+end;
+
+Function TGlobales.getMostrarOK():Boolean;
+begin
+   Seccion:='MEMO_CONSOLE';
+   Result:=getBoolean('MostrarOK',TRUE);
+end;
+Function TGlobales.getConfirmDel():Boolean;
+begin
+   Seccion:='MEMO_CONSOLE';
+   Result:=getBoolean('ConfirmDEL',TRUE);
+end;
+Function TGlobales.getClrMemo():Boolean;
+begin
+   Seccion:='MEMO_CONSOLE';
+   Result:=getBoolean('ClrMemo',FALSE);
+end;
+Function TGlobales.getMostrarERR():Boolean;
+begin
+   Seccion:='MEMO_CONSOLE';
+   Result:=getBoolean('MostrarERR',TRUE);
+end;
+Function TGlobales.getMostrarMSJ():Boolean;
+begin
+   Seccion:='MEMO_CONSOLE';
+   Result:=getBoolean('MostrarMSJ',TRUE);
+end;
+Function TGlobales.getSoloDir():Boolean;
+begin
+   Seccion:='CONFIG';
+   Result:=getBoolean('SoloDir',TRUE);
+end;
+
+Procedure TGlobales.setSoloDir(Valor:Boolean);
+begin
+    Seccion:='CONFIG';
+    setBoolean('SoloDir',Valor);
+end;
+
+
+Function TGlobales.getTrayMinimize():Boolean;
+begin
+   Seccion:='OPCIONES';
+   Result:=getBoolean('MinimizeToTray',FALSE);
+end;
+Function TGlobales.getTrayScriptFDE():Boolean;
+begin
+   Seccion:='OPCIONES';
+   Result:=getBoolean('TrayScriptFDE',FALSE);
+end;
+Function TGlobales.getTrayGenWar():Boolean;
+begin
+   Seccion:='OPCIONES';
+   Result:=getBoolean('TrayGenWar',FALSE);
+end;
+
+Function TGlobales.getTrayRunAPP():Boolean;
+begin
+    Seccion:='OPCIONES';
+    Result:=getBoolean('TrayRunAPP',FALSE);
+end;
+
+Function TGlobales.getBeep():Boolean;
+begin
+   Seccion:='OPCIONES';
+   Result:=getBoolean('Beep',FALSE);
+end;
+Function TGlobales.getOpcSalir():Boolean;
+begin
+   Seccion:='OPCIONES';
+   Result:=getBoolean('RecOpcSalir',FALSE);
+end;
+
+Function TGlobales.getOrderByUso():Boolean;
+begin
+   Seccion:='OPCIONES';
+   Result:=getBoolean('OrderByUso',FALSE);
+end;
+
+Procedure TGlobales.setTrayMinimize(Valor:Boolean);
+begin
+    Seccion:='OPCIONES';
+    setBoolean('MinimizeToTray',Valor);
+end;
+Procedure TGlobales.setTrayRunAPP(Valor:Boolean);
+ begin
+    Seccion:='OPCIONES';
+    setBoolean('TrayRunAPP',Valor);
+end;
+
+Procedure TGlobales.setTrayScriptFDE(Valor:Boolean);
+begin
+    Seccion:='OPCIONES';
+    setBoolean('TrayScriptFDE',Valor);
+end;
+
+Procedure TGlobales.setTrayGenWar(Valor:Boolean);
+begin
+    Seccion:='OPCIONES';
+    setBoolean('TrayGenWar',Valor);
+end;
+
+Procedure TGlobales.setBeep(Valor:Boolean);
+begin
+    Seccion:='OPCIONES';
+    setBoolean('Beep',Valor);
+end;
+
+Procedure TGlobales.setOpcSalir(Valor:Boolean);
+begin
+    Seccion:='OPCIONES';
+    setBoolean('RecOpcSalir',Valor);
+end;
+
+Procedure TGlobales.setOrderByUso(Valor:Boolean);
+Begin
+    Seccion:='OPCIONES';
+    setBoolean('OrderByUso',Valor);
+end;
+
+
+
+
+Procedure TGlobales.setPageIndex(Valor:Integer);
+Begin
+   Seccion:='CONFIG';
+   setInteger('PageIndex',Valor);
+end;
+
+Procedure TGlobales.setAPPuso(APP:String;Valor:Integer);
+Begin
+   Seccion:='APPS';
+   If Valor = 0 Then delAPP(APP+'USO') else setInteger(APP+'USO',Valor);
+end;
+Procedure TGlobales.setAPPNombre(APP:String;Valor:String);
+Begin
+   Seccion:='APPS';
+   If Trim(Valor).IsEmpty Then delAPP(APP+'NOM') else setVarstr(APP+'NOM',Valor);
+end;
+Procedure TGlobales.setAPPPar(APP:String;Valor:String);
+Begin
+   Seccion:='APPS';
+   If Trim(Valor).IsEmpty Then delAPP(APP+'PAR') else setVarstr(APP+'PAR',Valor);
+end;
+
+Function TGlobales.getPageIndex():Integer;
+begin
+   Seccion:='CONFIG';
+   Result:=getInteger('PageIndex',4);
+end;
+Function TGlobales.getAPPNombre(APP:String):String;
+begin
+   Seccion:='APPS';
+   Result:=getVarStr(APP+'NOM','');
+end;
+
+
+Function TGlobales.getAPPPar(APP:String):String;
+begin
+   Seccion:='APPS';
+   Result:=getVarStr(APP+'PAR','');
+end;
+
+end.
+

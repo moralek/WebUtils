@@ -1,0 +1,3 @@
+DelFind_UPD.exe RCDATA "DelFind_UPD.exe"
+SSLEAY32.DLL RCDATA "ssleay32.dll"
+LIBEAY32.DLL RCDATA "libeay32.dll"
