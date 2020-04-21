@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules date="2019-03-22" title="(SIGAS) para Subir a TST version 8.0 http://10.7.13.52:8883/probe/">
+  <webappsRules>
+    <MSGRUN>#Borra Librerias Conectores (DATASOURCE)#</MSGRUN>
+    <DELFIL>WEB-INF\lib\mysql-connector-java*.jar</DELFIL>
+    <DELFIL>WEB-INF\lib\postgresql*.jar</DELFIL>
+    <DELFIL>WEB-INF\lib\sqlitejdbc-v056.jar</DELFIL>
+    <MSGRUN>#Limpia Carpetas PUBLICTEMPSTORAGE y PRIVATETEMPSTORAGE#</MSGRUN>
+    <CREDIR>PrivateTempStorage</CREDIR>
+    <CREDIR>PublicTempStorage</CREDIR>
+    <CLRDIR>PrivateTempStorage</CLRDIR>
+    <CLRDIR>PublicTempStorage</CLRDIR>
+    <MSGRUN>#Borra war(s) de la carpeta#</MSGRUN>
+    <DELFIL>*.war</DELFIL>
+    <MSGRUN>#Borra Bat#</MSGRUN>
+    <DELFIL>WEB-INF\lib\*.bat</DELFIL>
+    <MSGRUN>#QRCODE (aplica a AFX-GA)#</MSGRUN>
+    <CHKFIL>WEB-INF\lib\QRCode.jar</CHKFIL>
+    <MSGRUN>#TEST PDFREPORT#</MSGRUN>
+    <CHKFIL>WEB-INF\PDFREPORT.INI</CHKFIL>
+    <CHKDIR>WEB-INF\FONTS</CHKDIR>
+    <MSGRUN>#Chk Resources#</MSGRUN>
+    <CHKFIL>static\Resources\*.png</CHKFIL>
+    <MSGRUN>#Chk classes#</MSGRUN>
+    <CHKFIL>WEB-INF\classes\*.class</CHKFIL>
+  </webappsRules>
+  <webxmlrules>
+    <rule>
+      <tag>display-name</tag>
+      <value>redirect</value>
+      <consider>Etiqueta y Valor</consider>
+      <found>MAS de [X] veces</found>
+      <X>0</X>
+      <msgtxt>Falta definir Nombre del modulo en web.xml</msgtxt>
+      <msgcolor>Error (Rojo)</msgcolor>
+    </rule>
+  </webxmlrules>
+</rules>
