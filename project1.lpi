@@ -23,9 +23,9 @@
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="1"/>
       <MinorVersionNr Value="4"/>
-      <BuildNr Value="3"/>
+      <BuildNr Value="4"/>
       <Language Value="080A"/>
-      <StringTable OriginalFilename="[WEB UTILS] Del-Find Files" ProductName="WEB UTILS" ProductVersion="1.4.0.3"/>
+      <StringTable OriginalFilename="[WEB UTILS] Del-Find Files" ProductName="WEB UTILS" ProductVersion="1.4.0.4"/>
     </VersionInfo>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>

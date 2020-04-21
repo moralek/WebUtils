@@ -241,6 +241,7 @@ begin
      If ((Trim(Filtertxt).IsEmpty) Or (AnsiPos(Filtertxt,LowerCase(dirtmp))>0)) then
       Begin
         If ((varglo.OcultarDirROOT=TRUE)
+        and (LowerCase(dirtmp)<> 'probe')
         and (LowerCase(dirtmp)<> 'root')
         and (LowerCase(dirtmp)<> 'docs')
         and (LowerCase(dirtmp)<> 'manager')

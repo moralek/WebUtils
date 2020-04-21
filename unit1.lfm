@@ -4300,7 +4300,7 @@ object Form1: TForm1
   OnCreate = FormCreate
   OnWindowStateChange = FormWindowStateChange
   Position = poScreenCenter
-  LCLVersion = '2.0.2.0'
+  LCLVersion = '2.0.8.0'
   object Notebook1: TNotebook
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -4569,7 +4569,6 @@ object Form1: TForm1
               ReadOnly = True
               Title.Caption = 'Ruta Absoluta'
               Width = 0
-              Visible = False
             end          
             item
               MaxSize = 300
@@ -4677,14 +4676,14 @@ object Form1: TForm1
           Height = 641
           Top = 11
           Width = 637
-          ActivePage = TabSheet6
+          ActivePage = TabSheet1
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Left = 2
           BorderSpacing.Top = 10
           BorderSpacing.Right = 10
           BorderSpacing.Bottom = 30
           ParentFont = False
-          TabIndex = 4
+          TabIndex = 0
           TabOrder = 2
           object TabSheet1: TTabSheet
             AnchorSideRight.Side = asrBottom
@@ -4891,6 +4890,7 @@ object Form1: TForm1
               AnchorSideRight.Side = asrBottom
               Left = 482
               Height = 33
+              Hint = 'Aplicar/Generar Pdf de las carpetas marcadas'
               Top = 16
               Width = 137
               Anchors = [akTop, akRight]
@@ -5047,6 +5047,7 @@ object Form1: TForm1
               AnchorSideLeft.Side = asrCenter
               Left = 242
               Height = 40
+              Hint = 'Editar Display-Name de las carpetas marcadas'
               Top = 160
               Width = 145
               Caption = 'Aplicar'
@@ -5461,7 +5462,7 @@ object Form1: TForm1
                 Left = 8
                 Height = 15
                 Top = 9
-                Width = 105
+                Width = 104
                 Anchors = [akLeft, akBottom]
                 Caption = 'JDBC_DATASOURCE'
                 Font.CharSet = ANSI_CHARSET
@@ -5603,6 +5604,7 @@ object Form1: TForm1
               AnchorSideBottom.Side = asrCenter
               Left = 344
               Height = 45
+              Hint = 'Aplicar Datasource a las carpetas marcadas'
               Top = 104
               Width = 232
               Caption = 'APLICAR'
@@ -6109,7 +6111,7 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           Left = 1
           Height = 48
-          Hint = 'Generar war de las carpetas seleccionadas'
+          Hint = 'Generar war de las carpetas marcadas'
           Top = 238
           Width = 39
           BorderSpacing.Top = 15
@@ -6414,7 +6416,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 1
           Height = 48
-          Hint = 'Buscar y copiar war de las carpetas seleccionadas'
+          Hint = 'Buscar y copiar war de las carpetas marcadas'
           Top = 301
           Width = 39
           BorderSpacing.Top = 15
