@@ -59,9 +59,8 @@
         <Filename Value="umyutils.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="UMyUtils"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="10"/>
-        <TopLine Value="238"/>
+        <TopLine Value="327"/>
         <CursorPos X="40" Y="244"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -125,7 +124,9 @@
         <Filename Value="umyrcs.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="UMyRCS"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
+        <TopLine Value="27"/>
         <CursorPos X="10" Y="22"/>
         <UsageCount Value="157"/>
         <Loaded Value="True"/>
