@@ -200,11 +200,6 @@ begin
   If (versionActual.Trim.IsEmpty) Then VersionActual:='0.0.1';
   If (UrlIni.Trim.IsEmpty) Then UrlIni:='https://filedn.com/l4o5bp4oGNf0AfR1x0lJ3xB/DelFind/update.ini';
   //Obtener parametros: URL , executable, updatables
-  showmessage('ParamPath:'+ ParamPath);
-  showmessage('exeactual:'+ exeactual);
-  showmessage('versionActual:'+ versionActual);
-  showmessage('UrlIni:'+ UrlIni);
-
   ok:=Utils.getIniParms(UrlIni,version,URL,executable,updatables);
 
   If not(OK) Then

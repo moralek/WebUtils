@@ -223,7 +223,6 @@ Application.ProcessMessages;
 Label1.Caption := 'Descargando la nueva versión, paciencia...';
 if Download(URL, ZipFile) then
 begin
-    MessageDlg('Se actualizó a la Ultima Version', mtInformation, [mbOk], 0);
     Label1.Caption:='Instalando...';
     //INICIO UNZIP FILES
     if FileExists(ZipFile) then
@@ -242,6 +241,7 @@ begin
       end;
      //FIN UNZIP FILES
     If FileExists(ZipFile) then DeleteFile(ZipFile);
+    MessageDlg('Se actualizó a la Ultima Version', mtInformation, [mbOk], 0);
     If fileExists(ParamPath+executable) then
     begin
          Application.Terminate;
