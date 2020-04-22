@@ -4676,14 +4676,14 @@ object Form1: TForm1
           Height = 641
           Top = 11
           Width = 637
-          ActivePage = TabSheet5
+          ActivePage = TabSheet1
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Left = 2
           BorderSpacing.Top = 10
           BorderSpacing.Right = 10
           BorderSpacing.Bottom = 30
           ParentFont = False
-          TabIndex = 5
+          TabIndex = 0
           TabOrder = 2
           object TabSheet1: TTabSheet
             AnchorSideRight.Side = asrBottom
@@ -5682,7 +5682,6 @@ object Form1: TForm1
                   'Ejemplo SQL'
                   'Ejemplo PJUD'
                 )
-                OnChange = ComboBoxDsCopyFromChange
                 ParentFont = False
                 Style = csDropDownList
                 TabOrder = 0
@@ -6416,7 +6415,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 1
           Height = 48
-          Hint = 'Buscar y copiar war de las carpetas seleccionadas'
+          Hint = 'Buscar y copiar war de las carpetas marcadas'
           Top = 301
           Width = 39
           BorderSpacing.Top = 15

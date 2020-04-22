@@ -384,7 +384,6 @@ type
     procedure CheckBox8Change(Sender: TObject);
     procedure CheckBox9Change(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
-    procedure ComboBoxDsCopyFromChange(Sender: TObject);
     procedure Edit2Change(Sender: TObject);
     procedure EditFolderAppChange(Sender: TObject);
     procedure Edit5Change(Sender: TObject);
@@ -814,7 +813,6 @@ begin
   For I := 0 To Memo2.Lines.Count -1 DO texto := texto+Memo2.Lines[i]+'{CRLF}';
   varGlobales.setPDFReportTxt(PDFREP,texto);
   varGlobales.setPDFReportCopyFonts(PDFREP,CheckBox11.Checked);
-
 end;
 
 procedure TForm1.BitBtn10Click(Sender: TObject);
@@ -1139,7 +1137,6 @@ begin
 Gridds:=TMyGridString.Create;
 //ShowMessage(Gridds.getSelectedValueStringGrid1(StringGrid1,StringGrid1.get));
 Gridds.Free;
-
 end;
 
 procedure TForm1.BtnApp10Click(Sender: TObject);
@@ -1930,17 +1927,13 @@ begin
   varGlobales.PDFReportselection:=(ComboBox1.ItemIndex);
 end;
 
-procedure TForm1.ComboBoxDsCopyFromChange(Sender: TObject);
-begin
-
-end;
-
 procedure TForm1.Edit2Change(Sender: TObject);
 var myxml:TMyXml;
 begin
   try
   MyXml:=TMyXml.create(Edit2.Text);
   Label6.Visible:=MyXml.Validaxml();
+  If Label6.Visible then varGlobales.FdeFilePath:=Edit2.Text;
   finally
   Myxml.Free;
   end;
@@ -2206,7 +2199,6 @@ begin
 end;
 
 procedure TForm1.ItemCopyRutaClick(Sender: TObject);
-var path, filename:String;
 begin
   Utils.ClipboardCopy(Utils.clearDirPath(StringGrid1.Rows[StringGrid1.Row][2]));
 end;
