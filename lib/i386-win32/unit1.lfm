@@ -4676,15 +4676,15 @@ object Form1: TForm1
           Height = 641
           Top = 11
           Width = 637
-          ActivePage = TabSheet4
+          ActivePage = TabSheet1
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Left = 2
           BorderSpacing.Top = 10
           BorderSpacing.Right = 10
           BorderSpacing.Bottom = 30
           ParentFont = False
-          TabIndex = 3
-          TabOrder = 2
+          TabIndex = 0
+          TabOrder = 3
           object TabSheet1: TTabSheet
             AnchorSideRight.Side = asrBottom
             Caption = 'Consola'
@@ -4867,7 +4867,7 @@ object Form1: TForm1
                 'Memo2'
               )
               ScrollBars = ssAutoBoth
-              TabOrder = 2
+              TabOrder = 5
             end
             object CheckBox11: TCheckBox
               Left = 10
@@ -4933,7 +4933,7 @@ object Form1: TForm1
                 5B84CB8B4B2C0000000000000000000000000000000000000000
               }
               OnClick = BitBtn4Click
-              TabOrder = 5
+              TabOrder = 2
             end
             object LblPdfReportIni: TLabel
               AnchorSideTop.Control = BitBtn4
@@ -4989,7 +4989,7 @@ object Form1: TForm1
               ItemHeight = 0
               OnClick = ListBox1Click
               Sorted = True
-              TabOrder = 2
+              TabOrder = 4
             end
             object ListBox2: TListBox
               AnchorSideLeft.Control = TabSheet3
@@ -5001,7 +5001,7 @@ object Form1: TForm1
               ItemHeight = 0
               OnClick = ListBox2Click
               Sorted = True
-              TabOrder = 3
+              TabOrder = 5
             end
             object CalendarLite1: TCalendarLite
               AnchorSideLeft.Side = asrBottom
@@ -5016,7 +5016,7 @@ object Form1: TForm1
               Constraints.MinHeight = 188
               Constraints.MinWidth = 188
               ParentColor = False
-              TabOrder = 4
+              TabOrder = 6
               TabStop = True
               Colors.TodayFrameColor = clGray
               Date = 43560
@@ -5040,7 +5040,7 @@ object Form1: TForm1
               BorderSpacing.Right = 10
               OnChange = EditFechaVersionChange
               OnKeyPress = EditFechaVersionKeyPress
-              TabOrder = 5
+              TabOrder = 2
             end
             object BitBtn5: TBitBtn
               AnchorSideLeft.Control = TabSheet3
@@ -5088,7 +5088,7 @@ object Form1: TForm1
                 5B84CB8B4B2C0000000000000000000000000000000000000000
               }
               OnClick = BitBtn5Click
-              TabOrder = 6
+              TabOrder = 3
             end
             object Label5: TLabel
               AnchorSideTop.Control = EditFechaVersion
@@ -5160,7 +5160,7 @@ object Form1: TForm1
                 0000000000000000000000000000000000000000000000000000
               }
               OnClick = BitBtn6Click
-              TabOrder = 7
+              TabOrder = 9
             end
             object BitBtn12: TBitBtn
               AnchorSideLeft.Control = ListBox1
@@ -5212,7 +5212,7 @@ object Form1: TForm1
                 5B84CB8B4B2C0000000000000000000000000000000000000000
               }
               OnClick = BitBtn12Click
-              TabOrder = 8
+              TabOrder = 7
             end
             object BitBtn13: TBitBtn
               AnchorSideLeft.Control = ListBox2
@@ -5264,7 +5264,7 @@ object Form1: TForm1
                 5B84CB8B4B2C0000000000000000000000000000000000000000
               }
               OnClick = BitBtn13Click
-              TabOrder = 9
+              TabOrder = 8
             end
             object Label9: TLabel
               AnchorSideLeft.Control = RichMemo3
@@ -5439,7 +5439,7 @@ object Form1: TForm1
               Font.Pitch = fpVariable
               Font.Quality = fqDraft
               ParentFont = False
-              TabOrder = 0
+              TabOrder = 2
               object EditEJJdbcDatasource: TEdit
                 Left = 8
                 Height = 23
@@ -5527,17 +5527,17 @@ object Form1: TForm1
             end
             object GroupBox10: TGroupBox
               Left = 8
-              Height = 192
+              Height = 184
               Top = 24
               Width = 544
               Caption = 'Aplicar Datasource'
-              ClientHeight = 167
+              ClientHeight = 159
               ClientWidth = 540
-              TabOrder = 1
+              TabOrder = 0
               object EditJdbcDatasource: TEdit
                 Left = 8
                 Height = 28
-                Top = 32
+                Top = 24
                 Width = 320
                 OnChange = EditJdbcDatasourceChange
                 TabOrder = 0
@@ -5549,7 +5549,7 @@ object Form1: TForm1
                 AnchorSideBottom.Control = EditJdbcDatasource
                 Left = 8
                 Height = 20
-                Top = 12
+                Top = 4
                 Width = 132
                 Anchors = [akLeft, akBottom]
                 Caption = 'JDBC_DATASOURCE'
@@ -5560,7 +5560,7 @@ object Form1: TForm1
                 AnchorSideBottom.Control = EditResRefName
                 Left = 8
                 Height = 20
-                Top = 76
+                Top = 60
                 Width = 103
                 Anchors = [akLeft, akBottom]
                 Caption = 'RES_REF_NAME'
@@ -5569,7 +5569,7 @@ object Form1: TForm1
               object EditResRefName: TEdit
                 Left = 8
                 Height = 28
-                Top = 96
+                Top = 80
                 Width = 320
                 OnChange = EditResRefNameChange
                 TabOrder = 1
@@ -5578,7 +5578,7 @@ object Form1: TForm1
                 Left = 8
                 Height = 28
                 Hint = 'Grabar como plantilla'
-                Top = 136
+                Top = 120
                 Width = 24
                 BorderSpacing.CellAlignHorizontal = ccaCenter
                 BorderSpacing.CellAlignVertical = ccaCenter
@@ -5613,7 +5613,8 @@ object Form1: TForm1
                 }
                 Layout = blGlyphTop
                 OnClick = BtnsaveDSClick
-                TabOrder = 2
+                ParentBidiMode = False
+                TabOrder = 3
               end
               object BitBtn27: TBitBtn
                 AnchorSideRight.Control = GroupBox10
@@ -5662,7 +5663,7 @@ object Form1: TForm1
                   5B84CB8B4B2C0000000000000000000000000000000000000000
                 }
                 OnClick = BitBtn27Click
-                TabOrder = 3
+                TabOrder = 2
               end
             end
             object GroupBox11: TGroupBox
@@ -5680,12 +5681,20 @@ object Form1: TForm1
               Font.Pitch = fpVariable
               Font.Quality = fqDraft
               ParentFont = False
-              TabOrder = 2
+              TabOrder = 1
               object ComboBoxDsCopyFrom: TComboBox
-                Left = 8
+                AnchorSideLeft.Control = BitBtn28
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Control = BitBtn28
+                AnchorSideRight.Control = BitBtn28
+                AnchorSideBottom.Control = BitBtn28
+                AnchorSideBottom.Side = asrBottom
+                Left = 34
                 Height = 28
                 Top = 0
-                Width = 320
+                Width = 344
+                Anchors = [akTop, akLeft, akBottom]
+                BorderSpacing.Left = 2
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = clBlack
                 Font.Height = -15
@@ -5705,11 +5714,20 @@ object Form1: TForm1
                 TabOrder = 0
               end
               object BitBtn15: TBitBtn
-                Left = 336
+                AnchorSideLeft.Control = ComboBoxDsCopyFrom
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Control = ComboBoxDsCopyFrom
+                AnchorSideRight.Control = ComboBoxDsCopyFrom
+                AnchorSideRight.Side = asrBottom
+                AnchorSideBottom.Control = BitBtn28
+                AnchorSideBottom.Side = asrBottom
+                Left = 380
                 Height = 28
-                Hint = 'seleccionar plantilla'
+                Hint = 'Seleccionar plantilla'
                 Top = 0
                 Width = 24
+                Anchors = [akTop, akLeft, akBottom]
+                BorderSpacing.Left = 2
                 Glyph.Data = {
                   36040000424D3604000000000000360000002800000010000000100000000100
                   2000000000000004000064000000640000000000000000000000000000000000
@@ -5751,7 +5769,7 @@ object Form1: TForm1
                 TabOrder = 1
               end
               object BitBtn28: TBitBtn
-                Left = 368
+                Left = 8
                 Height = 28
                 Hint = 'Eliminar plantilla actual'
                 Top = 0
@@ -6636,7 +6654,7 @@ object Form1: TForm1
           ParentShowHint = False
           ShowHint = True
           Spacing = 0
-          TabOrder = 3
+          TabOrder = 2
         end
       end
       object Splitter1: TSplitter
