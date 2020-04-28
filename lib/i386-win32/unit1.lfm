@@ -4676,14 +4676,14 @@ object Form1: TForm1
           Height = 641
           Top = 11
           Width = 637
-          ActivePage = PRUEBAS
+          ActivePage = TabSheet4
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Left = 2
           BorderSpacing.Top = 10
           BorderSpacing.Right = 10
           BorderSpacing.Bottom = 30
           ParentFont = False
-          TabIndex = 5
+          TabIndex = 3
           TabOrder = 2
           object TabSheet1: TTabSheet
             AnchorSideRight.Side = asrBottom
@@ -5539,6 +5539,7 @@ object Form1: TForm1
                 Height = 28
                 Top = 40
                 Width = 276
+                OnChange = EditJdbcDatasourceChange
                 TabOrder = 0
               end
               object Label19: TLabel

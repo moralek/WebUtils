@@ -58,7 +58,7 @@ Public
   Function versionStr(ModuloPar, VersionPar, FechaVersionPar:String):String;
   Procedure addItemListBox(var ListBox1:TListBox;NuevoItem:String);
   Procedure delItemListBox(var ListBox1:TListBox;delItem:String);
-  Procedure applyDataSource(var EditJdbcDataSource,EditResRefName:TEdit;ItemIndex:Integer;DefaultJdbcDataSource,DefaultResRefName:String);
+  Procedure applyDataSource(var EditJdbcDataSource,EditResRefName:TEdit;ComboBoxDsCopyFrom:TComboBox;DefaultJdbcDataSource,DefaultResRefName:String);
   Procedure getDataSource(pathwebxml,pathclientcfg,GxVersion,Modulo:String;var EDITJDBC, EDITresref:TEdit);
   Procedure updDataSource(StringGrid1:TStringGrid);
   Function RunAsAdmin(const Path, Params: string): Boolean;

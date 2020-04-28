@@ -397,6 +397,7 @@ type
     procedure EditDSUseJdbcDataSourceKeyPress(Sender: TObject; var Key: char);
     procedure EditFechaVersionChange(Sender: TObject);
     procedure EditFechaVersionKeyPress(Sender: TObject; var Key: char);
+    procedure EditJdbcDatasourceChange(Sender: TObject);
     procedure EditModuloChange(Sender: TObject);
     procedure EditModuloKeyPress(Sender: TObject; var Key: char);
     procedure EditResRefNameChange(Sender: TObject);
@@ -2092,6 +2093,11 @@ begin
   if key in[',','"','<','>','/'] then key:=#0;
 end;
 
+procedure TForm1.EditJdbcDatasourceChange(Sender: TObject);
+begin
+  Utils.allowOnlyTxt(EditJdbcDatasource);
+end;
+
 procedure TForm1.EditModuloChange(Sender: TObject);
 begin
      Label16.Caption:=Utils.versionStr(EditModulo.Text,EditVersion.Text,EditFechaVersion.Text);
@@ -2104,7 +2110,7 @@ end;
 
 procedure TForm1.EditResRefNameChange(Sender: TObject);
 begin
-
+  Utils.allowOnlyTxt(EditResRefName);
 end;
 
 procedure TForm1.EditScriptBeforeShow(ASender: TObject; ANewPage: TPage;

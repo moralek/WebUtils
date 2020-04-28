@@ -851,7 +851,7 @@ begin
   Editx.Text:=ReplaceRegExpr(RegEx,Editx.Text,'',TRUE);
   Editx.SelStart:=Length(Editx.Text);
   Editx.SelLength := 1;
-  Editx.SetFocus;
+  //Editx.SetFocus;
 end;
 
 end.

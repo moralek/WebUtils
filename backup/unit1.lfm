@@ -4676,14 +4676,14 @@ object Form1: TForm1
           Height = 641
           Top = 11
           Width = 637
-          ActivePage = TabSheet4
+          ActivePage = PRUEBAS
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Left = 2
           BorderSpacing.Top = 10
           BorderSpacing.Right = 10
           BorderSpacing.Bottom = 30
           ParentFont = False
-          TabIndex = 3
+          TabIndex = 5
           TabOrder = 2
           object TabSheet1: TTabSheet
             AnchorSideRight.Side = asrBottom
@@ -6049,6 +6049,7 @@ object Form1: TForm1
             Caption = 'PRUEBAS'
             ClientHeight = 608
             ClientWidth = 629
+            TabVisible = False
             object BitBtnPRUEBA: TBitBtn
               Left = 248
               Height = 40
