@@ -674,17 +674,6 @@ begin
         DSSL.Free;
         Exit;
      end;
-
-
-
-
-
-
-
-
-
-
-
    case ComboBoxDsCopyFrom.ItemIndex of
    0: Begin
        EditJdbcDataSource.Text:=VarGlo.DSJdbcDataSource;
@@ -874,7 +863,7 @@ Begin
   end;
 end;
 
-procedure TMyUtils.allowOnlyTxt(var Editx:TEdit;RegEx:String='[^\w//.]');
+procedure TMyUtils.allowOnlyTxt(var Editx:TEdit;RegEx:String='[^\w//.:]');
 begin
   Editx.Text:=ReplaceRegExpr(RegEx,Editx.Text,'',TRUE);
   Editx.SelStart:=Length(Editx.Text);

@@ -1931,8 +1931,7 @@ begin
 
     ComboBoxDsCopyFrom.Clear;
     ComboBoxDsCopyFrom.Items.Add('Último Aplicado... ');
-    //ComboBoxDsCopyFrom.Items[1]:='Actual:['+StringGrid1.Rows[aRow][3]+']';
-    ComboBoxDsCopyFrom.Items[1]:='Actual';
+    ComboBoxDsCopyFrom.Items.Add('Actual:['+StringGrid1.Rows[StringGrid1.Row][3]+']');
     ComboBoxDsCopyFrom.Items.Add('Ejemplo Oracle');
     ComboBoxDsCopyFrom.Items.Add('Ejemplo SQL');
     ComboBoxDsCopyFrom.Items.Add('Ejemplo PJUD');
