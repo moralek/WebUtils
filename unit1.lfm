@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 396
+  Left = 448
   Height = 708
-  Top = 173
+  Top = 167
   Width = 1300
   Anchors = []
   Caption = 'WEB UTILS: [PRINCIPAL] '
@@ -5425,11 +5425,11 @@ object Form1: TForm1
             ClientWidth = 629
             OnShow = TabSheet4Show
             object GroupBox3: TGroupBox
-              Left = 32
+              Left = 8
               Height = 128
-              Top = 416
+              Top = 296
               Width = 544
-              Caption = '## Actual ##'
+              Caption = 'Actual (Seleccionado)'
               ClientHeight = 108
               ClientWidth = 540
               Font.CharSet = ANSI_CHARSET
@@ -5444,7 +5444,7 @@ object Form1: TForm1
                 Left = 8
                 Height = 23
                 Top = 24
-                Width = 276
+                Width = 320
                 Enabled = False
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = clBlack
@@ -5475,7 +5475,7 @@ object Form1: TForm1
                 ParentFont = False
               end
               object Label18: TLabel
-                Left = 290
+                Left = 350
                 Height = 20
                 Top = 24
                 Width = 4
@@ -5512,7 +5512,7 @@ object Form1: TForm1
                 Left = 8
                 Height = 23
                 Top = 72
-                Width = 276
+                Width = 320
                 Enabled = False
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = clBlack
@@ -5526,19 +5526,19 @@ object Form1: TForm1
               end
             end
             object GroupBox10: TGroupBox
-              Left = 32
-              Height = 344
-              Top = 48
-              Width = 299
+              Left = 8
+              Height = 192
+              Top = 24
+              Width = 544
               Caption = 'Aplicar Datasource'
-              ClientHeight = 319
-              ClientWidth = 295
+              ClientHeight = 167
+              ClientWidth = 540
               TabOrder = 1
               object EditJdbcDatasource: TEdit
                 Left = 8
                 Height = 28
-                Top = 40
-                Width = 276
+                Top = 32
+                Width = 320
                 OnChange = EditJdbcDatasourceChange
                 TabOrder = 0
               end
@@ -5549,7 +5549,7 @@ object Form1: TForm1
                 AnchorSideBottom.Control = EditJdbcDatasource
                 Left = 8
                 Height = 20
-                Top = 20
+                Top = 12
                 Width = 132
                 Anchors = [akLeft, akBottom]
                 Caption = 'JDBC_DATASOURCE'
@@ -5560,7 +5560,7 @@ object Form1: TForm1
                 AnchorSideBottom.Control = EditResRefName
                 Left = 8
                 Height = 20
-                Top = 84
+                Top = 76
                 Width = 103
                 Anchors = [akLeft, akBottom]
                 Caption = 'RES_REF_NAME'
@@ -5569,93 +5569,110 @@ object Form1: TForm1
               object EditResRefName: TEdit
                 Left = 8
                 Height = 28
-                Top = 104
-                Width = 276
+                Top = 96
+                Width = 320
                 OnChange = EditResRefNameChange
                 TabOrder = 1
               end
-              object Memo3: TMemo
+              object BtnsaveDS: TBitBtn
                 Left = 8
-                Height = 136
-                Top = 168
-                Width = 276
-                Font.CharSet = ANSI_CHARSET
-                Font.Color = clGray
-                Font.Height = -13
-                Font.Name = 'Segoe UI Semilight'
-                Font.Pitch = fpVariable
-                Font.Quality = fqDraft
-                Lines.Strings = (
-                  'client.cfg:'
-                  'USE_JDBC_DATASOURCE=1'
-                  ''
-                  'web.xml:'
-                  '<description>DB Connection</description>'
-                  '<res-type>javax.sql.DataSource</res-type>'
-                  '<res-auth>Container</res-auth>'
-                )
-                ParentFont = False
-                ReadOnly = True
+                Height = 28
+                Hint = 'Grabar como plantilla'
+                Top = 136
+                Width = 24
+                BorderSpacing.CellAlignHorizontal = ccaCenter
+                BorderSpacing.CellAlignVertical = ccaCenter
+                Color = clNone
+                Glyph.Data = {
+                  36030000424D3603000000000000360000002800000010000000100000000100
+                  1800000000000003000064000000640000000000000000000000D6AA8DCC936E
+                  BB7241B56734B56734B16533B16533AF6432AD6232AD6232A96031A76031A65F
+                  30A65F30A9673BBB845FC27C4EEAC4ACEAC4ACFEFAF8FEFAF8FEFAF8FEFAF8FE
+                  FAF8FEFAF8FEFAF8FEFAF8FEFAF8FEFAF8C8997BC79778AC6A3EB96935EDCAB2
+                  E1A179FEFAF861BF8761BF8761BF8761BF8761BF8761BF8761BF8761BF87FDF9
+                  F6C98C64C8997BA65F30BB6B38EECDB6E1A179FEFAF8BEDCC1BEDCC1BEDCC1BE
+                  DCC1BEDCC1BEDCC1BEDCC1BEDCC1FDF9F6CD8F67CC9D80A76031BB6B38EECDB6
+                  E1A179FEFAF861BF8761BF8761BF8761BF8761BF8761BF8761BF8761BF87FDF9
+                  F6CE9169CEA283A96031B96935EED0B9E1A179FEFAF8FEFAF8FEFAF8FEFAF8FE
+                  FAF8FEFAF8FEFAF8FEFAF8FEFAF8FEFAF8D3956CD2A689A96031B96935F0D2BD
+                  E1A179E1A179E1A179E1A179E1A179E0A077DE9E75DE9E75DC9C73D99A71D698
+                  6FD6986FD6AA8DAD6232B96935F2D5C1E1A179E1A179E1A179E1A179E1A179E1
+                  A179E0A077DE9E75DE9E75DC9C73D99A71D99A71DAAF94AD6232B96935F2D8C4
+                  E1A179E1A179E1A179E1A179E1A179E1A179E1A179DE9E75DE9E75DC9C73D99A
+                  71DC9C73DDB499AF6432B96935F4D9C7E6A67CC88B63C98C64C98C64CB916BCB
+                  916CCA8F68C88B64C88B63C88B63C88B63DC9C73E1B99EB16533B96935F4DCC9
+                  E6A67CF9ECE1F9ECE1F9ECE1FCF4EEFDF9F6FDF8F3FAEDE5F8E7DBF6E5D9F6E5
+                  D9DE9E75E4BDA3B16533BC6C38F5DDCCE8A77DFAF0E9FAF0E9C98C64FAF0E9FD
+                  F8F3FEFAF8FCF4EEF8E8DEF8E7DBF6E5D9E0A077E7C1A8B56734BE7241F6DFD0
+                  E8A77DFCF6F1FCF6F1C88B63FAF0E9FBF4EEFDF9F6FDF9F6FAF0E9F8E8DEF8E7
+                  DBE1A179EFD5C2B66834C58053F6DFD0E9A97FFDF9F6FDF9F6C88B63FBF4EEFA
+                  F0E9FCF6F1FEFAF8FCF6F1F9ECE1F8E7DBEED0B9ECD0BCBB7241D5A484F6E0D1
+                  F6E0D1FEFAF8FEFAF8FDF9F6FCF6F1FAF0E9FBF2EDFDF9F6FDF9F6FBF2EDF8E8
+                  DEECD0BCCE9169000000000000D8AA8CC8875DBE7241BC6C38B96935B96935B9
+                  6935B96935BB6B38BC6C38BA6C39BE7241C88B64000000000000
+                }
+                Layout = blGlyphTop
+                OnClick = BtnsaveDSClick
                 TabOrder = 2
               end
-            end
-            object BitBtn27: TBitBtn
-              AnchorSideRight.Control = GroupBox10
-              AnchorSideRight.Side = asrCenter
-              AnchorSideBottom.Side = asrCenter
-              Left = 344
-              Height = 45
-              Hint = 'Aplicar Datasource a las carpetas marcadas'
-              Top = 56
-              Width = 232
-              Caption = 'APLICAR'
-              Glyph.Data = {
-                36040000424D3604000000000000360000002800000010000000100000000100
-                2000000000000004000064000000640000000000000000000000000000000000
-                0000000000000000000000000000CB8B4B2CD5975A85D79C5D9FD79C5D9FD599
-                5B84CB8B4B2C0000000000000000000000000000000000000000000000000000
-                000000000000D191512CD8A063B9EDB881F2FBCA96FFFDCC98FFFDCC98FFFBCA
-                96FFEDB880F1D89F62B8CD8F5129000000000000000000000000000000000000
-                0000D5985A4FE7B176DCFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC
-                98FFFDCC98FFFDCC98FFE7B077DBD498594D000000000000000000000000D191
-                512CE7B077DCFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC
-                98FFFDCC98FFFDCC98FFFDCC98FFE5B077DBCC9353280000000000000000DA9F
-                64B5FDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC
-                98FFFDCC98FFFDCC98FFFDCC98FFFDCC97FFDA9F62B400000000CD8F5129EDB7
-                80F2FDCC98FFFDCC98FFFDCC98FFFDCD9AFFFEECD9FFFEDBB6FFFDCC98FFFDCC
-                98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFECB77FF1C98D5126D5985D86FCCA
-                96FFFDCC98FFFDCC98FFFDCD9AFFFEEEDCFFFEE7CEFFFFF4E9FFFEDBB6FFFDCC
-                98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFBCA96FFD69A5B83D99F629CFDCC
-                98FFFDCC98FFFDCC98FFFEEAD5FFFEE4C9FFFDCC98FFFDD0A0FFFFF4E9FFFEDB
-                B7FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFDBA0639BD89F639DFDCC
-                98FFFDCC98FFFDCC98FFFDD0A1FFFDCC98FFFDCC98FFFDCC98FFFDD0A0FFFFF4
-                E9FFFEDBB7FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFD9A0639BD69A5C88FCCB
-                96FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDD1
-                A2FFFFF5ECFFFEDAB4FFFDCC98FFFDCC98FFFCCA96FFD5995C85CA8E4D2BEDB9
-                82F2FDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC
-                98FFFDD0A0FFFFF3E7FFFDD0A0FFFDCC98FFEEB881F0CC8C4D2800000000DCA1
-                67BCFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC
-                98FFFDCC98FFFDCC99FFFDCC98FFFDCC98FFDCA265B80000000000000000D39B
-                592EE6B078E0FDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC
-                98FFFDCC98FFFDCC98FFFDCC98FFE7B077DED094532B00000000000000000000
-                0000D6995950E6B177E1FDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC
-                98FFFDCC98FFFDCC98FFE7B077DFD5965C4E0000000000000000000000000000
-                000000000000D59A5A30DBA264BDEDB881F2FBCA96FFFDCC98FFFDCC98FFFBCA
-                96FFEDB880F1D9A164BCD2995B2D000000000000000000000000000000000000
-                0000000000000000000000000000CB8B4B2CD5975A85D79C5D9FD79C5D9FD599
-                5B84CB8B4B2C0000000000000000000000000000000000000000
-              }
-              OnClick = BitBtn27Click
-              TabOrder = 2
+              object BitBtn27: TBitBtn
+                AnchorSideRight.Control = GroupBox10
+                AnchorSideRight.Side = asrCenter
+                AnchorSideBottom.Side = asrCenter
+                Left = 376
+                Height = 64
+                Hint = 'Aplicar Datasource a las carpetas marcadas'
+                Top = 40
+                Width = 128
+                Caption = 'APLICAR'
+                Glyph.Data = {
+                  36040000424D3604000000000000360000002800000010000000100000000100
+                  2000000000000004000064000000640000000000000000000000000000000000
+                  0000000000000000000000000000CB8B4B2CD5975A85D79C5D9FD79C5D9FD599
+                  5B84CB8B4B2C0000000000000000000000000000000000000000000000000000
+                  000000000000D191512CD8A063B9EDB881F2FBCA96FFFDCC98FFFDCC98FFFBCA
+                  96FFEDB880F1D89F62B8CD8F5129000000000000000000000000000000000000
+                  0000D5985A4FE7B176DCFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC
+                  98FFFDCC98FFFDCC98FFE7B077DBD498594D000000000000000000000000D191
+                  512CE7B077DCFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC
+                  98FFFDCC98FFFDCC98FFFDCC98FFE5B077DBCC9353280000000000000000DA9F
+                  64B5FDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC
+                  98FFFDCC98FFFDCC98FFFDCC98FFFDCC97FFDA9F62B400000000CD8F5129EDB7
+                  80F2FDCC98FFFDCC98FFFDCC98FFFDCD9AFFFEECD9FFFEDBB6FFFDCC98FFFDCC
+                  98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFECB77FF1C98D5126D5985D86FCCA
+                  96FFFDCC98FFFDCC98FFFDCD9AFFFEEEDCFFFEE7CEFFFFF4E9FFFEDBB6FFFDCC
+                  98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFBCA96FFD69A5B83D99F629CFDCC
+                  98FFFDCC98FFFDCC98FFFEEAD5FFFEE4C9FFFDCC98FFFDD0A0FFFFF4E9FFFEDB
+                  B7FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFDBA0639BD89F639DFDCC
+                  98FFFDCC98FFFDCC98FFFDD0A1FFFDCC98FFFDCC98FFFDCC98FFFDD0A0FFFFF4
+                  E9FFFEDBB7FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFD9A0639BD69A5C88FCCB
+                  96FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDD1
+                  A2FFFFF5ECFFFEDAB4FFFDCC98FFFDCC98FFFCCA96FFD5995C85CA8E4D2BEDB9
+                  82F2FDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC
+                  98FFFDD0A0FFFFF3E7FFFDD0A0FFFDCC98FFEEB881F0CC8C4D2800000000DCA1
+                  67BCFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC
+                  98FFFDCC98FFFDCC99FFFDCC98FFFDCC98FFDCA265B80000000000000000D39B
+                  592EE6B078E0FDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC
+                  98FFFDCC98FFFDCC98FFFDCC98FFE7B077DED094532B00000000000000000000
+                  0000D6995950E6B177E1FDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC98FFFDCC
+                  98FFFDCC98FFFDCC98FFE7B077DFD5965C4E0000000000000000000000000000
+                  000000000000D59A5A30DBA264BDEDB881F2FBCA96FFFDCC98FFFDCC98FFFBCA
+                  96FFEDB880F1D9A164BCD2995B2D000000000000000000000000000000000000
+                  0000000000000000000000000000CB8B4B2CD5975A85D79C5D9FD79C5D9FD599
+                  5B84CB8B4B2C0000000000000000000000000000000000000000
+                }
+                OnClick = BitBtn27Click
+                TabOrder = 3
+              end
             end
             object GroupBox11: TGroupBox
-              Left = 344
+              Left = 8
               Height = 56
               Top = 232
-              Width = 232
-              Caption = 'Copiar desde...'
+              Width = 544
+              Caption = 'Plantillas'
               ClientHeight = 36
-              ClientWidth = 228
+              ClientWidth = 540
               Font.CharSet = ANSI_CHARSET
               Font.Color = clBlack
               Font.Height = -12
@@ -5663,12 +5680,12 @@ object Form1: TForm1
               Font.Pitch = fpVariable
               Font.Quality = fqDraft
               ParentFont = False
-              TabOrder = 3
+              TabOrder = 2
               object ComboBoxDsCopyFrom: TComboBox
                 Left = 8
                 Height = 28
                 Top = 0
-                Width = 184
+                Width = 320
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = clBlack
                 Font.Height = -15
@@ -5688,8 +5705,9 @@ object Form1: TForm1
                 TabOrder = 0
               end
               object BitBtn15: TBitBtn
-                Left = 200
+                Left = 336
                 Height = 28
+                Hint = 'seleccionar plantilla'
                 Top = 0
                 Width = 24
                 Glyph.Data = {
@@ -5732,6 +5750,68 @@ object Form1: TForm1
                 OnClick = BitBtn15Click
                 TabOrder = 1
               end
+              object BitBtn28: TBitBtn
+                Left = 368
+                Height = 28
+                Hint = 'Eliminar plantilla actual'
+                Top = 0
+                Width = 24
+                Glyph.Data = {
+                  36030000424D3603000000000000360000002800000010000000100000000100
+                  1800000000000003000064000000640000000000000000000000000000000000
+                  0000000000000000000000000000000000000000000000000000000000000000
+                  00000000000000000000000000000000000000000000000000000000536AC63D
+                  59BE3852BE4A66C1000000000000000000000000000000000000000000000000
+                  0000000000005364CA3B51CC7479E88D91ED8D91ED7077E4324DC13D59BE0000
+                  000000000000000000000000000000000000004F5FCD5B64E0A0A5F57D85EF5A
+                  62E9585CE77C83EE9D9FF4515DD63350B9000000000000000000000000000000
+                  6370D3606AE3A0AAF6535EEC4C58E94C58E94D58E64B56E64F55E69DA1F4515D
+                  D63D59BE0000000000000000000000004A55DBA0AAF65563F05165EE4C58E94C
+                  58E94C58E94C58E94B56E65159E69DA1F4324DC10000000000000000007277DC
+                  808BEE7D91F75C72F34C58E94C58E94C58E94C58E94C58E94C58E94C58E97A82
+                  F0747AE24A63C20000000000006367DBA0AAF66F85F86781F6FFFFFFFFFFFFFF
+                  FFFFFFFFFFFFFFFFFFFFFF4C58E95B65EA959BF13855BD000000000000686DDC
+                  ADB8F97D92F96F84F0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF4C58E95D69
+                  EE959CF13C54BF0000000000007B7EE2A4AEF59CAAFA768BF0535EEC535EEC53
+                  5EEC535EEC535EEC535EEC6276F2808DF4777EE9546AC8000000000000000000
+                  7C82EACDD4FC8A9CFA7D91F77489EE6B83F66B83F66B83F66B83F66278F3A3AE
+                  F83D4ED00000000000000000000000007877E3A2A6F3D4DBFD8699FA7E90F079
+                  8DF17D92F97D92F9758BF8A7B5F8626DE35767CC000000000000000000000000
+                  0000006F6EE1A9ACF2D8DCFDADB8F990A2FA8A9CFA9BA8FBB9C7FC6F7AE95261
+                  CE0000000000000000000000000000000000000000007777E28D91EDBDC2F8CC
+                  D3F9C3CBF9A9B3F4656FE2626CD5000000000000000000000000000000000000
+                  0000000000000000000000007C7EE1696ADD676ADB7378DE0000000000000000
+                  0000000000000000000000000000000000000000000000000000000000000000
+                  0000000000000000000000000000000000000000000000000000
+                }
+                Layout = blGlyphTop
+                OnClick = BitBtn28Click
+                TabOrder = 2
+              end
+            end
+            object Memo3: TMemo
+              Left = 32
+              Height = 144
+              Top = 432
+              Width = 504
+              Font.CharSet = ANSI_CHARSET
+              Font.Color = clGray
+              Font.Height = -13
+              Font.Name = 'Segoe UI Semilight'
+              Font.Pitch = fpVariable
+              Font.Quality = fqDraft
+              Lines.Strings = (
+                'client.cfg:'
+                'USE_JDBC_DATASOURCE=1'
+                ''
+                'web.xml:'
+                '<description>DB Connection</description>'
+                '<res-type>javax.sql.DataSource</res-type>'
+                '<res-auth>Container</res-auth>'
+              )
+              ParentFont = False
+              ReadOnly = True
+              TabOrder = 3
             end
           end
           object TabSheet6: TTabSheet
@@ -7289,10 +7369,10 @@ object Form1: TForm1
         Left = 16
         Height = 200
         Top = 272
-        Width = 371
+        Width = 728
         Caption = 'Otras Opciones'
         ClientHeight = 175
-        ClientWidth = 367
+        ClientWidth = 724
         ParentFont = False
         TabOrder = 2
         object CheckBox5: TCheckBox
@@ -7329,8 +7409,8 @@ object Form1: TForm1
           Left = 16
           Height = 24
           Top = 8
-          Width = 330
-          Caption = 'Excluir ROOT, manager, host-manager  y docs '
+          Width = 369
+          Caption = 'Excluir ROOT, manager, host-manager, docs y probe'
           OnChange = CheckBox1Change
           ParentFont = False
           TabOrder = 3
@@ -7345,51 +7425,15 @@ object Form1: TForm1
           ParentFont = False
           TabOrder = 4
         end
-      end
-      object GroupBox6: TGroupBox
-        Left = 392
-        Height = 192
-        Top = 280
-        Width = 464
-        Caption = 'Rutas'
-        ClientHeight = 167
-        ClientWidth = 460
-        ParentFont = False
-        TabOrder = 3
-        object Label8: TLabel
-          AnchorSideLeft.Control = Edit5
-          AnchorSideBottom.Control = Edit5
-          Left = 16
-          Height = 20
-          Top = -4
-          Width = 84
-          Anchors = [akLeft, akBottom]
-          Caption = 'JAVA_HOME:'
-          ParentColor = False
+        object CheckBox12: TCheckBox
+          Left = 392
+          Height = 24
+          Top = 8
+          Width = 323
+          Caption = 'Ocultar plantillas de ejemplo en DataSources'
+          OnChange = CheckBox12Change
           ParentFont = False
-        end
-        object Edit5: TEdit
-          Left = 16
-          Height = 28
-          Top = 16
-          Width = 424
-          OnChange = Edit5Change
-          ParentFont = False
-          TabOrder = 0
-        end
-        object BitBtn19: TBitBtn
-          AnchorSideTop.Control = Edit5
-          AnchorSideBottom.Control = Edit5
-          AnchorSideBottom.Side = asrBottom
-          Left = 432
-          Height = 28
-          Top = 16
-          Width = 24
-          Anchors = [akTop, akLeft, akBottom]
-          Caption = '...'
-          OnClick = BitBtn19Click
-          ParentFont = False
-          TabOrder = 1
+          TabOrder = 5
         end
       end
       object GroupBox7: TGroupBox
@@ -7401,7 +7445,7 @@ object Form1: TForm1
         ClientHeight = 175
         ClientWidth = 348
         ParentFont = False
-        TabOrder = 4
+        TabOrder = 3
         object CheckBox2: TCheckBox
           Left = 16
           Height = 24
@@ -7473,10 +7517,10 @@ object Form1: TForm1
         Height = 200
         Top = 56
         Width = 464
-        Caption = 'Web.xml / Config.cfg'
+        Caption = 'Parámetros'
         ClientHeight = 175
         ClientWidth = 460
-        TabOrder = 5
+        TabOrder = 4
         object EditDSDescription: TEdit
           Left = 8
           Height = 28
@@ -7492,6 +7536,7 @@ object Form1: TForm1
           Cursor = crHandPoint
           Left = 8
           Height = 20
+          Hint = 'Clic para habilitar/deshabilitar'
           Top = 4
           Width = 91
           Anchors = [akLeft, akBottom]
@@ -7500,6 +7545,8 @@ object Form1: TForm1
           Font.Style = [fsUnderline]
           ParentColor = False
           ParentFont = False
+          ParentShowHint = False
+          ShowHint = True
           OnClick = Label22Click
         end
         object EditDSRestype: TEdit
@@ -7517,6 +7564,7 @@ object Form1: TForm1
           Cursor = crHandPoint
           Left = 232
           Height = 20
+          Hint = 'Clic para habilitar/deshabilitar'
           Top = 4
           Width = 63
           Anchors = [akLeft, akBottom]
@@ -7525,6 +7573,8 @@ object Form1: TForm1
           Font.Style = [fsUnderline]
           ParentColor = False
           ParentFont = False
+          ParentShowHint = False
+          ShowHint = True
           OnClick = Label23Click
         end
         object EditDSResAuth: TEdit
@@ -7542,6 +7592,7 @@ object Form1: TForm1
           Cursor = crHandPoint
           Left = 8
           Height = 20
+          Hint = 'Clic para habilitar/deshabilitar'
           Top = 60
           Width = 70
           Anchors = [akLeft, akBottom]
@@ -7550,6 +7601,8 @@ object Form1: TForm1
           Font.Style = [fsUnderline]
           ParentColor = False
           ParentFont = False
+          ParentShowHint = False
+          ShowHint = True
           OnClick = Label24Click
         end
         object EditDSUseJdbcDataSource: TEdit
@@ -7569,6 +7622,7 @@ object Form1: TForm1
           Cursor = crHandPoint
           Left = 232
           Height = 20
+          Hint = 'Clic para habilitar/deshabilitar'
           Top = 60
           Width = 164
           Anchors = [akLeft, akBottom]
@@ -7577,7 +7631,52 @@ object Form1: TForm1
           Font.Style = [fsUnderline]
           ParentColor = False
           ParentFont = False
+          ParentShowHint = False
+          ShowHint = True
           OnClick = Label25Click
+        end
+        object Edit5: TEdit
+          Left = 8
+          Height = 28
+          Top = 132
+          Width = 424
+          Enabled = False
+          OnChange = Edit5Change
+          ParentFont = False
+          TabOrder = 4
+        end
+        object BitBtn19: TBitBtn
+          AnchorSideTop.Control = Edit5
+          AnchorSideBottom.Control = Edit5
+          AnchorSideBottom.Side = asrBottom
+          Left = 424
+          Height = 28
+          Top = 132
+          Width = 24
+          Anchors = [akTop, akLeft, akBottom]
+          Caption = '...'
+          OnClick = BitBtn19Click
+          ParentFont = False
+          TabOrder = 5
+        end
+        object Label8: TLabel
+          AnchorSideLeft.Control = Edit5
+          AnchorSideBottom.Control = Edit5
+          Cursor = crHandPoint
+          Left = 8
+          Height = 20
+          Hint = 'Clic para habilitar/deshabilitar'
+          Top = 112
+          Width = 91
+          Anchors = [akLeft, akBottom]
+          Caption = 'JAVA_HOME:'
+          Font.Color = clBlue
+          Font.Style = [fsBold, fsUnderline]
+          ParentColor = False
+          ParentFont = False
+          ParentShowHint = False
+          ShowHint = True
+          OnClick = Label8Click
         end
       end
     end

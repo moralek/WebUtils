@@ -657,6 +657,34 @@ var VarGlo:TGlobales;
     A: TStringArray;
 begin
   Varglo:=TGlobales.Create;
+  If ((Varglo.OcultaEjemplosDS) and (ComboBoxDsCopyFrom.ItemIndex >1)) Or
+     ((Varglo.OcultaEjemplosDS=FALSE) and (ComboBoxDsCopyFrom.ItemIndex >4)) then
+     begin
+        DSSL:=VarGlo.getAllDataSources();
+        for i := 0 to DSSL.Count - 1 do
+        begin
+            A:= DSSL[i].Split('#');
+            X:= length(A);
+            if (X>0) and (A[0]=ComboBoxDsCopyFrom.Text) then
+            begin
+                EditJdbcDataSource.Text:=A[0];
+                If X>1 then EditResRefName.Text:=A[1];
+            end;
+        end;
+        DSSL.Free;
+        Exit;
+     end;
+
+
+
+
+
+
+
+
+
+
+
    case ComboBoxDsCopyFrom.ItemIndex of
    0: Begin
        EditJdbcDataSource.Text:=VarGlo.DSJdbcDataSource;
@@ -851,7 +879,7 @@ begin
   Editx.Text:=ReplaceRegExpr(RegEx,Editx.Text,'',TRUE);
   Editx.SelStart:=Length(Editx.Text);
   Editx.SelLength := 1;
-  Editx.SetFocus;
+  //Editx.SetFocus;
 end;
 
 end.

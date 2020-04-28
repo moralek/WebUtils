@@ -46,6 +46,8 @@ type
     BitBtn25: TBitBtn;
     BitBtn26: TBitBtn;
     BitBtn27: TBitBtn;
+    BitBtn28: TBitBtn;
+    BtnsaveDS: TBitBtn;
     BitBtnPRUEBA: TBitBtn;
     BitBtn4: TBitBtn;
     BitBtn5: TBitBtn;
@@ -78,6 +80,7 @@ type
     CheckBox1: TCheckBox;
     CheckBox10: TCheckBox;
     CheckBox11: TCheckBox;
+    CheckBox12: TCheckBox;
     ComboBox1: TComboBox;
     ComboBoxPRUEBA: TComboBox;
     ComboBoxDsCopyFrom: TComboBox;
@@ -166,7 +169,6 @@ type
     CheckBox8: TCheckBox;
     CheckBox9: TCheckBox;
     Edit5: TEdit;
-    GroupBox6: TGroupBox;
     GroupBox7: TGroupBox;
     GroupBox8: TGroupBox;
     ImgApp10: TImage;
@@ -301,6 +303,7 @@ type
     procedure BitBtn25Click(Sender: TObject);
     procedure BitBtn26Click(Sender: TObject);
     procedure BitBtn27Click(Sender: TObject);
+    procedure BitBtn28Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
@@ -370,10 +373,12 @@ type
     procedure BtnApp9Click(Sender: TObject);
     procedure BtnApp9MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure BtnsaveDSClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure CalendarLite1DateChange(Sender: TObject);
     procedure CheckBox10Change(Sender: TObject);
     procedure CheckBox11Change(Sender: TObject);
+    procedure CheckBox12Change(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);
     procedure CheckBox2Change(Sender: TObject);
     procedure CheckBox3Change(Sender: TObject);
@@ -445,6 +450,7 @@ type
     procedure Label25Click(Sender: TObject);
     procedure Label4Click(Sender: TObject);
     procedure Label5Click(Sender: TObject);
+    procedure Label8Click(Sender: TObject);
     procedure LblPdfReportIniClick(Sender: TObject);
     procedure LblLinkUpdateClick(Sender: TObject);
     procedure linkClientCfgClick(Sender: TObject);
@@ -617,6 +623,7 @@ begin
   CheckBox6.Checked:=varGlobales.OrderByUso;
   CheckBox8.Checked:=varGlobales.OpcSalir;
   CheckBox10.Checked:=varGlobales.DelWars;
+  CheckBox12.Checked:=varGlobales.OcultaEjemplosDS;
   If (Not(FileExists(Utils.clearDirPath(varGlobales.JavaHome)+'bin\jar.exe'))) then
      begin
      Edit5.Text:=Utils.retJavaHome();
@@ -648,20 +655,24 @@ begin
   EditResRefName.Text:=varGlobales.DSResRefName;
   loadMemo3();
   loadComboboxDataSources;
+  ComboBoxDsCopyFrom.ItemIndex:=0;
   //INFO
   ChangeStringGrid1();
 end;
 procedure TForm1.loadComboboxDataSources();
 var DSSL:TStringList;
-  i:Integer;
+  i,x,p:Integer;
 begin
   DSSL:=varGlobales.getAllDataSources();
-  For i:=5 to ComboBoxDsCopyFrom.Items.Count-1 do
+  x:= ComboBoxDsCopyFrom.Items.Count-1;
+  If (varGlobales.OcultaEjemplosDS) then p:=2 else p:=5;
+  For i:=p to x do
    Begin
-     ComboBoxDsCopyFrom.Items.Delete(i);
+     ComboBoxDsCopyFrom.Items.Delete(ComboBoxDsCopyFrom.Items.Count-1);
    end;
   For i := 0 to DSSL.Count - 1 do ComboBoxDsCopyFrom.Items.Add(DSSL[i].Split('#')[0]);
   DSSL.Free;
+  ComboBoxDsCopyFrom.ItemIndex:=ComboBoxDsCopyFrom.Items.Count-1;
 end;
 
 procedure TForm1.loadMemo3();
@@ -829,6 +840,20 @@ begin
   VarGlobales.DSResRefName:=EditResRefName.Text;
   Utils.updDataSource(StringGrid1);
   Utils.getDataSource(Utils.clearFilePath(StringGrid1.Rows[StringGrid1.Row][7]),StringGrid1.Rows[StringGrid1.Row][6],StringGrid1.Rows[StringGrid1.Row][8],StringGrid1.Rows[StringGrid1.Row][4],EditEJJdbcDatasource,EditEJResRefName);
+end;
+
+procedure TForm1.BitBtn28Click(Sender: TObject);
+var x:integer;
+begin
+
+  if (varGlobales.OcultaEjemplosDS) then x:=1 else x:=4;
+  If ComboBoxDsCopyFrom.ItemIndex>x then
+  begin
+    varGlobales.delDataSource(ComboBoxDsCopyFrom.Text);
+    loadComboboxDataSources();
+    ComboBoxDsCopyFrom.ItemIndex:=0
+  end;
+
 end;
 
 procedure TForm1.BitBtn2Click(Sender: TObject);
@@ -1869,6 +1894,12 @@ begin
   end;
 end;
 
+procedure TForm1.BtnsaveDSClick(Sender: TObject);
+begin
+  varGlobales.setDataSource(EditJdbcDatasource.Text,EditResRefName.Text);
+  loadComboboxDataSources();
+end;
+
 procedure TForm1.Button2Click(Sender: TObject);
 begin
   SelectDirectoryDialog1.InitialDir:=Edit1.Text;
@@ -1892,6 +1923,19 @@ end;
 procedure TForm1.CheckBox11Change(Sender: TObject);
 begin
   If ComboBox1.Text='Personalizar...' Then EDRutaFonts.Enabled:=CheckBox11.Checked;
+end;
+
+procedure TForm1.CheckBox12Change(Sender: TObject);
+begin
+    varGlobales.OcultaEjemplosDS:=CheckBox12.Checked;
+
+    ComboBoxDsCopyFrom.Clear;
+    ComboBoxDsCopyFrom.Items.Add('Último Aplicado... ');
+    ComboBoxDsCopyFrom.Items.Add('Actual[]');
+    ComboBoxDsCopyFrom.Items.Add('Ejemplo Oracle');
+    ComboBoxDsCopyFrom.Items.Add('Ejemplo SQL');
+    ComboBoxDsCopyFrom.Items.Add('Ejemplo PJUD');
+    loadComboboxDataSources();
 end;
 
 procedure TForm1.CheckBox1Change(Sender: TObject);
@@ -2345,6 +2389,12 @@ begin
   If StringGrid1.RowCount<2 Then exit;
   dir:=Utils.clearDirPath(StringGrid1.Rows[StringGrid1.Row][2])+'WEB-INF\web.xml';
   If FileExists(dir) then ShellExecute(0,nil, PChar(dir),PChar(dir),nil,1) else showMessage('No se Encuentra web.xml');
+end;
+
+procedure TForm1.Label8Click(Sender: TObject);
+begin
+  Edit5.Enabled:=Not Edit5.Enabled;
+  BitBtn19.Enabled:=Edit5.Enabled;
 end;
 
 procedure TForm1.LblPdfReportIniClick(Sender: TObject);

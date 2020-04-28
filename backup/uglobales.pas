@@ -83,6 +83,9 @@ private
     Procedure setCompWebXml(Valor:Boolean);
     Function getCompWebXml():Boolean;
 
+    Procedure setHideExDS(Valor:Boolean);
+    Function getHideExDS():Boolean;
+
     Procedure setPageIndex(Valor:Integer);
     Function getPageIndex():Integer;
 
@@ -472,6 +475,11 @@ Begin
     Result:=getBoolean('chkWebXml',FALSE);
 end;
 
+Function TGlobales.getHideExDs():Boolean;
+ Begin
+    Seccion:='CONFIG';
+    Result:=getBoolean('HideExDs',FALSE);
+end;
 Procedure TGlobales.setTrayMinimize(Valor:Boolean);
 begin
     Seccion:='OPCIONES';
@@ -517,6 +525,13 @@ Procedure TGlobales.setcompWebXml(Valor:Boolean);
 Begin
     Seccion:='CONFIG';
     setBoolean('chkWebXml',Valor);
+end;
+
+
+Procedure TGlobales.setHideExDs(Valor:Boolean);
+Begin
+    Seccion:='CONFIG';
+    setBoolean('HideExDs',Valor);
 end;
 
 Procedure TGlobales.setPageIndex(Valor:Integer);
@@ -734,9 +749,14 @@ begin
 end;
 
 Procedure TGlobales.setDataSource(DataSource,RefName:String);
+var DSSL:TStringList;
+  i,x:Integer;
 begin
    Seccion:='DATASOURCE';
-
+   delDataSource(DataSource);
+   DSSL:=getAllDataSources();
+   DSSL.Add(Trim(DataSource)+'#'+Trim(RefName));
+   setAllDataSources(DSSL);
 end;
 
 Procedure TGlobales.delDataSource(DataSource:String);
@@ -744,14 +764,15 @@ var DSSL:TStringList;
   i,x: Integer;
 begin
    Seccion:='DATASOURCE';
-   x:=0;
+   x:=-1;
    DSSL:=getAllDataSources();
   for i := 0 to DSSL.Count - 1 do
   begin
-    If (DSSL[i]= DataSource) Then x:=i;
+    If (DSSL[i].Split('#')[0]= DataSource) Then x:=i;
   end;
-  If x>0 then DSSL.Delete(x);
-  setAllDataSources(DSSL);
+  If x>-1 then DSSL.Delete(x);
+
+  If DSSL.Count=0 then FicheroIni.DeleteKey(Seccion,'DATASOURCELIST') else setAllDataSources(DSSL);
 end;
 Function TGlobales.getAllDataSources():TStringList;
 var DSSL:TStringList;
@@ -766,7 +787,8 @@ end;
 Procedure TGlobales.setAllDataSources(DSSL:TStringList);
 begin
   Seccion:='DATASOURCE';
-  //FicheroIni.WriteString(Seccion,'DATASOURCELIST',DSSL.GetText);
+  DSSL.Delimiter:=';';
+  FicheroIni.WriteString(Seccion,'DATASOURCELIST',DSSL.DelimitedText);
 
 end;
 
