@@ -4312,7 +4312,7 @@ object Form1: TForm1
     Height = 683
     Top = 0
     Width = 1300
-    PageIndex = 0
+    PageIndex = 2
     Anchors = [akTop, akLeft, akRight, akBottom]
     TabOrder = 0
     object RunFDE: TPage
