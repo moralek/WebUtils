@@ -61,8 +61,8 @@
         <UnitName Value="UMyUtils"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="9"/>
-        <TopLine Value="51"/>
-        <CursorPos X="69" Y="66"/>
+        <TopLine Value="864"/>
+        <CursorPos X="73" Y="866"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit5>
@@ -560,11 +560,11 @@
       </Position28>
       <Position29>
         <Filename Value="umyutils.pas"/>
-        <Caret Line="659" Column="3" TopLine="765"/>
+        <Caret Line="866" Column="71" TopLine="848"/>
       </Position29>
       <Position30>
         <Filename Value="umyutils.pas"/>
-        <Caret Line="866" Column="71" TopLine="848"/>
+        <Caret Line="66" Column="23" TopLine="51"/>
       </Position30>
     </JumpHistory>
     <RunParams>
