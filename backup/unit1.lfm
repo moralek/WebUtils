@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 457
+  Left = 396
   Height = 708
-  Top = 164
+  Top = 173
   Width = 1300
   Anchors = []
   Caption = 'WEB UTILS: [PRINCIPAL] '
@@ -4676,14 +4676,14 @@ object Form1: TForm1
           Height = 641
           Top = 11
           Width = 637
-          ActivePage = TabSheet1
+          ActivePage = TabSheet4
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Left = 2
           BorderSpacing.Top = 10
           BorderSpacing.Right = 10
           BorderSpacing.Bottom = 30
           ParentFont = False
-          TabIndex = 0
+          TabIndex = 3
           TabOrder = 2
           object TabSheet1: TTabSheet
             AnchorSideRight.Side = asrBottom
@@ -5444,7 +5444,7 @@ object Form1: TForm1
                 Left = 8
                 Height = 23
                 Top = 24
-                Width = 240
+                Width = 276
                 Enabled = False
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = clBlack
@@ -5475,7 +5475,7 @@ object Form1: TForm1
                 ParentFont = False
               end
               object Label18: TLabel
-                Left = 280
+                Left = 290
                 Height = 20
                 Top = 24
                 Width = 4
@@ -5512,7 +5512,7 @@ object Form1: TForm1
                 Left = 8
                 Height = 23
                 Top = 72
-                Width = 240
+                Width = 276
                 Enabled = False
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = clBlack
@@ -5535,10 +5535,10 @@ object Form1: TForm1
               ClientWidth = 295
               TabOrder = 1
               object EditJdbcDatasource: TEdit
-                Left = 23
+                Left = 8
                 Height = 28
                 Top = 40
-                Width = 240
+                Width = 276
                 TabOrder = 0
               end
               object Label19: TLabel
@@ -5546,7 +5546,7 @@ object Form1: TForm1
                 AnchorSideTop.Control = EditJdbcDatasource
                 AnchorSideTop.Side = asrBottom
                 AnchorSideBottom.Control = EditJdbcDatasource
-                Left = 23
+                Left = 8
                 Height = 20
                 Top = 20
                 Width = 132
@@ -5557,7 +5557,7 @@ object Form1: TForm1
               object Label21: TLabel
                 AnchorSideLeft.Control = EditResRefName
                 AnchorSideBottom.Control = EditResRefName
-                Left = 23
+                Left = 8
                 Height = 20
                 Top = 84
                 Width = 103
@@ -5566,10 +5566,10 @@ object Form1: TForm1
                 ParentColor = False
               end
               object EditResRefName: TEdit
-                Left = 23
+                Left = 8
                 Height = 28
                 Top = 104
-                Width = 240
+                Width = 276
                 OnChange = EditResRefNameChange
                 TabOrder = 1
               end
@@ -5577,7 +5577,7 @@ object Form1: TForm1
                 Left = 8
                 Height = 136
                 Top = 168
-                Width = 280
+                Width = 276
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = clGray
                 Font.Height = -13
@@ -5605,7 +5605,7 @@ object Form1: TForm1
               Left = 344
               Height = 45
               Hint = 'Aplicar Datasource a las carpetas marcadas'
-              Top = 104
+              Top = 56
               Width = 232
               Caption = 'APLICAR'
               Glyph.Data = {
@@ -6045,61 +6045,57 @@ object Form1: TForm1
               ParentColor = False
             end
           end
-          object TabSheet5: TTabSheet
+          object PRUEBAS: TTabSheet
             Caption = 'PRUEBAS'
             ClientHeight = 608
             ClientWidth = 629
-            TabVisible = False
-            object EditPRUEBA: TEdit
-              Left = 16
-              Height = 28
-              Top = 32
-              Width = 592
-              TabOrder = 0
-              Text = 'C:\Program Files\Apache Software Foundation\Tomcat 8.0\webapps\cgu90exx-sql\WEB-INF\web.xml'
-            end
             object BitBtnPRUEBA: TBitBtn
-              Left = 208
-              Height = 65
-              Top = 160
-              Width = 188
+              Left = 248
+              Height = 40
+              Top = 196
+              Width = 140
               Caption = 'BitBtnPRUEBA'
               OnClick = BitBtnPRUEBAClick
+              TabOrder = 0
+            end
+            object RESREFNAMEPRUEBA: TEdit
+              Left = 16
+              Height = 28
+              Top = 120
+              Width = 368
               TabOrder = 1
             end
-            object Memo4: TMemo
-              Left = 16
-              Height = 234
-              Top = 232
-              Width = 504
-              Lines.Strings = (
-                'Memo4'
-              )
+            object ComboBoxPRUEBA: TComboBox
+              Left = 32
+              Height = 28
+              Top = 200
+              Width = 191
+              ItemHeight = 20
+              Style = csDropDownList
               TabOrder = 2
+            end
+            object DATASOURCEPRUEBA: TEdit
+              Left = 16
+              Height = 28
+              Top = 48
+              Width = 368
+              TabOrder = 3
             end
             object Label26: TLabel
               Left = 16
               Height = 20
-              Top = 8
-              Width = 55
-              Caption = 'web.xml'
+              Top = 24
+              Width = 132
+              Caption = 'JDBC_DATASOURCE'
               ParentColor = False
             end
             object Label27: TLabel
               Left = 16
               Height = 20
-              Top = 88
-              Width = 60
-              Caption = 'client.cfg'
+              Top = 95
+              Width = 103
+              Caption = 'RES_REF_NAME'
               ParentColor = False
-            end
-            object EditPrueba2: TEdit
-              Left = 16
-              Height = 28
-              Top = 112
-              Width = 592
-              TabOrder = 3
-              Text = 'C:\Program Files\Apache Software Foundation\Tomcat 8.0\webapps\cgu90exx-sql\WEB-INF\classes\client.cfg'
             end
           end
         end

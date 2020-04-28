@@ -79,15 +79,18 @@ type
     CheckBox10: TCheckBox;
     CheckBox11: TCheckBox;
     ComboBox1: TComboBox;
+    ComboBoxPRUEBA: TComboBox;
     ComboBoxDsCopyFrom: TComboBox;
+    DATASOURCEPRUEBA: TEdit;
     EditDisplayName: TEdit;
     Editwebxml: TEdit;
     EditFolderApp: TEdit;
     EditModuleName: TEdit;
     EditClientCfg: TEdit;
     EditWar: TEdit;
-    EditPrueba2: TEdit;
-    EditPRUEBA: TEdit;
+    Label26: TLabel;
+    Label27: TLabel;
+    RESREFNAMEPRUEBA: TEdit;
     EditDSRestype: TEdit;
     EditDSResAuth: TEdit;
     EditDSUseJdbcDataSource: TEdit;
@@ -127,8 +130,6 @@ type
     Label23: TLabel;
     Label24: TLabel;
     Label25: TLabel;
-    Label26: TLabel;
-    Label27: TLabel;
     Label28: TLabel;
     Label29: TLabel;
     Label3: TLabel;
@@ -154,7 +155,6 @@ type
     Memo1: TMemo;
     Memo2: TMemo;
     Memo3: TMemo;
-    Memo4: TMemo;
     MenuItem1: TMenuItem;
     MenuItem14: TMenuItem;
     CheckBox2: TCheckBox;
@@ -251,7 +251,7 @@ type
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
     TabSheet4: TTabSheet;
-    TabSheet5: TTabSheet;
+    PRUEBAS: TTabSheet;
     TabSheet6: TTabSheet;
     TrayPopMenu: TPopupMenu;
     ToTray: TCheckBox;
@@ -479,7 +479,7 @@ type
     procedure ItemVerWinClick(Sender: TObject);
     procedure OpcionesBeforeShow(ASender: TObject; ANewPage: TPage;
       ANewIndex: Integer);
-    procedure PrincipalBeforeShow(ASender: TObject; ANewPage: TPage;
+     procedure PrincipalBeforeShow(ASender: TObject; ANewPage: TPage;
       ANewIndex: Integer);
     procedure RichMemo3Change(Sender: TObject);
     procedure Splitter2CanOffset(Sender: TObject; var NewOffset: Integer;
@@ -536,6 +536,8 @@ type
     Procedure RestoreFromTray();
     procedure RefreshAPPS();
     Procedure ChangeStringGrid1();
+    procedure loadMemo3();
+    procedure loadComboboxDataSources();
     { private declarations }
   public
     { public declarations }
@@ -564,6 +566,8 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 var
   FileVerInfo: TFileVersionInfo;
+  DSSL:TStringList;
+  i:Integer;
 begin
   Label16.Caption:=Utils.versionStr(EditModulo.Text,EditVersion.Text,EditFechaVersion.Text);
   Application.AddOnActivateHandler(@HandleApplicationActivate);
@@ -641,9 +645,36 @@ begin
   ComboBoxDsCopyFrom.ItemIndex:=1;
   EditJdbcDatasource.Text:=varGlobales.DSJdbcDataSource;
   EditResRefName.Text:=varGlobales.DSResRefName;
+  loadMemo3();
+  loadComboboxDataSources;
   //INFO
   ChangeStringGrid1();
 end;
+procedure TForm1.loadComboboxDataSources();
+var DSSL:TStringList;
+  i:Integer;
+begin
+  DSSL:=varGlobales.getAllDataSources();
+  For i:=5 to ComboBoxDsCopyFrom.Items.Count-1 do
+   Begin
+     ComboBoxDsCopyFrom.Items.Delete(i);
+   end;
+  For i := 0 to DSSL.Count - 1 do ComboBoxDsCopyFrom.Items.Add(DSSL[i].Split('#')[0]);
+  DSSL.Free;
+end;
+
+procedure TForm1.loadMemo3();
+begin
+  Memo3.Lines.Clear;
+  Memo3.Lines.Add('client.cfg:');
+  Memo3.Lines.Add('USE_JDBC_DATASOURCE='+EditDSUseJdbcDataSource.Text);
+  Memo3.Lines.Add('');
+  Memo3.Lines.Add('web.xml:');
+  Memo3.Lines.Add('<description>'+EditDSDescription.Text+'</description>');
+  Memo3.Lines.Add('<res-type>'+EditDSRestype.Text+'</res-type>');
+  Memo3.Lines.Add('<res-auth>'+EditDSResAuth.Text+'</res-auth>');
+end;
+
 procedure TForm1.Button1Click(Sender: TObject);
 var MyXml:TMyXml;
 begin
@@ -901,7 +932,7 @@ end;
 
 procedure TForm1.BitBtn15Click(Sender: TObject);
 begin
-  Utils.applyDataSource(EditJdbcDatasource,EditResRefName,ComboBoxDsCopyFrom.ItemIndex,EditEJJdbcDatasource.Text,EditEJResRefName.Text);
+  Utils.applyDataSource(EditJdbcDatasource,EditResRefName,ComboBoxDsCopyFrom,EditEJJdbcDatasource.Text,EditEJResRefName.Text);
 end;
 
 procedure TForm1.BitBtn16Click(Sender: TObject);
@@ -1131,12 +1162,30 @@ begin
 end;
 
 procedure TForm1.BitBtnPRUEBAClick(Sender: TObject);
-var Gridds:TMyGridString;
-   //JDBC_DATASOURCE,RES_REF_NAME:String;
+var DSSL:TStringList;
+  x,i:Integer;
+  A: TStringArray;
 begin
-Gridds:=TMyGridString.Create;
-//ShowMessage(Gridds.getSelectedValueStringGrid1(StringGrid1,StringGrid1.get));
-Gridds.Free;
+  DATASOURCEPRUEBA.Clear;
+  RESREFNAMEPRUEBA.Clear;
+  DSSL:=varGlobales.getAllDataSources();
+  for i := 0 to DSSL.Count - 1 do
+   begin
+     A:= DSSL[i].Split('#');
+     X:= length(A);
+     if (X>0) and (A[0]=ComboBoxPRUEBA.Text) then
+     begin
+        DATASOURCEPRUEBA.Text:=A[0];
+        If X>1 then RESREFNAMEPRUEBA.Text:=A[1];
+     end;
+   end;
+  loadComboboxDataSources();
+  DSSL.Free;
+  ComboBoxPRUEBA.ItemIndex:=1;
+  // if ComboBoxPRUEBA.Text = DSSL[i].Split('#')[0] then
+  // begin
+  // DATASOURCEPRUEBA.Text:=;
+  // end;
 end;
 
 procedure TForm1.BtnApp10Click(Sender: TObject);
@@ -2006,21 +2055,25 @@ end;
 procedure TForm1.EditDSDescriptionChange(Sender: TObject);
 begin
   varGlobales.DSDescription:=EditDSDescription.Text;
+  loadMemo3();
 end;
 
 procedure TForm1.EditDSResAuthChange(Sender: TObject);
 begin
   varGlobales.DSResAuth:=EditDSResAuth.Text;
+  loadMemo3();
 end;
 
 procedure TForm1.EditDSRestypeChange(Sender: TObject);
 begin
   varGlobales.DSResType:=EditDSRestype.Text;
+  loadMemo3();
 end;
 
 procedure TForm1.EditDSUseJdbcDataSourceChange(Sender: TObject);
 begin
   varGlobales.DSUseJdbcDatasource:=StrToInt(EditDSUseJdbcDataSource.Text);
+  loadMemo3();
 end;
 
 procedure TForm1.EditDSUseJdbcDataSourceKeyPress(Sender: TObject; var Key: char

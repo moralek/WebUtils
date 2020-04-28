@@ -13,7 +13,7 @@ uses
     fileinfo, winpeimagereader {need this for reading exe info}
   , elfreader {needed for reading ELF executables}
   , machoreader {needed for reading MACH-O executables}
-    ,ShellApi
+    ,ShellApi, Regexpr
     ;
 type
   TMyUtils=class
@@ -58,11 +58,12 @@ Public
   Function versionStr(ModuloPar, VersionPar, FechaVersionPar:String):String;
   Procedure addItemListBox(var ListBox1:TListBox;NuevoItem:String);
   Procedure delItemListBox(var ListBox1:TListBox;delItem:String);
-  Procedure applyDataSource(var EditJdbcDataSource,EditResRefName:TEdit;ItemIndex:Integer;DefaultJdbcDataSource,DefaultResRefName:String);
+  Procedure applyDataSource(var EditJdbcDataSource,EditResRefName:TEdit;ComboBoxDsCopyFrom:TComboBox;DefaultJdbcDataSource,DefaultResRefName:String);
   Procedure getDataSource(pathwebxml,pathclientcfg,GxVersion,Modulo:String;var EDITJDBC, EDITresref:TEdit);
   Procedure updDataSource(StringGrid1:TStringGrid);
   Function RunAsAdmin(const Path, Params: string): Boolean;
   Procedure GetClientCfgPathModuleGXVersion(BasePath:String;var ClientCfgPath,Module,GxVersion:String);
+  procedure allowOnlyTxt(var Editx:TEdit;RegEx:String='[^\w//.]');
 Private
   Procedure GenWarDir(RutaBase,javahome:String;var Memo:TRichMemo;var TrayIcon1:TTrayIcon;var StausBar1:TStatusBar;var QErrores:Integer;nomwar:String='');
 end;
@@ -649,37 +650,48 @@ begin
      end;
 end;
 
-Procedure TMyUtils.applyDataSource(var EditJdbcDataSource,EditResRefName:TEdit;ItemIndex:Integer;DefaultJdbcDataSource,DefaultResRefName:String);
-   var VarGlo:TGlobales;
+Procedure TMyUtils.applyDataSource(var EditJdbcDataSource,EditResRefName:TEdit;ComboBoxDsCopyFrom:TComboBox;DefaultJdbcDataSource,DefaultResRefName:String);
+var VarGlo:TGlobales;
+    DSSL:TStringList;
+    x,i:Integer;
+    A: TStringArray;
 begin
   Varglo:=TGlobales.Create;
-   case ItemIndex of
+   case ComboBoxDsCopyFrom.ItemIndex of
    0: Begin
        EditJdbcDataSource.Text:=VarGlo.DSJdbcDataSource;
        EditResRefName.Text:=Varglo.DSResRefName;
       End; //Ultimo aplicado
 
-   {1: Begin
-      EditJdbcDataSource;
-      End;//Actual }
+   1: Begin
+        EditJdbcDataSource.Text:=DefaultJdbcDataSource;
+        EditResRefName.Text:=DefaultResRefName;
+       End;//Actual
 
    2: Begin
        EditJdbcDataSource.Text:='java:/comp/env/jdbc/sigasoracle';
        EditResRefName.Text:='jdbc/sigasoracle';
-      End;//Oracle
+       End;//Ejemplo Oracle
 
    3: Begin EditJdbcDataSource.Text:='java:/comp/env/jdbc/sigassql';
        EditResRefName.Text:='jdbc/sigassql';
-      End;//SQL
+      End;//Ejemplo SQL
 
    4: Begin EditJdbcDataSource.Text:='jdbc/CGU';
        EditResRefName.Text:='jdbc/CGU';
-      End;//PJUD
+      End;//Ejemplo PJUD
    else
-       Begin
-          EditJdbcDataSource.Text:=DefaultJdbcDataSource;
-          EditResRefName.Text:=DefaultResRefName;
-       end;
+      DSSL:=VarGlo.getAllDataSources();
+      for i := 0 to DSSL.Count - 1 do
+      begin
+          A:= DSSL[i].Split('#');
+          X:= length(A);
+          if (X>0) and (A[0]=ComboBoxDsCopyFrom.Text) then
+          begin
+              EditJdbcDataSource.Text:=A[0];
+              If X>1 then EditResRefName.Text:=A[1];
+          end;
+      end;
    end;
    Varglo.Free;
 end;
@@ -832,6 +844,14 @@ Begin
     end;
     Directorios.Free;
   end;
+end;
+
+procedure TMyUtils.allowOnlyTxt(var Editx:TEdit;RegEx:String='[^\w//.]');
+begin
+  Editx.Text:=ReplaceRegExpr(RegEx,Editx.Text,'',TRUE);
+  Editx.SelStart:=Length(Editx.Text);
+  Editx.SelLength := 1;
+  Editx.SetFocus;
 end;
 
 end.

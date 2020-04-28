@@ -112,7 +112,6 @@ private
     Function getAppPath():String;
     Function getProductVersion():String;
     Function getIniUpdate():String;
-
 public
     COLOROK:TColor;
     FicheroIni:TIniFile;
@@ -139,6 +138,11 @@ public
     Function getPDFReportRutafonts(PDFREP:String):String;
     Function getPDFReportTxt(PDFREP:String):String;
     Function getPDFReporCopyFonts(PDFREP:String):Boolean;
+    //DATASOURCES
+    Procedure setDataSource(DataSource,RefName:String);
+    Procedure delDataSource(DataSource:String);
+    Function getAllDataSources():TStringList;
+    Procedure setAllDataSources(DSSL:TStringList);
 
     //____________________
     //======================
@@ -542,7 +546,7 @@ end;
 Procedure TGlobales.setPDFReportRutaFonts(PDFREP:String;Valor:String);
 Begin
    Seccion:='PDFREPORT';
-   If Trim(Valor).IsEmpty Then delPDFReport(PDFREP+'rut') else setVarstr(PDFREP+'rut',Valor);
+   If Trim(Valor).IsEmpty Then delPDFReport(PDFREP+'Path') else setVarstr(PDFREP+'Path',Valor);
 end;
 
 Procedure TGlobales.setPDFReportTxt(PDFREP:String;Valor:String);
@@ -580,7 +584,7 @@ begin
    Seccion:='PDFREPORT';
    Defalultvalue:=' ';
    If (PDFREP='pdfreplin') Or (PDFREP='pdfrepper') Then Defalultvalue:='../fonts/';
-   Result:=getVarStr(PDFREP+'rut',Defalultvalue);
+   Result:=getVarStr(PDFREP+'Path',Defalultvalue);
 end;
 
 Function TGlobales.getPDFReportTxt(PDFREP:String):String;
@@ -727,6 +731,43 @@ Function TGlobales.getDSResRefName():String;
 begin
    Seccion:='DATASOURCE';
    Result:=getVarStr('RES-REF-NAME','');
+end;
+
+Procedure TGlobales.setDataSource(DataSource,RefName:String);
+begin
+   Seccion:='DATASOURCE';
+
+end;
+
+Procedure TGlobales.delDataSource(DataSource:String);
+var DSSL:TStringList;
+  i,x: Integer;
+begin
+   Seccion:='DATASOURCE';
+   x:=0;
+   DSSL:=getAllDataSources();
+  for i := 0 to DSSL.Count - 1 do
+  begin
+    If (DSSL[i]= DataSource) Then x:=i;
+  end;
+  If x>0 then DSSL.Delete(x);
+  setAllDataSources(DSSL);
+end;
+Function TGlobales.getAllDataSources():TStringList;
+var DSSL:TStringList;
+begin
+   Seccion:='DATASOURCE';
+   DSSL:=TStringList.Create;
+   DSSL.Delimiter:=';';
+   DSSL.DelimitedText:=getVarStr('DATASOURCELIST','');
+   Result:=DSSL;
+end;
+
+Procedure TGlobales.setAllDataSources(DSSL:TStringList);
+begin
+  Seccion:='DATASOURCE';
+  //FicheroIni.WriteString(Seccion,'DATASOURCELIST',DSSL.GetText);
+
 end;
 
 end.
