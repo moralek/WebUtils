@@ -389,6 +389,7 @@ type
     procedure CheckBox8Change(Sender: TObject);
     procedure CheckBox9Change(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
+    procedure ComboBoxDsCopyFromChange(Sender: TObject);
     procedure Edit2Change(Sender: TObject);
     procedure EditFolderAppChange(Sender: TObject);
     procedure Edit5Change(Sender: TObject);
@@ -573,8 +574,7 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 var
   FileVerInfo: TFileVersionInfo;
-  DSSL:TStringList;
-  i:Integer;
+  X:Integer;
 begin
   Label16.Caption:=Utils.versionStr(EditModulo.Text,EditVersion.Text,EditFechaVersion.Text);
   Application.AddOnActivateHandler(@HandleApplicationActivate);
@@ -650,12 +650,13 @@ begin
   EditDSRestype.Text:=varGlobales.DSResType;
   EditDSResAuth.Text:=varGlobales.DSResAuth;
   EditDSUseJdbcDataSource.Text:=varGlobales.DSUseJdbcDatasource.ToString();
-  ComboBoxDsCopyFrom.ItemIndex:=1;
   EditJdbcDatasource.Text:=varGlobales.DSJdbcDataSource;
   EditResRefName.Text:=varGlobales.DSResRefName;
   loadMemo3();
   loadComboboxDataSources;
   ComboBoxDsCopyFrom.ItemIndex:=0;
+  if (varGlobales.OcultaEjemplosDS) then x:=1 else x:=4;
+  BitBtn28.Enabled:=(ComboBoxDsCopyFrom.ItemIndex>X);
   //INFO
   ChangeStringGrid1();
 end;
@@ -673,6 +674,9 @@ begin
   For i := 0 to DSSL.Count - 1 do ComboBoxDsCopyFrom.Items.Add(DSSL[i].Split('#')[0]);
   DSSL.Free;
   ComboBoxDsCopyFrom.ItemIndex:=ComboBoxDsCopyFrom.Items.Count-1;
+  x:=4;
+  If CheckBox12.Checked then X:=1;
+  BitBtn28.Enabled:=(ComboBoxDsCopyFrom.ItemIndex>X);
 end;
 
 procedure TForm1.loadMemo3();
@@ -845,7 +849,6 @@ end;
 procedure TForm1.BitBtn28Click(Sender: TObject);
 var x:integer;
 begin
-
   if (varGlobales.OcultaEjemplosDS) then x:=1 else x:=4;
   If ComboBoxDsCopyFrom.ItemIndex>x then
   begin
@@ -853,7 +856,7 @@ begin
     loadComboboxDataSources();
     ComboBoxDsCopyFrom.ItemIndex:=0
   end;
-
+  BitBtn28.Enabled:=(ComboBoxDsCopyFrom.ItemIndex>X);
 end;
 
 procedure TForm1.BitBtn2Click(Sender: TObject);
@@ -2021,6 +2024,13 @@ begin
   varGlobales.PDFReportselection:=(ComboBox1.ItemIndex);
 end;
 
+procedure TForm1.ComboBoxDsCopyFromChange(Sender: TObject);
+var x:integer;
+begin
+  if (varGlobales.OcultaEjemplosDS) then x:=1 else x:=4;
+  BitBtn28.Enabled:=(ComboBoxDsCopyFrom.ItemIndex>X);
+end;
+
 procedure TForm1.Edit2Change(Sender: TObject);
 var myxml:TMyXml;
 begin
@@ -2754,10 +2764,13 @@ begin
 end;
 
 procedure TForm1.TabSheet4Show(Sender: TObject);
+Var X:Integer;
 begin
   ComboBoxDsCopyFrom.Items[1]:='Actual:['+StringGrid1.Rows[StringGrid1.Row][3]+']';
   Label18.Caption:='['+StringGrid1.Rows[StringGrid1.Row][3]+']';
   Utils.getDataSource(Utils.clearFilePath(StringGrid1.Rows[StringGrid1.Row][7]),StringGrid1.Rows[StringGrid1.Row][6],StringGrid1.Rows[StringGrid1.Row][8],StringGrid1.Rows[StringGrid1.Row][4],EditEJJdbcDatasource,EditEJResRefName);
+  if (varGlobales.OcultaEjemplosDS) then x:=1 else x:=4;
+  BitBtn28.Enabled:=(ComboBoxDsCopyFrom.ItemIndex>X);
 end;
 
 procedure TForm1.TabSheet6Show(Sender: TObject);

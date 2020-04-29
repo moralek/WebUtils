@@ -4312,7 +4312,7 @@ object Form1: TForm1
     Height = 683
     Top = 0
     Width = 1300
-    PageIndex = 2
+    PageIndex = 0
     Anchors = [akTop, akLeft, akRight, akBottom]
     TabOrder = 0
     object RunFDE: TPage
@@ -4676,14 +4676,14 @@ object Form1: TForm1
           Height = 641
           Top = 11
           Width = 637
-          ActivePage = TabSheet1
+          ActivePage = TabSheet4
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Left = 2
           BorderSpacing.Top = 10
           BorderSpacing.Right = 10
           BorderSpacing.Bottom = 30
           ParentFont = False
-          TabIndex = 0
+          TabIndex = 3
           TabOrder = 3
           object TabSheet1: TTabSheet
             AnchorSideRight.Side = asrBottom
@@ -5441,10 +5441,10 @@ object Form1: TForm1
               ParentFont = False
               TabOrder = 2
               object EditEJJdbcDatasource: TEdit
-                Left = 8
+                Left = 32
                 Height = 23
                 Top = 24
-                Width = 320
+                Width = 332
                 Enabled = False
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = clBlack
@@ -5459,7 +5459,7 @@ object Form1: TForm1
               object Label17: TLabel
                 AnchorSideLeft.Control = EditEJJdbcDatasource
                 AnchorSideBottom.Control = EditEJJdbcDatasource
-                Left = 8
+                Left = 32
                 Height = 15
                 Top = 9
                 Width = 104
@@ -5475,7 +5475,7 @@ object Form1: TForm1
                 ParentFont = False
               end
               object Label18: TLabel
-                Left = 350
+                Left = 370
                 Height = 20
                 Top = 24
                 Width = 4
@@ -5493,7 +5493,7 @@ object Form1: TForm1
               object Label20: TLabel
                 AnchorSideLeft.Control = EditEJResRefName
                 AnchorSideBottom.Control = EditEJResRefName
-                Left = 8
+                Left = 32
                 Height = 15
                 Top = 57
                 Width = 82
@@ -5509,10 +5509,10 @@ object Form1: TForm1
                 ParentFont = False
               end
               object EditEJResRefName: TEdit
-                Left = 8
+                Left = 32
                 Height = 23
                 Top = 72
-                Width = 320
+                Width = 332
                 Enabled = False
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = clBlack
@@ -5535,10 +5535,10 @@ object Form1: TForm1
               ClientWidth = 540
               TabOrder = 0
               object EditJdbcDatasource: TEdit
-                Left = 8
+                Left = 32
                 Height = 28
                 Top = 24
-                Width = 320
+                Width = 332
                 OnChange = EditJdbcDatasourceChange
                 TabOrder = 0
               end
@@ -5547,7 +5547,7 @@ object Form1: TForm1
                 AnchorSideTop.Control = EditJdbcDatasource
                 AnchorSideTop.Side = asrBottom
                 AnchorSideBottom.Control = EditJdbcDatasource
-                Left = 8
+                Left = 32
                 Height = 20
                 Top = 4
                 Width = 132
@@ -5558,7 +5558,7 @@ object Form1: TForm1
               object Label21: TLabel
                 AnchorSideLeft.Control = EditResRefName
                 AnchorSideBottom.Control = EditResRefName
-                Left = 8
+                Left = 32
                 Height = 20
                 Top = 60
                 Width = 103
@@ -5567,18 +5567,18 @@ object Form1: TForm1
                 ParentColor = False
               end
               object EditResRefName: TEdit
-                Left = 8
+                Left = 32
                 Height = 28
                 Top = 80
-                Width = 320
+                Width = 332
                 OnChange = EditResRefNameChange
                 TabOrder = 1
               end
               object BtnsaveDS: TBitBtn
-                Left = 8
+                Left = 32
                 Height = 28
                 Hint = 'Grabar como plantilla'
-                Top = 120
+                Top = 112
                 Width = 24
                 BorderSpacing.CellAlignHorizontal = ccaCenter
                 BorderSpacing.CellAlignVertical = ccaCenter
@@ -5623,8 +5623,8 @@ object Form1: TForm1
                 Left = 376
                 Height = 64
                 Hint = 'Aplicar Datasource a las carpetas marcadas'
-                Top = 40
-                Width = 128
+                Top = 31
+                Width = 122
                 Caption = 'APLICAR'
                 Glyph.Data = {
                   36040000424D3604000000000000360000002800000010000000100000000100
@@ -5668,11 +5668,11 @@ object Form1: TForm1
             end
             object GroupBox11: TGroupBox
               Left = 8
-              Height = 56
-              Top = 232
+              Height = 72
+              Top = 220
               Width = 544
               Caption = 'Plantillas'
-              ClientHeight = 36
+              ClientHeight = 52
               ClientWidth = 540
               Font.CharSet = ANSI_CHARSET
               Font.Color = clBlack
@@ -5689,9 +5689,9 @@ object Form1: TForm1
                 AnchorSideRight.Control = BitBtn28
                 AnchorSideBottom.Control = BitBtn28
                 AnchorSideBottom.Side = asrBottom
-                Left = 34
+                Left = 58
                 Height = 28
-                Top = 0
+                Top = 9
                 Width = 344
                 Anchors = [akTop, akLeft, akBottom]
                 BorderSpacing.Left = 2
@@ -5709,6 +5709,7 @@ object Form1: TForm1
                   'Ejemplo SQL'
                   'Ejemplo PJUD'
                 )
+                OnChange = ComboBoxDsCopyFromChange
                 ParentFont = False
                 Style = csDropDownList
                 TabOrder = 0
@@ -5721,10 +5722,10 @@ object Form1: TForm1
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Control = BitBtn28
                 AnchorSideBottom.Side = asrBottom
-                Left = 380
+                Left = 404
                 Height = 28
                 Hint = 'Seleccionar plantilla'
-                Top = 0
+                Top = 9
                 Width = 24
                 Anchors = [akTop, akLeft, akBottom]
                 BorderSpacing.Left = 2
@@ -5769,10 +5770,10 @@ object Form1: TForm1
                 TabOrder = 1
               end
               object BitBtn28: TBitBtn
-                Left = 8
+                Left = 32
                 Height = 28
                 Hint = 'Eliminar plantilla actual'
-                Top = 0
+                Top = 9
                 Width = 24
                 Glyph.Data = {
                   36030000424D3603000000000000360000002800000010000000100000000100
@@ -5808,10 +5809,10 @@ object Form1: TForm1
               end
             end
             object Memo3: TMemo
-              Left = 32
+              Left = 42
               Height = 144
               Top = 432
-              Width = 504
+              Width = 483
               Font.CharSet = ANSI_CHARSET
               Font.Color = clGray
               Font.Height = -13
