@@ -91,6 +91,7 @@ type
     EditModuleName: TEdit;
     EditClientCfg: TEdit;
     EditWar: TEdit;
+    Image2: TImage;
     Label26: TLabel;
     Label27: TLabel;
     RESREFNAMEPRUEBA: TEdit;
@@ -880,6 +881,7 @@ var myw:TMyWin;
     FileVerInfo: TFileVersionInfo;
     BabyMode:String;
 begin
+  Image2.Visible:=True;
    myw:=TMyWin.Create;
    FileVerInfo:=TFileVersionInfo.Create(nil);
    FileVerInfo.ReadFileInfo;
