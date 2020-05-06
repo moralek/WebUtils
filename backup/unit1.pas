@@ -1079,7 +1079,7 @@ begin
     ShowMessage('Ingrese Ruta Destino para copiar las fuentes');
     Exit;
   end;
-  Utils.ProcesaPDFReport(StringGrid1, CheckBox1.Checked,EDRutaFonts.Text,Memo2.Text);
+  Utils.ProcesaPDFReport(StringGrid1, CheckBox11.Checked,EDRutaFonts.Text,Memo2.Text);
 end;
 
 procedure TForm1.BitBtn5Click(Sender: TObject);
@@ -2535,7 +2535,7 @@ end;
 
 procedure TForm1.MenuItem18Click(Sender: TObject);
 begin
-  ShellExecute(0,nil, PChar('explorer.exe'),Pchar('"https://www.evernote.com/shard/s201/sh/4e60e820-8eac-4134-a146-841c94d76d10/89c888a93ea73a36"'),PChar('%WINDIR%'),1);
+  ShellExecute(0,nil, PChar('explorer.exe'),Pchar('"https://github.com/moralek/WebUtils/releases"'),PChar('%WINDIR%'),1);
 end;
 
 procedure TForm1.MenuItem1Click(Sender: TObject);

@@ -63,7 +63,7 @@ Public
   Procedure updDataSource(StringGrid1:TStringGrid);
   Function RunAsAdmin(const Path, Params: string): Boolean;
   Procedure GetClientCfgPathModuleGXVersion(BasePath:String;var ClientCfgPath,Module,GxVersion:String);
-  procedure allowOnlyTxt(var Editx:TEdit;RegEx:String='[^\w//.:]');
+  procedure allowOnlyTxt(var Editx:TEdit;RegEx:String='[^\w//.:_-]');
 Private
   Procedure GenWarDir(RutaBase,javahome:String;var Memo:TRichMemo;var TrayIcon1:TTrayIcon;var StausBar1:TStatusBar;var QErrores:Integer;nomwar:String='');
 end;
@@ -574,6 +574,7 @@ begin
         rewrite(fichero);
         writeLn(fichero, PDfReportTXT );
         close(fichero);
+        showmessage('copyfonts'+CopyFonts.ToString);
         If CopyFonts Then
         Begin
           RutaBase:=StringGrid1.Cells[2,i]+'WEB-INF\classes\';
@@ -863,7 +864,7 @@ Begin
   end;
 end;
 
-procedure TMyUtils.allowOnlyTxt(var Editx:TEdit;RegEx:String='[^\w//.:]');
+procedure TMyUtils.allowOnlyTxt(var Editx:TEdit;RegEx:String='[^\w//.:_-]');
 begin
   Editx.Text:=ReplaceRegExpr(RegEx,Editx.Text,'',TRUE);
   Editx.SelStart:=Length(Editx.Text);
