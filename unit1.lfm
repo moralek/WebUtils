@@ -1,15 +1,15 @@
 object Form1: TForm1
-  Left = 448
-  Height = 708
-  Top = 167
-  Width = 1300
+  Left = 701
+  Height = 1133
+  Top = 341
+  Width = 2080
   Anchors = []
   Caption = 'WEB UTILS: [PRINCIPAL] '
-  ClientHeight = 683
-  ClientWidth = 1300
-  Constraints.MinHeight = 600
-  Constraints.MinWidth = 1000
-  DesignTimePPI = 120
+  ClientHeight = 1133
+  ClientWidth = 2080
+  Constraints.MinHeight = 960
+  Constraints.MinWidth = 1600
+  DesignTimePPI = 192
   Icon.Data = {
     501702000000010006000000000001002000E291000066000000808000000100
     20002808010048920000404000000100200028420000709A0100303000000100
@@ -4296,11 +4296,11 @@ object Form1: TForm1
     8001AC418001AC41C003AC41E007AC41F01FAC41
   }
   Menu = MainMenu1
+  Position = poScreenCenter
+  LCLVersion = '4.6.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   OnWindowStateChange = FormWindowStateChange
-  Position = poScreenCenter
-  LCLVersion = '2.0.8.0'
   object Notebook1: TNotebook
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -4309,9 +4309,9 @@ object Form1: TForm1
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 683
+    Height = 1133
     Top = 0
-    Width = 1300
+    Width = 2080
     PageIndex = 0
     Anchors = [akTop, akLeft, akRight, akBottom]
     TabOrder = 0
@@ -4320,13 +4320,14 @@ object Form1: TForm1
       Color = clWhite
       object Panel2: TPanel
         Left = 0
-        Height = 683
+        Height = 1133
         Top = 0
-        Width = 604
+        Width = 966
         Align = alLeft
-        ClientHeight = 683
-        ClientWidth = 604
+        ClientHeight = 1133
+        ClientWidth = 966
         Color = clWhite
+        ParentBackground = False
         ParentColor = False
         ParentFont = False
         TabOrder = 0
@@ -4335,52 +4336,52 @@ object Form1: TForm1
           AnchorSideTop.Control = Edit2
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = Button2
-          Left = 21
-          Height = 24
+          Left = 33
+          Height = 38
           Hint = 'Ingrese Directorio Webapps'
-          Top = 85
-          Width = 554
+          Top = 135
+          Width = 887
           Anchors = [akTop, akLeft, akRight]
           AutoSize = False
-          BorderSpacing.Left = 20
-          BorderSpacing.Top = 25
-          BorderSpacing.Right = 2
-          OnChange = Edit1Change
+          BorderSpacing.Left = 32
+          BorderSpacing.Top = 40
+          BorderSpacing.Right = 3
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           TabOrder = 2
+          OnChange = Edit1Change
         end
         object Edit2: TEdit
           AnchorSideLeft.Control = Panel2
           AnchorSideTop.Control = Panel2
           AnchorSideRight.Control = Button1
-          Left = 21
-          Height = 24
+          Left = 33
+          Height = 38
           Hint = 'Ingrese Ruta al Archivo .fde'
-          Top = 36
-          Width = 554
+          Top = 57
+          Width = 887
           Anchors = [akTop, akLeft, akRight]
           AutoSize = False
-          BorderSpacing.Left = 20
-          BorderSpacing.Top = 35
-          BorderSpacing.Right = 2
-          OnChange = Edit2Change
+          BorderSpacing.Left = 32
+          BorderSpacing.Top = 56
+          BorderSpacing.Right = 3
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           TabOrder = 0
+          OnChange = Edit2Change
         end
         object Label2: TLabel
           AnchorSideLeft.Control = Edit2
           AnchorSideBottom.Control = Edit2
           AnchorSideBottom.Side = asrBottom
-          Left = 21
-          Height = 20
-          Top = 15
-          Width = 82
+          Left = 33
+          Height = 32
+          Top = 23
+          Width = 132
           Anchors = [akLeft, akBottom]
-          BorderSpacing.Bottom = 25
+          BorderSpacing.Bottom = 40
           Caption = 'Archivo .fde:'
           ParentColor = False
           ParentFont = False
@@ -4390,13 +4391,13 @@ object Form1: TForm1
           AnchorSideBottom.Control = Edit1
           AnchorSideBottom.Side = asrBottom
           Cursor = crHandPoint
-          Left = 21
-          Height = 20
+          Left = 33
+          Height = 32
           Hint = 'Ir a Carpeta'
-          Top = 64
-          Width = 63
+          Top = 101
+          Width = 99
           Anchors = [akLeft, akBottom]
-          BorderSpacing.Bottom = 25
+          BorderSpacing.Bottom = 40
           Caption = 'webapps:'
           ParentColor = False
           ParentFont = False
@@ -4411,39 +4412,67 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = Edit1
           AnchorSideBottom.Side = asrBottom
-          Left = 577
-          Height = 24
-          Top = 85
-          Width = 26
+          Left = 923
+          Height = 38
+          Top = 135
+          Width = 42
           Anchors = [akTop, akRight, akBottom]
           Caption = '...'
-          OnClick = Button2Click
           ParentFont = False
           TabOrder = 3
+          OnClick = Button2Click
         end
         object ListFilterEdit1: TListFilterEdit
           AnchorSideLeft.Control = Panel2
           AnchorSideTop.Control = Edit1
           AnchorSideTop.Side = asrBottom
-          AnchorSideRight.Control = StringGrid1
-          AnchorSideRight.Side = asrCenter
           AnchorSideBottom.Side = asrBottom
-          Left = 101
-          Height = 28
-          Top = 139
-          Width = 419
-          ButtonWidth = 22
-          Anchors = [akTop, akLeft, akRight]
-          BorderSpacing.Left = 100
-          BorderSpacing.Top = 30
+          Left = 161
+          Height = 45
+          Top = 221
+          Width = 470
+          ButtonWidth = 35
+          Anchors = [akTop, akLeft]
+          BorderSpacing.Left = 160
+          BorderSpacing.Top = 48
           AutoSize = False
           NumGlyphs = 1
           MaxLength = 0
           ParentFont = False
           ParentShowHint = False
           TabOrder = 5
-          OnChange = ListFilterEdit1Change
           TextHint = '(Filtro Carpeta)'
+          OnChange = ListFilterEdit1Change
+        end
+        object Label35: TLabel
+          AnchorSideTop.Control = ListFilterEdit1
+          AnchorSideTop.Side = asrCenter
+          Left = 654
+          Height = 32
+          Top = 227
+          Width = 64
+          Anchors = [akTop, akLeft]
+          BorderSpacing.Left = 20
+          Caption = 'Modo:'
+          ParentColor = False
+          ParentFont = False
+        end
+        object ComboBoxModo: TComboBox
+          AnchorSideTop.Control = Edit1
+          AnchorSideTop.Side = asrBottom
+          AnchorSideRight.Control = Panel2
+          AnchorSideRight.Side = asrBottom
+          Left = 726
+          Height = 45
+          Top = 221
+          Width = 194
+          Anchors = [akTop, akRight]
+          BorderSpacing.Top = 48
+          ItemHeight = 0
+          ParentFont = False
+          Style = csDropDownList
+          TabOrder = 6
+          OnChange = ComboBoxModoChange
         end
         object Button1: TButton
           AnchorSideLeft.Side = asrBottom
@@ -4452,16 +4481,16 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = Edit2
           AnchorSideBottom.Side = asrBottom
-          Left = 577
-          Height = 24
-          Top = 36
-          Width = 26
+          Left = 923
+          Height = 38
+          Top = 57
+          Width = 42
           Anchors = [akTop, akRight, akBottom]
-          BorderSpacing.Left = 1
+          BorderSpacing.Left = 2
           Caption = '...'
-          OnClick = Button1Click
           ParentFont = False
           TabOrder = 1
+          OnClick = Button1Click
         end
         object Label6: TLabel
           AnchorSideLeft.Control = Label2
@@ -4470,17 +4499,17 @@ object Form1: TForm1
           AnchorSideBottom.Control = Edit2
           AnchorSideBottom.Side = asrBottom
           Cursor = crHandPoint
-          Left = 108
-          Height = 13
+          Left = 173
+          Height = 21
           Hint = 'Editar archivo .fde'
-          Top = 17
-          Width = 30
+          Top = 26
+          Width = 40
           Anchors = [akLeft, akBottom]
-          BorderSpacing.Left = 5
-          BorderSpacing.Bottom = 30
+          BorderSpacing.Left = 8
+          BorderSpacing.Bottom = 48
           Caption = 'editar'
           Font.Color = clBlue
-          Font.Height = 13
+          Font.Height = 21
           Font.Style = [fsUnderline]
           ParentColor = False
           ParentFont = False
@@ -4492,12 +4521,12 @@ object Form1: TForm1
           AnchorSideLeft.Control = Panel2
           AnchorSideTop.Control = ListFilterEdit1
           AnchorSideBottom.Side = asrBottom
-          Left = 21
-          Height = 28
+          Left = 33
+          Height = 45
           Hint = 'Invertir Selección'
-          Top = 139
-          Width = 29
-          BorderSpacing.Left = 20
+          Top = 221
+          Width = 46
+          BorderSpacing.Left = 32
           Color = clWindow
           Glyph.Data = {
             36030000424D3603000000000000360000002800000010000000100000000100
@@ -4527,43 +4556,43 @@ object Form1: TForm1
             6BC59D7E00000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000
           }
-          OnClick = BitBtn3Click
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           Spacing = 0
           TabOrder = 4
+          OnClick = BitBtn3Click
         end
         object StringGrid1: TStringGrid
           AnchorSideLeft.Control = Panel2
-          AnchorSideTop.Control = ListFilterEdit1
+          AnchorSideTop.Control = ComboBoxModo
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = Panel2
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = Panel2
           AnchorSideBottom.Side = asrBottom
-          Left = 21
-          Height = 477
+          Left = 33
+          Height = 805
           Hint = 'Subdirectorios (Doble click para ver en Explorador de Windows )'
-          Top = 175
-          Width = 581
+          Top = 279
+          Width = 930
           Anchors = [akTop, akLeft, akRight, akBottom]
-          BorderSpacing.Left = 20
-          BorderSpacing.Top = 8
-          BorderSpacing.Right = 1
-          BorderSpacing.Bottom = 30
+          BorderSpacing.Left = 32
+          BorderSpacing.Top = 13
+          BorderSpacing.Right = 2
+          BorderSpacing.Bottom = 48
           ColCount = 10
           Columns = <          
             item
               ButtonStyle = cbsCheckboxColumn
               Title.Caption = ''
-              Width = 30
+              Width = 48
             end          
             item
-              MaxSize = 300
+              MaxSize = 480
               ReadOnly = True
               Title.Caption = 'Carpeta'
-              Width = 262
+              Width = 419
             end          
             item
               ReadOnly = True
@@ -4571,9 +4600,9 @@ object Form1: TForm1
               Width = 0
             end          
             item
-              MaxSize = 300
+              MaxSize = 480
               Title.Caption = 'Nombre del war'
-              Width = 200
+              Width = 320
             end          
             item
               ReadOnly = True
@@ -4603,7 +4632,7 @@ object Form1: TForm1
             item
               ReadOnly = True
               Title.Caption = 'PDFReport'
-              Width = 85
+              Width = 136
             end>
           FixedCols = 0
           Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSizing, goColSizing, goEditing, goRowSelect, goAlwaysShowEditor, goDblClickAutoSize, goSmoothScroll, goSelectionActive, goFixedColSizing]
@@ -4611,28 +4640,28 @@ object Form1: TForm1
           ParentShowHint = False
           RowCount = 1
           ShowHint = True
-          TabOrder = 6
+          TabOrder = 7
           OnDblClick = StringGrid1DblClick
           OnDrawCell = StringGrid1DrawCell
           OnMouseDown = StringGrid1MouseDown
           OnSelection = StringGrid1Selection
           ColWidths = (
-            30
-            262
+            48
+            419
             0
-            200
-            0
-            0
+            320
             0
             0
             0
-            85
+            0
+            0
+            136
           )
         end
         object Image1: TImage
-          Left = 520
+          Left = 832
           Height = 16
-          Top = 144
+          Top = 230
           Width = 16
           AutoSize = True
           Picture.Data = {
@@ -4655,41 +4684,68 @@ object Form1: TForm1
         end
       end
       object Panel4: TPanel
-        Left = 610
-        Height = 683
+        Left = 976
+        Height = 1133
         Top = 0
-        Width = 690
+        Width = 1104
         Align = alClient
-        ClientHeight = 683
-        ClientWidth = 690
+        ClientHeight = 1133
+        ClientWidth = 1104
+        ParentBackground = False
         ParentFont = False
         TabOrder = 2
+        object LblAdminRequired: TLabel
+          Left = 69
+          Height = 32
+          Top = 12
+          Width = 1005
+          Alignment = taCenter
+          Anchors = [akTop, akLeft, akRight]
+          AutoSize = False
+          BorderSpacing.Left = 3
+          BorderSpacing.Right = 16
+          Caption = 'ADVERTENCIA: SE ESTÁ EJECUTANDO SIN PERMISOS DE ADMINISTRADOR.'
+          Color = 11542560
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clWhite
+          Font.Height = -15
+          Font.Name = 'Arial'
+          Font.Pitch = fpVariable
+          Font.Quality = fqCleartypeNatural
+          Font.Style = [fsBold]
+          Layout = tlCenter
+          ParentColor = False
+          ParentFont = False
+          Transparent = False
+          Visible = False
+        end
         object PageControl1: TPageControl
           AnchorSideLeft.Control = BitBtn1
           AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = Panel4
+          AnchorSideTop.Side = asrTop
           AnchorSideRight.Control = Panel4
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = Panel4
           AnchorSideBottom.Side = asrBottom
-          Left = 42
-          Height = 641
-          Top = 11
-          Width = 637
+          Left = 66
+          Height = 1084
+          Top = 0
+          Width = 1021
           ActivePage = TabSheet2
           Anchors = [akTop, akLeft, akRight, akBottom]
-          BorderSpacing.Left = 2
-          BorderSpacing.Top = 10
-          BorderSpacing.Right = 10
-          BorderSpacing.Bottom = 30
+          BorderSpacing.Left = 3
+          BorderSpacing.Top = 0
+          BorderSpacing.Right = 16
+          BorderSpacing.Bottom = 48
           ParentFont = False
           TabIndex = 1
           TabOrder = 3
           object TabSheet1: TTabSheet
             AnchorSideRight.Side = asrBottom
             Caption = 'Consola'
-            ClientHeight = 608
-            ClientWidth = 629
+            ClientHeight = 981
+            ClientWidth = 1005
             ParentFont = False
             object RichMemo1: TRichMemo
               AnchorSideLeft.Control = TabSheet1
@@ -4699,9 +4755,9 @@ object Form1: TForm1
               AnchorSideBottom.Control = TabSheet1
               AnchorSideBottom.Side = asrBottom
               Left = 0
-              Height = 608
+              Height = 981
               Top = 0
-              Width = 629
+              Width = 1005
               Anchors = [akTop, akLeft, akRight, akBottom]
               BorderSpacing.CellAlignHorizontal = ccaCenter
               BorderSpacing.CellAlignVertical = ccaCenter
@@ -4720,11 +4776,11 @@ object Form1: TForm1
               AnchorSideRight.Side = asrBottom
               AnchorSideBottom.Control = RichMemo1
               AnchorSideBottom.Side = asrBottom
-              Left = 599
-              Height = 30
+              Left = 957
+              Height = 48
               Hint = 'Limpia el Panel'
-              Top = 578
-              Width = 30
+              Top = 933
+              Width = 48
               Anchors = [akRight, akBottom]
               Color = clWhite
               Glyph.Data = {
@@ -4803,51 +4859,51 @@ object Form1: TForm1
                 0000000000000000000000000000000000000000000000000000000000000000
                 0000000000000000000000000000000000000000000000000000
               }
-              OnClick = BitBtn11Click
               ParentFont = False
               ParentShowHint = False
               ShowHint = True
               Spacing = 0
               TabOrder = 1
+              OnClick = BitBtn11Click
             end
           end
           object TabSheet2: TTabSheet
             Caption = 'PdfReport.ini'
-            ClientHeight = 608
-            ClientWidth = 629
+            ClientHeight = 981
+            ClientWidth = 1005
             object ComboBox1: TComboBox
-              Left = 78
-              Height = 28
-              Top = 16
-              Width = 282
-              ItemHeight = 20
+              Left = 125
+              Height = 40
+              Top = 26
+              Width = 451
+              ItemHeight = 32
               Items.Strings = (
                 '[WINDOWS]'
                 '[LINUX]'
                 '[IBM_WAS]'
                 'Personalizar...'
               )
-              OnChange = ComboBox1Change
               Style = csDropDownList
               TabOrder = 0
+              OnChange = ComboBox1Change
             end
             object Label3: TLabel
-              Left = 10
-              Height = 20
-              Top = 16
-              Width = 56
+              Left = 16
+              Height = 32
+              Top = 26
+              Width = 88
               Caption = 'Plantilla:'
               ParentColor = False
             end
             object BitBtn2: TBitBtn
-              Left = 376
-              Height = 68
-              Top = 16
-              Width = 86
+              Left = 602
+              Height = 109
+              Top = 26
+              Width = 138
               Caption = 'Grabar'
-              OnClick = BitBtn2Click
               TabOrder = 1
               Visible = False
+              OnClick = BitBtn2Click
             end
             object Memo2: TMemo
               AnchorSideLeft.Control = TabSheet2
@@ -4855,14 +4911,14 @@ object Form1: TForm1
               AnchorSideRight.Side = asrBottom
               AnchorSideBottom.Control = TabSheet2
               AnchorSideBottom.Side = asrBottom
-              Left = 10
-              Height = 502
-              Top = 96
-              Width = 609
+              Left = 16
+              Height = 811
+              Top = 154
+              Width = 973
               Anchors = [akTop, akLeft, akRight, akBottom]
-              BorderSpacing.Left = 10
-              BorderSpacing.Right = 10
-              BorderSpacing.Bottom = 10
+              BorderSpacing.Left = 16
+              BorderSpacing.Right = 16
+              BorderSpacing.Bottom = 16
               Lines.Strings = (
                 'Memo2'
               )
@@ -4870,31 +4926,31 @@ object Form1: TForm1
               TabOrder = 5
             end
             object CheckBox11: TCheckBox
-              Left = 10
-              Height = 24
-              Top = 56
-              Width = 141
+              Left = 16
+              Height = 36
+              Top = 90
+              Width = 222
               Caption = 'Copiar Fuentes a :'
-              OnChange = CheckBox11Change
               TabOrder = 3
+              OnChange = CheckBox11Change
             end
             object EDRutaFonts: TEdit
-              Left = 160
-              Height = 28
-              Top = 56
-              Width = 200
+              Left = 256
+              Height = 40
+              Top = 90
+              Width = 320
               TabOrder = 4
             end
             object BitBtn4: TBitBtn
               AnchorSideRight.Control = TabSheet2
               AnchorSideRight.Side = asrBottom
-              Left = 482
-              Height = 33
+              Left = 770
+              Height = 53
               Hint = 'Aplicar/Generar Pdf de las carpetas marcadas'
-              Top = 16
-              Width = 137
+              Top = 26
+              Width = 219
               Anchors = [akTop, akRight]
-              BorderSpacing.Right = 10
+              BorderSpacing.Right = 16
               Caption = 'Aplicar'
               Glyph.Data = {
                 36040000424D3604000000000000360000002800000010000000100000000100
@@ -4932,8 +4988,8 @@ object Form1: TForm1
                 0000000000000000000000000000CB8B4B2CD5975A85D79C5D9FD79C5D9FD599
                 5B84CB8B4B2C0000000000000000000000000000000000000000
               }
-              OnClick = BitBtn4Click
               TabOrder = 2
+              OnClick = BitBtn4Click
             end
             object LblPdfReportIni: TLabel
               AnchorSideTop.Control = BitBtn4
@@ -4942,12 +4998,12 @@ object Form1: TForm1
               AnchorSideRight.Side = asrBottom
               AnchorSideBottom.Control = Memo2
               Cursor = crHandPoint
-              Left = 509
-              Height = 20
-              Top = 73
-              Width = 110
+              Left = 811
+              Height = 32
+              Top = 117
+              Width = 178
               Anchors = [akRight, akBottom]
-              BorderSpacing.Bottom = 3
+              BorderSpacing.Bottom = 5
               Caption = 'ver PDFreport.ini'
               Font.Color = clBlue
               Font.Style = [fsUnderline]
@@ -4958,70 +5014,70 @@ object Form1: TForm1
           end
           object TabSheet3: TTabSheet
             Caption = 'Web.xml'
-            ClientHeight = 608
-            ClientWidth = 629
+            ClientHeight = 981
+            ClientWidth = 1005
             OnShow = TabSheet3Show
             object EditModulo: TEdit
-              Left = 15
-              Height = 28
-              Top = 100
-              Width = 190
+              Left = 24
+              Height = 40
+              Top = 160
+              Width = 304
+              TabOrder = 0
               OnChange = EditModuloChange
               OnKeyPress = EditModuloKeyPress
-              TabOrder = 0
             end
             object EditVersion: TEdit
               AnchorSideLeft.Control = TabSheet3
               AnchorSideLeft.Side = asrCenter
-              Left = 219
-              Height = 28
-              Top = 100
-              Width = 190
+              Left = 350
+              Height = 40
+              Top = 160
+              Width = 304
+              TabOrder = 1
               OnChange = EditVersionChange
               OnKeyPress = EditVersionKeyPress
-              TabOrder = 1
             end
             object ListBox1: TListBox
-              Left = 15
-              Height = 200
-              Top = 212
-              Width = 190
+              Left = 24
+              Height = 320
+              Top = 339
+              Width = 304
               ItemHeight = 0
-              OnClick = ListBox1Click
               Sorted = True
               TabOrder = 4
+              OnClick = ListBox1Click
             end
             object ListBox2: TListBox
               AnchorSideLeft.Control = TabSheet3
               AnchorSideLeft.Side = asrCenter
-              Left = 219
-              Height = 200
-              Top = 212
-              Width = 190
+              Left = 350
+              Height = 320
+              Top = 339
+              Width = 304
               ItemHeight = 0
-              OnClick = ListBox2Click
               Sorted = True
               TabOrder = 5
+              OnClick = ListBox2Click
             end
             object CalendarLite1: TCalendarLite
               AnchorSideLeft.Side = asrBottom
               AnchorSideRight.Control = TabSheet3
               AnchorSideRight.Side = asrBottom
-              Left = 428
-              Height = 200
-              Top = 212
-              Width = 191
+              Left = 683
+              Height = 320
+              Top = 339
+              Width = 306
               Anchors = [akTop, akRight]
-              BorderSpacing.Right = 10
-              Constraints.MinHeight = 188
-              Constraints.MinWidth = 188
+              BorderSpacing.Right = 16
+              Constraints.MinHeight = 301
+              Constraints.MinWidth = 301
               ParentColor = False
               TabOrder = 6
               TabStop = True
               Colors.TodayFrameColor = clGray
               Date = 43560
               DayNames = 'dom,lun,mar,mié,jue,vie,sáb'
-              DisplayTexts = '"Hoy es",dd/mm/yyyy,"Dias de fiestas","No hay dias feriados establecidos para"'
+              DisplayTexts = '"Hoy es %s",dd/mm/yyyy,"Dias de fiestas %d","No hay dias feriados establecidos para %d","dddd dd/mm/yyyy","mmmm yyyy"'
               MonthNames = 'enero,febrero,marzo,abril,mayo,junio,julio,agosto,septiembre,octubre,noviembre,diciembre'
               Options = [coShowBorder, coShowHolidays, coShowTodayFrame, coShowWeekend]
               StartingDayOfWeek = dowMonday
@@ -5032,24 +5088,24 @@ object Form1: TForm1
             object EditFechaVersion: TEdit
               AnchorSideRight.Control = TabSheet3
               AnchorSideRight.Side = asrBottom
-              Left = 428
-              Height = 28
-              Top = 100
-              Width = 191
+              Left = 683
+              Height = 40
+              Top = 160
+              Width = 306
               Anchors = [akTop, akRight]
-              BorderSpacing.Right = 10
+              BorderSpacing.Right = 16
+              TabOrder = 2
               OnChange = EditFechaVersionChange
               OnKeyPress = EditFechaVersionKeyPress
-              TabOrder = 2
             end
             object BitBtn5: TBitBtn
               AnchorSideLeft.Control = TabSheet3
               AnchorSideLeft.Side = asrCenter
-              Left = 242
-              Height = 40
+              Left = 386
+              Height = 64
               Hint = 'Editar Display-Name de las carpetas marcadas'
-              Top = 160
-              Width = 145
+              Top = 256
+              Width = 232
               Caption = 'Aplicar'
               Glyph.Data = {
                 36040000424D3604000000000000360000002800000010000000100000000100
@@ -5087,8 +5143,8 @@ object Form1: TForm1
                 0000000000000000000000000000CB8B4B2CD5975A85D79C5D9FD79C5D9FD599
                 5B84CB8B4B2C0000000000000000000000000000000000000000
               }
-              OnClick = BitBtn5Click
               TabOrder = 3
+              OnClick = BitBtn5Click
             end
             object Label5: TLabel
               AnchorSideTop.Control = EditFechaVersion
@@ -5097,12 +5153,12 @@ object Form1: TForm1
               AnchorSideRight.Side = asrBottom
               AnchorSideBottom.Control = RichMemo3
               Cursor = crHandPoint
-              Left = 538
-              Height = 20
-              Top = 473
-              Width = 79
+              Left = 860
+              Height = 32
+              Top = 757
+              Width = 127
               Anchors = [akRight, akBottom]
-              BorderSpacing.Bottom = 3
+              BorderSpacing.Bottom = 5
               Caption = 'ver web.xml'
               Font.Color = clBlue
               Font.Style = [fsUnderline]
@@ -5116,12 +5172,12 @@ object Form1: TForm1
               AnchorSideTop.Side = asrBottom
               AnchorSideRight.Control = CalendarLite1
               AnchorSideRight.Side = asrBottom
-              Left = 428
-              Height = 25
-              Top = 415
-              Width = 191
+              Left = 683
+              Height = 40
+              Top = 664
+              Width = 306
               Anchors = [akTop, akLeft, akRight]
-              BorderSpacing.Top = 3
+              BorderSpacing.Top = 5
               Caption = 'Hoy'
               Glyph.Data = {
                 36040000424D3604000000000000360000002800000010000000100000000100
@@ -5159,8 +5215,8 @@ object Form1: TForm1
                 0000000000000000000000000000000000000000000000000000000000000000
                 0000000000000000000000000000000000000000000000000000
               }
-              OnClick = BitBtn6Click
               TabOrder = 9
+              OnClick = BitBtn6Click
             end
             object BitBtn12: TBitBtn
               AnchorSideLeft.Control = ListBox1
@@ -5168,12 +5224,12 @@ object Form1: TForm1
               AnchorSideTop.Side = asrBottom
               AnchorSideRight.Control = ListBox1
               AnchorSideRight.Side = asrBottom
-              Left = 15
-              Height = 25
-              Top = 415
-              Width = 190
+              Left = 24
+              Height = 40
+              Top = 664
+              Width = 304
               Anchors = [akTop, akLeft, akRight]
-              BorderSpacing.Top = 3
+              BorderSpacing.Top = 5
               Caption = 'Eliminar'
               Glyph.Data = {
                 36040000424D3604000000000000360000002800000010000000100000000100
@@ -5211,8 +5267,8 @@ object Form1: TForm1
                 0000000000000000000000000000CB8B4B2CD5975A85D79C5D9FD79C5D9FD599
                 5B84CB8B4B2C0000000000000000000000000000000000000000
               }
-              OnClick = BitBtn12Click
               TabOrder = 7
+              OnClick = BitBtn12Click
             end
             object BitBtn13: TBitBtn
               AnchorSideLeft.Control = ListBox2
@@ -5220,12 +5276,12 @@ object Form1: TForm1
               AnchorSideTop.Side = asrBottom
               AnchorSideRight.Control = ListBox2
               AnchorSideRight.Side = asrBottom
-              Left = 219
-              Height = 25
-              Top = 415
-              Width = 190
+              Left = 350
+              Height = 40
+              Top = 664
+              Width = 304
               Anchors = [akTop, akLeft, akRight]
-              BorderSpacing.Top = 3
+              BorderSpacing.Top = 5
               Caption = 'Eliminar'
               Glyph.Data = {
                 36040000424D3604000000000000360000002800000010000000100000000100
@@ -5263,8 +5319,8 @@ object Form1: TForm1
                 0000000000000000000000000000CB8B4B2CD5975A85D79C5D9FD79C5D9FD599
                 5B84CB8B4B2C0000000000000000000000000000000000000000
               }
-              OnClick = BitBtn13Click
               TabOrder = 8
+              OnClick = BitBtn13Click
             end
             object Label9: TLabel
               AnchorSideLeft.Control = RichMemo3
@@ -5272,14 +5328,14 @@ object Form1: TForm1
               AnchorSideRight.Control = RichMemo3
               AnchorSideRight.Side = asrCenter
               AnchorSideBottom.Control = RichMemo3
-              Left = 15
-              Height = 20
-              Top = 476
-              Width = 93
+              Left = 24
+              Height = 32
+              Top = 762
+              Width = 149
               Anchors = [akLeft, akBottom]
-              BorderSpacing.Left = 5
+              BorderSpacing.Left = 8
               Caption = 'display-name:'
-              Font.Height = 20
+              Font.Height = 32
               ParentColor = False
               ParentFont = False
               ParentShowHint = False
@@ -5291,10 +5347,10 @@ object Form1: TForm1
               AnchorSideTop.Control = EditModulo
               AnchorSideTop.Side = asrBottom
               AnchorSideBottom.Control = EditModulo
-              Left = 15
-              Height = 20
-              Top = 80
-              Width = 55
+              Left = 24
+              Height = 32
+              Top = 128
+              Width = 89
               Anchors = [akLeft, akBottom]
               Caption = 'Módulo:'
               ParentColor = False
@@ -5302,10 +5358,10 @@ object Form1: TForm1
             object Label11: TLabel
               AnchorSideLeft.Control = EditVersion
               AnchorSideBottom.Control = EditVersion
-              Left = 219
-              Height = 20
-              Top = 80
-              Width = 51
+              Left = 350
+              Height = 32
+              Top = 128
+              Width = 83
               Anchors = [akLeft, akBottom]
               Caption = 'Versión:'
               ParentColor = False
@@ -5313,10 +5369,10 @@ object Form1: TForm1
             object Label12: TLabel
               AnchorSideLeft.Control = EditFechaVersion
               AnchorSideBottom.Control = EditFechaVersion
-              Left = 428
-              Height = 20
-              Top = 80
-              Width = 41
+              Left = 683
+              Height = 32
+              Top = 128
+              Width = 67
               Anchors = [akLeft, akBottom]
               Caption = 'Fecha:'
               ParentColor = False
@@ -5328,10 +5384,10 @@ object Form1: TForm1
               AnchorSideRight.Control = EditModulo
               AnchorSideRight.Side = asrBottom
               Cursor = crHandPoint
-              Left = 188
-              Height = 20
-              Top = 128
-              Width = 17
+              Left = 303
+              Height = 32
+              Top = 200
+              Width = 25
               Anchors = [akTop, akRight]
               Caption = '[x]'
               Font.Color = clBlue
@@ -5346,10 +5402,10 @@ object Form1: TForm1
               AnchorSideRight.Control = EditVersion
               AnchorSideRight.Side = asrBottom
               Cursor = crHandPoint
-              Left = 392
-              Height = 20
-              Top = 128
-              Width = 17
+              Left = 629
+              Height = 32
+              Top = 200
+              Width = 25
               Anchors = [akTop, akRight]
               Caption = '[x]'
               Font.Color = clBlue
@@ -5359,10 +5415,10 @@ object Form1: TForm1
               OnClick = Label14Click
             end
             object RichMemo3: TRichMemo
-              Left = 10
-              Height = 104
-              Top = 496
-              Width = 607
+              Left = 16
+              Height = 166
+              Top = 794
+              Width = 971
               BorderStyle = bsNone
               Font.Style = [fsBold, fsItalic]
               HideSelection = False
@@ -5382,10 +5438,10 @@ object Form1: TForm1
               AnchorSideRight.Control = EditFechaVersion
               AnchorSideRight.Side = asrBottom
               Cursor = crHandPoint
-              Left = 602
-              Height = 20
-              Top = 128
-              Width = 17
+              Left = 964
+              Height = 32
+              Top = 200
+              Width = 25
               Anchors = [akTop, akRight]
               Caption = '[x]'
               Font.Color = clBlue
@@ -5395,12 +5451,12 @@ object Form1: TForm1
               OnClick = Label15Click
             end
             object Label16: TLabel
-              Left = 15
-              Height = 28
-              Top = 24
-              Width = 6
+              Left = 24
+              Height = 45
+              Top = 38
+              Width = 12
               Caption = '.'
-              Font.Height = -20
+              Font.Height = -32
               Font.Style = [fsBold, fsItalic]
               ParentColor = False
               ParentFont = False
@@ -5409,10 +5465,10 @@ object Form1: TForm1
               AnchorSideLeft.Control = EditModulo
               AnchorSideRight.Control = EditFechaVersion
               AnchorSideRight.Side = asrBottom
-              Left = 15
-              Height = 23
-              Top = 56
-              Width = 604
+              Left = 24
+              Height = 37
+              Top = 90
+              Width = 965
               Anchors = [akTop, akLeft, akRight]
               LineColor = clActiveCaption
               ArrowColor = clBlack
@@ -5421,34 +5477,35 @@ object Form1: TForm1
           end
           object TabSheet4: TTabSheet
             Caption = 'DataSource'
-            ClientHeight = 608
-            ClientWidth = 629
+            ClientHeight = 981
+            ClientWidth = 1005
             OnShow = TabSheet4Show
             object GroupBox3: TGroupBox
-              Left = 8
-              Height = 128
-              Top = 296
-              Width = 544
+              Left = 13
+              Height = 205
+              Top = 474
+              Width = 870
               Caption = 'Actual (Seleccionado)'
-              ClientHeight = 108
-              ClientWidth = 540
+              ClientHeight = 175
+              ClientWidth = 866
               Font.CharSet = ANSI_CHARSET
               Font.Color = clBlack
-              Font.Height = -12
+              Font.Height = -19
               Font.Name = 'Segoe UI'
               Font.Pitch = fpVariable
               Font.Quality = fqDraft
+              ParentBackground = False
               ParentFont = False
               TabOrder = 2
               object EditEJJdbcDatasource: TEdit
-                Left = 32
-                Height = 23
-                Top = 24
-                Width = 332
+                Left = 51
+                Height = 33
+                Top = 38
+                Width = 531
                 Enabled = False
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = clBlack
-                Font.Height = -12
+                Font.Height = -19
                 Font.Name = 'Segoe UI'
                 Font.Pitch = fpVariable
                 Font.Quality = fqDraft
@@ -5459,15 +5516,15 @@ object Form1: TForm1
               object Label17: TLabel
                 AnchorSideLeft.Control = EditEJJdbcDatasource
                 AnchorSideBottom.Control = EditEJJdbcDatasource
-                Left = 32
-                Height = 15
-                Top = 9
-                Width = 104
+                Left = 51
+                Height = 25
+                Top = 13
+                Width = 166
                 Anchors = [akLeft, akBottom]
                 Caption = 'JDBC_DATASOURCE'
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = clBlack
-                Font.Height = -12
+                Font.Height = -19
                 Font.Name = 'Segoe UI'
                 Font.Pitch = fpVariable
                 Font.Quality = fqDraft
@@ -5475,14 +5532,14 @@ object Form1: TForm1
                 ParentFont = False
               end
               object Label18: TLabel
-                Left = 370
-                Height = 20
-                Top = 24
-                Width = 4
+                Left = 592
+                Height = 32
+                Top = 38
+                Width = 7
                 Caption = '.'
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = clBlack
-                Font.Height = -15
+                Font.Height = -24
                 Font.Name = 'Segoe UI'
                 Font.Pitch = fpVariable
                 Font.Quality = fqDraft
@@ -5493,15 +5550,15 @@ object Form1: TForm1
               object Label20: TLabel
                 AnchorSideLeft.Control = EditEJResRefName
                 AnchorSideBottom.Control = EditEJResRefName
-                Left = 32
-                Height = 15
-                Top = 57
-                Width = 82
+                Left = 51
+                Height = 25
+                Top = 90
+                Width = 130
                 Anchors = [akLeft, akBottom]
                 Caption = 'RES_REF_NAME'
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = clBlack
-                Font.Height = -12
+                Font.Height = -19
                 Font.Name = 'Segoe UI'
                 Font.Pitch = fpVariable
                 Font.Quality = fqDraft
@@ -5509,14 +5566,14 @@ object Form1: TForm1
                 ParentFont = False
               end
               object EditEJResRefName: TEdit
-                Left = 32
-                Height = 23
-                Top = 72
-                Width = 332
+                Left = 51
+                Height = 33
+                Top = 115
+                Width = 531
                 Enabled = False
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = clBlack
-                Font.Height = -12
+                Font.Height = -19
                 Font.Name = 'Segoe UI'
                 Font.Pitch = fpVariable
                 Font.Quality = fqDraft
@@ -5526,31 +5583,32 @@ object Form1: TForm1
               end
             end
             object GroupBox10: TGroupBox
-              Left = 8
-              Height = 184
-              Top = 24
-              Width = 544
+              Left = 13
+              Height = 294
+              Top = 38
+              Width = 870
               Caption = 'Aplicar Datasource'
-              ClientHeight = 159
-              ClientWidth = 540
+              ClientHeight = 257
+              ClientWidth = 866
+              ParentBackground = False
               TabOrder = 0
               object EditJdbcDatasource: TEdit
-                Left = 32
-                Height = 28
-                Top = 24
-                Width = 332
-                OnChange = EditJdbcDatasourceChange
+                Left = 51
+                Height = 40
+                Top = 38
+                Width = 531
                 TabOrder = 0
+                OnChange = EditJdbcDatasourceChange
               end
               object Label19: TLabel
                 AnchorSideLeft.Control = EditJdbcDatasource
                 AnchorSideTop.Control = EditJdbcDatasource
                 AnchorSideTop.Side = asrBottom
                 AnchorSideBottom.Control = EditJdbcDatasource
-                Left = 32
-                Height = 20
-                Top = 4
-                Width = 132
+                Left = 51
+                Height = 32
+                Top = 6
+                Width = 208
                 Anchors = [akLeft, akBottom]
                 Caption = 'JDBC_DATASOURCE'
                 ParentColor = False
@@ -5558,29 +5616,29 @@ object Form1: TForm1
               object Label21: TLabel
                 AnchorSideLeft.Control = EditResRefName
                 AnchorSideBottom.Control = EditResRefName
-                Left = 32
-                Height = 20
-                Top = 60
-                Width = 103
+                Left = 51
+                Height = 32
+                Top = 96
+                Width = 164
                 Anchors = [akLeft, akBottom]
                 Caption = 'RES_REF_NAME'
                 ParentColor = False
               end
               object EditResRefName: TEdit
-                Left = 32
-                Height = 28
-                Top = 80
-                Width = 332
-                OnChange = EditResRefNameChange
+                Left = 51
+                Height = 40
+                Top = 128
+                Width = 531
                 TabOrder = 1
+                OnChange = EditResRefNameChange
               end
               object BtnsaveDS: TBitBtn
-                Left = 32
-                Height = 28
+                Left = 51
+                Height = 45
                 Hint = 'Grabar como plantilla'
-                Top = 112
-                Width = 28
-                BorderSpacing.Left = 20
+                Top = 179
+                Width = 45
+                BorderSpacing.Left = 32
                 Color = clWindow
                 Glyph.Data = {
                   36090000424D3609000000000000360000002800000018000000180000000100
@@ -5658,21 +5716,21 @@ object Form1: TForm1
                   0000000000000000000000000000000000000000000000000000000000000000
                   0000000000000000000000000000000000000000000000000000
                 }
-                OnClick = BtnsaveDSClick
                 ParentBidiMode = False
                 ParentFont = False
                 ParentShowHint = False
                 TabOrder = 3
+                OnClick = BtnsaveDSClick
               end
               object BitBtn27: TBitBtn
                 AnchorSideRight.Control = GroupBox10
                 AnchorSideRight.Side = asrCenter
                 AnchorSideBottom.Side = asrCenter
-                Left = 376
-                Height = 64
+                Left = 602
+                Height = 102
                 Hint = 'Aplicar Datasource a las carpetas marcadas'
-                Top = 31
-                Width = 122
+                Top = 50
+                Width = 195
                 Caption = 'APLICAR'
                 Glyph.Data = {
                   36040000424D3604000000000000360000002800000010000000100000000100
@@ -5710,24 +5768,25 @@ object Form1: TForm1
                   0000000000000000000000000000CB8B4B2CD5975A85D79C5D9FD79C5D9FD599
                   5B84CB8B4B2C0000000000000000000000000000000000000000
                 }
-                OnClick = BitBtn27Click
                 TabOrder = 2
+                OnClick = BitBtn27Click
               end
             end
             object GroupBox11: TGroupBox
-              Left = 8
-              Height = 72
-              Top = 220
-              Width = 544
+              Left = 13
+              Height = 115
+              Top = 352
+              Width = 870
               Caption = 'Plantillas'
-              ClientHeight = 52
-              ClientWidth = 540
+              ClientHeight = 85
+              ClientWidth = 866
               Font.CharSet = ANSI_CHARSET
               Font.Color = clBlack
-              Font.Height = -12
+              Font.Height = -19
               Font.Name = 'Segoe UI'
               Font.Pitch = fpVariable
               Font.Quality = fqDraft
+              ParentBackground = False
               ParentFont = False
               TabOrder = 1
               object ComboBoxDsCopyFrom: TComboBox
@@ -5737,19 +5796,19 @@ object Form1: TForm1
                 AnchorSideRight.Control = BitBtn28
                 AnchorSideBottom.Control = BitBtn28
                 AnchorSideBottom.Side = asrBottom
-                Left = 58
-                Height = 28
-                Top = 9
-                Width = 344
+                Left = 92
+                Height = 40
+                Top = 14
+                Width = 550
                 Anchors = [akTop, akLeft, akBottom]
-                BorderSpacing.Left = 2
+                BorderSpacing.Left = 3
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = clBlack
-                Font.Height = -15
+                Font.Height = -24
                 Font.Name = 'Segoe UI'
                 Font.Pitch = fpVariable
                 Font.Quality = fqDraft
-                ItemHeight = 20
+                ItemHeight = 32
                 Items.Strings = (
                   'Último Aplicado...'
                   '## War Actual ##'
@@ -5757,10 +5816,10 @@ object Form1: TForm1
                   'Ejemplo SQL'
                   'Ejemplo PJUD'
                 )
-                OnChange = ComboBoxDsCopyFromChange
                 ParentFont = False
                 Style = csDropDownList
                 TabOrder = 0
+                OnChange = ComboBoxDsCopyFromChange
               end
               object BitBtn15: TBitBtn
                 AnchorSideLeft.Control = ComboBoxDsCopyFrom
@@ -5770,13 +5829,13 @@ object Form1: TForm1
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Control = BitBtn28
                 AnchorSideBottom.Side = asrBottom
-                Left = 404
-                Height = 28
+                Left = 645
+                Height = 45
                 Hint = 'Seleccionar plantilla'
-                Top = 9
-                Width = 24
+                Top = 14
+                Width = 38
                 Anchors = [akTop, akLeft, akBottom]
-                BorderSpacing.Left = 2
+                BorderSpacing.Left = 3
                 Glyph.Data = {
                   36090000424D3609000000000000360000002800000018000000180000000100
                   2000000000000009000064000000640000000000000000000000000000000000
@@ -5854,15 +5913,15 @@ object Form1: TForm1
                   0000000000000000000000000000000000000000000000000000
                 }
                 Layout = blGlyphTop
-                OnClick = BitBtn15Click
                 TabOrder = 1
+                OnClick = BitBtn15Click
               end
               object BitBtn28: TBitBtn
-                Left = 32
-                Height = 28
+                Left = 51
+                Height = 45
                 Hint = 'Eliminar plantilla actual'
-                Top = 9
-                Width = 24
+                Top = 14
+                Width = 38
                 Glyph.Data = {
                   36090000424D3609000000000000360000002800000018000000180000000100
                   2000000000000009000064000000640000000000000000000000000000000000
@@ -5940,18 +5999,18 @@ object Form1: TForm1
                   0000000000000000000000000000000000000000000000000000
                 }
                 Layout = blGlyphTop
-                OnClick = BitBtn28Click
                 TabOrder = 2
+                OnClick = BitBtn28Click
               end
             end
             object Memo3: TMemo
-              Left = 42
-              Height = 144
-              Top = 432
-              Width = 483
+              Left = 67
+              Height = 230
+              Top = 691
+              Width = 773
               Font.CharSet = ANSI_CHARSET
               Font.Color = clGray
-              Font.Height = -13
+              Font.Height = -21
               Font.Name = 'Segoe UI Semilight'
               Font.Pitch = fpVariable
               Font.Quality = fqDraft
@@ -5971,44 +6030,45 @@ object Form1: TForm1
           end
           object TabSheet6: TTabSheet
             Caption = 'Info'
-            ClientHeight = 608
-            ClientWidth = 629
+            ClientHeight = 981
+            ClientWidth = 1005
             OnShow = TabSheet6Show
             object GroupBoxINFO: TGroupBox
-              Left = 8
-              Height = 280
-              Top = 96
-              Width = 600
-              ClientHeight = 255
-              ClientWidth = 596
+              Left = 13
+              Height = 448
+              Top = 154
+              Width = 960
+              ClientHeight = 411
+              ClientWidth = 956
+              ParentBackground = False
               TabOrder = 0
               object EditFolderApp: TEdit
                 AnchorSideLeft.Control = EditWar
                 AnchorSideTop.Control = Label28
                 Cursor = crArrow
-                Left = 113
-                Height = 20
-                Top = 70
-                Width = 436
+                Left = 180
+                Height = 32
+                Top = 113
+                Width = 698
                 BorderStyle = bsNone
                 Enabled = False
                 Font.Color = clBlack
                 Font.Style = [fsBold, fsItalic]
-                OnChange = EditFolderAppChange
                 ParentColor = True
                 ParentFont = False
                 ReadOnly = True
                 TabOrder = 0
+                OnChange = EditFolderAppChange
               end
               object Label28: TLabel
                 AnchorSideLeft.Control = GroupBoxINFO
                 AnchorSideTop.Control = Label29
-                Left = 10
-                Height = 20
-                Top = 70
-                Width = 55
-                BorderSpacing.Left = 10
-                BorderSpacing.Top = 30
+                Left = 16
+                Height = 32
+                Top = 113
+                Width = 87
+                BorderSpacing.Left = 16
+                BorderSpacing.Top = 48
                 Caption = 'Carpeta:'
                 ParentColor = False
               end
@@ -6019,11 +6079,11 @@ object Form1: TForm1
                 AnchorSideRight.Control = GroupBoxINFO
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
-                Left = 554
-                Height = 20
-                Top = 70
-                Width = 20
-                BorderSpacing.Left = 5
+                Left = 886
+                Height = 32
+                Top = 113
+                Width = 33
+                BorderSpacing.Left = 8
                 Caption = 'ver'
                 Font.Color = clBlue
                 Font.Style = [fsUnderline]
@@ -6034,13 +6094,13 @@ object Form1: TForm1
               object Label29: TLabel
                 AnchorSideLeft.Control = GroupBoxINFO
                 AnchorSideTop.Control = Label34
-                Left = 10
-                Height = 20
-                Top = 40
-                Width = 55
+                Left = 16
+                Height = 32
+                Top = 65
+                Width = 89
                 Anchors = [akLeft]
-                BorderSpacing.Left = 10
-                BorderSpacing.Top = 30
+                BorderSpacing.Left = 16
+                BorderSpacing.Top = 48
                 Caption = 'Modulo:'
                 ParentColor = False
               end
@@ -6048,10 +6108,10 @@ object Form1: TForm1
                 AnchorSideLeft.Control = EditFolderApp
                 AnchorSideTop.Control = Label29
                 Cursor = crArrow
-                Left = 113
-                Height = 20
-                Top = 40
-                Width = 436
+                Left = 180
+                Height = 32
+                Top = 65
+                Width = 698
                 BorderStyle = bsNone
                 Enabled = False
                 Font.Color = clBlack
@@ -6064,12 +6124,12 @@ object Form1: TForm1
               object Label30: TLabel
                 AnchorSideLeft.Control = GroupBoxINFO
                 AnchorSideTop.Control = Label28
-                Left = 10
-                Height = 20
-                Top = 100
-                Width = 36
-                BorderSpacing.Left = 10
-                BorderSpacing.Top = 30
+                Left = 16
+                Height = 32
+                Top = 161
+                Width = 57
+                BorderSpacing.Left = 16
+                BorderSpacing.Top = 48
                 Caption = '*.war:'
                 ParentColor = False
               end
@@ -6077,10 +6137,10 @@ object Form1: TForm1
                 AnchorSideLeft.Control = EditPDFReport
                 AnchorSideTop.Control = Label30
                 Cursor = crArrow
-                Left = 113
-                Height = 20
-                Top = 100
-                Width = 436
+                Left = 180
+                Height = 32
+                Top = 161
+                Width = 698
                 BorderStyle = bsNone
                 Enabled = False
                 Font.Color = clBlack
@@ -6095,11 +6155,11 @@ object Form1: TForm1
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Control = EditWar
                 Cursor = crHandPoint
-                Left = 554
-                Height = 20
-                Top = 100
-                Width = 20
-                BorderSpacing.Left = 5
+                Left = 886
+                Height = 32
+                Top = 161
+                Width = 33
+                BorderSpacing.Left = 8
                 Caption = 'ver'
                 Font.Color = clBlue
                 Font.Style = [fsUnderline]
@@ -6110,12 +6170,12 @@ object Form1: TForm1
               object Label31: TLabel
                 AnchorSideLeft.Control = GroupBoxINFO
                 AnchorSideTop.Control = Label30
-                Left = 10
-                Height = 20
-                Top = 130
-                Width = 93
-                BorderSpacing.Left = 10
-                BorderSpacing.Top = 30
+                Left = 16
+                Height = 32
+                Top = 209
+                Width = 148
+                BorderSpacing.Left = 16
+                BorderSpacing.Top = 48
                 Caption = 'PDFReport.ini:'
                 ParentColor = False
               end
@@ -6124,11 +6184,11 @@ object Form1: TForm1
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Control = Label31
                 Cursor = crArrow
-                Left = 113
-                Height = 20
-                Top = 130
-                Width = 436
-                BorderSpacing.Left = 10
+                Left = 180
+                Height = 32
+                Top = 209
+                Width = 698
+                BorderSpacing.Left = 16
                 BorderStyle = bsNone
                 Enabled = False
                 Font.Color = clBlack
@@ -6143,11 +6203,11 @@ object Form1: TForm1
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Control = EditPDFReport
                 Cursor = crHandPoint
-                Left = 554
-                Height = 20
-                Top = 130
-                Width = 20
-                BorderSpacing.Left = 5
+                Left = 886
+                Height = 32
+                Top = 209
+                Width = 33
+                BorderSpacing.Left = 8
                 Caption = 'ver'
                 Font.Color = clBlue
                 Font.Style = [fsUnderline]
@@ -6158,12 +6218,12 @@ object Form1: TForm1
               object Label32: TLabel
                 AnchorSideLeft.Control = GroupBoxINFO
                 AnchorSideTop.Control = Label31
-                Left = 10
-                Height = 20
-                Top = 160
-                Width = 63
-                BorderSpacing.Left = 10
-                BorderSpacing.Top = 30
+                Left = 16
+                Height = 32
+                Top = 257
+                Width = 101
+                BorderSpacing.Left = 16
+                BorderSpacing.Top = 48
                 Caption = 'client.cfg:'
                 ParentColor = False
               end
@@ -6171,10 +6231,10 @@ object Form1: TForm1
                 AnchorSideLeft.Control = EditPDFReport
                 AnchorSideTop.Control = Label32
                 Cursor = crArrow
-                Left = 113
-                Height = 20
-                Top = 160
-                Width = 436
+                Left = 180
+                Height = 32
+                Top = 257
+                Width = 698
                 BorderStyle = bsNone
                 Enabled = False
                 Font.Color = clBlack
@@ -6189,11 +6249,11 @@ object Form1: TForm1
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Control = EditClientCfg
                 Cursor = crHandPoint
-                Left = 554
-                Height = 20
-                Top = 160
-                Width = 20
-                BorderSpacing.Left = 5
+                Left = 886
+                Height = 32
+                Top = 257
+                Width = 33
+                BorderSpacing.Left = 8
                 Caption = 'ver'
                 Font.Color = clBlue
                 Font.Style = [fsUnderline]
@@ -6204,12 +6264,12 @@ object Form1: TForm1
               object Label33: TLabel
                 AnchorSideLeft.Control = GroupBoxINFO
                 AnchorSideTop.Control = Label32
-                Left = 10
-                Height = 20
-                Top = 190
-                Width = 58
-                BorderSpacing.Left = 10
-                BorderSpacing.Top = 30
+                Left = 16
+                Height = 32
+                Top = 305
+                Width = 92
+                BorderSpacing.Left = 16
+                BorderSpacing.Top = 48
                 Caption = 'web.xml:'
                 ParentColor = False
               end
@@ -6217,10 +6277,10 @@ object Form1: TForm1
                 AnchorSideLeft.Control = EditClientCfg
                 AnchorSideTop.Control = Label33
                 Cursor = crArrow
-                Left = 113
-                Height = 20
-                Top = 190
-                Width = 436
+                Left = 180
+                Height = 32
+                Top = 305
+                Width = 698
                 BorderStyle = bsNone
                 Enabled = False
                 Font.Color = clBlack
@@ -6235,11 +6295,11 @@ object Form1: TForm1
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Control = Editwebxml
                 Cursor = crHandPoint
-                Left = 554
-                Height = 20
-                Top = 190
-                Width = 20
-                BorderSpacing.Left = 5
+                Left = 886
+                Height = 32
+                Top = 305
+                Width = 33
+                BorderSpacing.Left = 8
                 Caption = 'ver'
                 Font.Color = clBlue
                 Font.Style = [fsUnderline]
@@ -6253,11 +6313,11 @@ object Form1: TForm1
               AnchorSideLeft.Side = asrBottom
               AnchorSideTop.Control = Label34
               Cursor = crArrow
-              Left = 124
-              Height = 20
-              Top = 40
-              Width = 436
-              BorderSpacing.Left = 10
+              Left = 198
+              Height = 32
+              Top = 65
+              Width = 698
+              BorderSpacing.Left = 16
               BorderStyle = bsNone
               Enabled = False
               Font.Color = clBlack
@@ -6270,67 +6330,67 @@ object Form1: TForm1
             object Label34: TLabel
               AnchorSideLeft.Control = GroupBoxINFO
               AnchorSideTop.Control = GroupBoxINFO
-              Left = 16
-              Height = 20
-              Top = 40
-              Width = 98
+              Left = 26
+              Height = 32
+              Top = 65
+              Width = 156
               Anchors = []
-              BorderSpacing.Left = 10
-              BorderSpacing.Top = 20
+              BorderSpacing.Left = 16
+              BorderSpacing.Top = 32
               Caption = 'Display-Name:'
               ParentColor = False
             end
           end
           object PRUEBAS: TTabSheet
             Caption = 'PRUEBAS'
-            ClientHeight = 608
-            ClientWidth = 629
+            ClientHeight = 981
+            ClientWidth = 1005
             TabVisible = False
             object BitBtnPRUEBA: TBitBtn
-              Left = 248
-              Height = 40
-              Top = 196
-              Width = 140
+              Left = 397
+              Height = 64
+              Top = 314
+              Width = 224
               Caption = 'BitBtnPRUEBA'
-              OnClick = BitBtnPRUEBAClick
               TabOrder = 0
+              OnClick = BitBtnPRUEBAClick
             end
             object RESREFNAMEPRUEBA: TEdit
-              Left = 16
-              Height = 28
-              Top = 120
-              Width = 368
+              Left = 26
+              Height = 40
+              Top = 192
+              Width = 589
               TabOrder = 1
             end
             object ComboBoxPRUEBA: TComboBox
-              Left = 32
-              Height = 28
-              Top = 200
-              Width = 191
-              ItemHeight = 20
+              Left = 51
+              Height = 40
+              Top = 320
+              Width = 306
+              ItemHeight = 32
               Style = csDropDownList
               TabOrder = 2
             end
             object DATASOURCEPRUEBA: TEdit
-              Left = 16
-              Height = 28
-              Top = 48
-              Width = 368
+              Left = 26
+              Height = 40
+              Top = 77
+              Width = 589
               TabOrder = 3
             end
             object Label26: TLabel
-              Left = 16
-              Height = 20
-              Top = 24
-              Width = 132
+              Left = 26
+              Height = 32
+              Top = 38
+              Width = 208
               Caption = 'JDBC_DATASOURCE'
               ParentColor = False
             end
             object Label27: TLabel
-              Left = 16
-              Height = 20
-              Top = 95
-              Width = 103
+              Left = 26
+              Height = 32
+              Top = 152
+              Width = 164
               Caption = 'RES_REF_NAME'
               ParentColor = False
             end
@@ -6342,11 +6402,11 @@ object Form1: TForm1
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrBottom
           Left = 1
-          Height = 48
+          Height = 77
           Hint = 'Generar war de las carpetas marcadas'
-          Top = 238
-          Width = 39
-          BorderSpacing.Top = 15
+          Top = 415
+          Width = 62
+          BorderSpacing.Top = 24
           BorderSpacing.CellAlignHorizontal = ccaCenter
           BorderSpacing.CellAlignVertical = ccaCenter
           Color = clWhite
@@ -6483,20 +6543,20 @@ object Form1: TForm1
             FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
           }
           GlyphShowMode = gsmAlways
-          OnClick = BitBtn9Click
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           TabOrder = 1
+          OnClick = BitBtn9Click
         end
         object BitBtn1: TBitBtn
           AnchorSideLeft.Control = Panel4
           AnchorSideRight.Side = asrCenter
           Left = 1
-          Height = 48
+          Height = 77
           Hint = 'Ejecuta comandos del archivo fde'
-          Top = 175
-          Width = 39
+          Top = 314
+          Width = 62
           Anchors = [akLeft]
           BorderSpacing.CellAlignHorizontal = ccaCenter
           BorderSpacing.CellAlignVertical = ccaCenter
@@ -6634,12 +6694,12 @@ object Form1: TForm1
             FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
           }
           GlyphShowMode = gsmAlways
-          OnClick = BitBtn1Click
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           Spacing = 0
           TabOrder = 0
+          OnClick = BitBtn1Click
         end
         object BitBtn14: TBitBtn
           AnchorSideLeft.Control = Panel4
@@ -6647,11 +6707,11 @@ object Form1: TForm1
           AnchorSideTop.Side = asrBottom
           AnchorSideBottom.Side = asrBottom
           Left = 1
-          Height = 48
+          Height = 77
           Hint = 'Buscar y copiar war de las carpetas marcadas'
-          Top = 301
-          Width = 39
-          BorderSpacing.Top = 15
+          Top = 516
+          Width = 62
+          BorderSpacing.Top = 24
           Color = clWhite
           Glyph.Data = {
             36100000424D3610000000000000360000002800000020000000200000000100
@@ -6786,20 +6846,20 @@ object Form1: TForm1
             0000000000000000000000000000000000000000000000000000
           }
           GlyphShowMode = gsmAlways
-          OnClick = BitBtn14Click
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           Spacing = 0
           TabOrder = 2
+          OnClick = BitBtn14Click
         end
       end
       object Splitter1: TSplitter
-        Left = 604
-        Height = 683
+        Left = 966
+        Height = 1133
         Hint = 'Arrastre para cambiar el tamaño del panel.'
         Top = 0
-        Width = 6
+        Width = 10
         ParentShowHint = False
         ShowHint = True
       end
@@ -6807,13 +6867,13 @@ object Form1: TForm1
     object Principal: TPage
       OnBeforeShow = PrincipalBeforeShow
       object GroupBox4: TGroupBox
-        Left = 408
-        Height = 552
-        Top = 16
-        Width = 408
+        Left = 653
+        Height = 883
+        Top = 26
+        Width = 653
         Caption = 'Accesos directos'
-        ClientHeight = 527
-        ClientWidth = 404
+        ClientHeight = 858
+        ClientWidth = 649
         ParentFont = False
         TabOrder = 0
         object BtnApp1: TBitBtn
@@ -6823,30 +6883,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp1
           AnchorSideBottom.Side = asrBottom
-          Left = 40
-          Height = 32
-          Top = 8
-          Width = 154
+          Left = 64
+          Height = 51
+          Top = -11
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp1Click
-          OnMouseDown = BtnApp1MouseDown
           ParentFont = False
           TabOrder = 0
+          OnClick = BtnApp1Click
+          OnMouseDown = BtnApp1MouseDown
         end
         object ImgApp1: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 8
-          Height = 32
+          Left = 13
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 8
-          Width = 32
+          Top = 13
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp1MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp1MouseDown
         end
         object BtnApp2: TBitBtn
           AnchorSideLeft.Control = ImgApp2
@@ -6855,30 +6915,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp2
           AnchorSideBottom.Side = asrBottom
-          Left = 240
-          Height = 32
-          Top = 9
-          Width = 154
+          Left = 384
+          Height = 51
+          Top = -10
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp2Click
-          OnMouseDown = BtnApp2MouseDown
           ParentFont = False
           TabOrder = 1
+          OnClick = BtnApp2Click
+          OnMouseDown = BtnApp2MouseDown
         end
         object ImgApp2: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 208
-          Height = 32
+          Left = 333
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 9
-          Width = 32
+          Top = 14
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp2MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp2MouseDown
         end
         object BtnApp3: TBitBtn
           AnchorSideLeft.Control = ImgApp3
@@ -6887,30 +6947,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp3
           AnchorSideBottom.Side = asrBottom
-          Left = 40
-          Height = 32
-          Top = 58
-          Width = 154
+          Left = 64
+          Height = 51
+          Top = 39
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp3Click
-          OnMouseDown = BtnApp3MouseDown
           ParentFont = False
           TabOrder = 2
+          OnClick = BtnApp3Click
+          OnMouseDown = BtnApp3MouseDown
         end
         object ImgApp3: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 8
-          Height = 32
+          Left = 13
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 58
-          Width = 32
+          Top = 93
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp3MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp3MouseDown
         end
         object BtnApp4: TBitBtn
           AnchorSideLeft.Control = ImgApp4
@@ -6919,30 +6979,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp4
           AnchorSideBottom.Side = asrBottom
-          Left = 240
-          Height = 32
-          Top = 58
-          Width = 154
+          Left = 384
+          Height = 51
+          Top = 39
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp4Click
-          OnMouseDown = BtnApp4MouseDown
           ParentFont = False
           TabOrder = 3
+          OnClick = BtnApp4Click
+          OnMouseDown = BtnApp4MouseDown
         end
         object ImgApp4: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 208
-          Height = 32
+          Left = 333
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 58
-          Width = 32
+          Top = 93
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp4MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp4MouseDown
         end
         object BtnApp5: TBitBtn
           AnchorSideLeft.Control = ImgApp5
@@ -6951,44 +7011,44 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp5
           AnchorSideBottom.Side = asrBottom
-          Left = 40
-          Height = 32
-          Top = 105
-          Width = 154
+          Left = 64
+          Height = 51
+          Top = 86
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp5Click
-          OnMouseDown = BtnApp5MouseDown
           ParentFont = False
           TabOrder = 4
+          OnClick = BtnApp5Click
+          OnMouseDown = BtnApp5MouseDown
         end
         object ImgApp5: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 8
-          Height = 32
+          Left = 13
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 105
-          Width = 32
+          Top = 168
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp5MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp5MouseDown
         end
         object ImgApp6: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 208
-          Height = 32
+          Left = 333
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 105
-          Width = 32
+          Top = 168
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp6MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp6MouseDown
         end
         object BtnApp6: TBitBtn
           AnchorSideLeft.Control = ImgApp6
@@ -6997,30 +7057,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp6
           AnchorSideBottom.Side = asrBottom
-          Left = 240
-          Height = 32
-          Top = 105
-          Width = 154
+          Left = 384
+          Height = 51
+          Top = 86
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp6Click
-          OnMouseDown = BtnApp6MouseDown
           ParentFont = False
           TabOrder = 5
+          OnClick = BtnApp6Click
+          OnMouseDown = BtnApp6MouseDown
         end
         object ImgApp7: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 8
-          Height = 32
+          Left = 13
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 152
-          Width = 32
+          Top = 243
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp7MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp7MouseDown
         end
         object BtnApp7: TBitBtn
           AnchorSideLeft.Control = ImgApp7
@@ -7029,30 +7089,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp7
           AnchorSideBottom.Side = asrBottom
-          Left = 40
-          Height = 32
-          Top = 152
-          Width = 154
+          Left = 64
+          Height = 51
+          Top = 133
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp7Click
-          OnMouseDown = BtnApp7MouseDown
           ParentFont = False
           TabOrder = 6
+          OnClick = BtnApp7Click
+          OnMouseDown = BtnApp7MouseDown
         end
         object ImgApp8: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 208
-          Height = 32
+          Left = 333
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 152
-          Width = 32
+          Top = 243
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp8MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp8MouseDown
         end
         object BtnApp8: TBitBtn
           AnchorSideLeft.Control = ImgApp8
@@ -7061,30 +7121,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp8
           AnchorSideBottom.Side = asrBottom
-          Left = 240
-          Height = 32
-          Top = 152
-          Width = 154
+          Left = 384
+          Height = 51
+          Top = 133
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp8Click
-          OnMouseDown = BtnApp8MouseDown
           ParentFont = False
           TabOrder = 7
+          OnClick = BtnApp8Click
+          OnMouseDown = BtnApp8MouseDown
         end
         object ImgApp9: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 8
-          Height = 32
+          Left = 13
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 201
-          Width = 32
+          Top = 322
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp9MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp9MouseDown
         end
         object BtnApp9: TBitBtn
           AnchorSideLeft.Control = ImgApp9
@@ -7093,30 +7153,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp9
           AnchorSideBottom.Side = asrBottom
-          Left = 40
-          Height = 32
-          Top = 201
-          Width = 154
+          Left = 64
+          Height = 51
+          Top = 182
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp9Click
-          OnMouseDown = BtnApp9MouseDown
           ParentFont = False
           TabOrder = 8
+          OnClick = BtnApp9Click
+          OnMouseDown = BtnApp9MouseDown
         end
         object ImgApp10: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 208
-          Height = 32
+          Left = 333
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 201
-          Width = 32
+          Top = 322
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp10MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp10MouseDown
         end
         object BtnApp10: TBitBtn
           AnchorSideLeft.Control = ImgApp10
@@ -7125,30 +7185,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp10
           AnchorSideBottom.Side = asrBottom
-          Left = 240
-          Height = 32
-          Top = 201
-          Width = 154
+          Left = 384
+          Height = 51
+          Top = 182
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp10Click
-          OnMouseDown = BtnApp10MouseDown
           ParentFont = False
           TabOrder = 9
+          OnClick = BtnApp10Click
+          OnMouseDown = BtnApp10MouseDown
         end
         object ImgApp11: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 8
-          Height = 32
+          Left = 13
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 249
-          Width = 32
+          Top = 398
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp1MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp1MouseDown
         end
         object BtnApp11: TBitBtn
           AnchorSideLeft.Control = ImgApp11
@@ -7157,30 +7217,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp11
           AnchorSideBottom.Side = asrBottom
-          Left = 40
-          Height = 32
-          Top = 249
-          Width = 154
+          Left = 64
+          Height = 51
+          Top = 230
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp11Click
-          OnMouseDown = BtnApp11MouseDown
           ParentFont = False
           TabOrder = 10
+          OnClick = BtnApp11Click
+          OnMouseDown = BtnApp11MouseDown
         end
         object ImgApp12: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 208
-          Height = 32
+          Left = 333
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 250
-          Width = 32
+          Top = 400
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp2MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp2MouseDown
         end
         object BtnApp12: TBitBtn
           AnchorSideLeft.Control = ImgApp12
@@ -7189,30 +7249,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp12
           AnchorSideBottom.Side = asrBottom
-          Left = 240
-          Height = 32
-          Top = 250
-          Width = 154
+          Left = 384
+          Height = 51
+          Top = 231
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp12Click
-          OnMouseDown = BtnApp12MouseDown
           ParentFont = False
           TabOrder = 11
+          OnClick = BtnApp12Click
+          OnMouseDown = BtnApp12MouseDown
         end
         object ImgApp13: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 8
-          Height = 32
+          Left = 13
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 298
-          Width = 32
+          Top = 477
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp3MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp3MouseDown
         end
         object BtnApp13: TBitBtn
           AnchorSideLeft.Control = ImgApp13
@@ -7221,30 +7281,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp13
           AnchorSideBottom.Side = asrBottom
-          Left = 40
-          Height = 32
-          Top = 298
-          Width = 154
+          Left = 64
+          Height = 51
+          Top = 279
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp13Click
-          OnMouseDown = BtnApp13MouseDown
           ParentFont = False
           TabOrder = 12
+          OnClick = BtnApp13Click
+          OnMouseDown = BtnApp13MouseDown
         end
         object ImgApp14: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 208
-          Height = 32
+          Left = 333
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 299
-          Width = 32
+          Top = 478
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp4MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp4MouseDown
         end
         object BtnApp14: TBitBtn
           AnchorSideLeft.Control = ImgApp14
@@ -7253,30 +7313,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp14
           AnchorSideBottom.Side = asrBottom
-          Left = 240
-          Height = 32
-          Top = 299
-          Width = 154
+          Left = 384
+          Height = 51
+          Top = 280
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp14Click
-          OnMouseDown = BtnApp14MouseDown
           ParentFont = False
           TabOrder = 13
+          OnClick = BtnApp14Click
+          OnMouseDown = BtnApp14MouseDown
         end
         object ImgApp15: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 8
-          Height = 32
+          Left = 13
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 346
-          Width = 32
+          Top = 554
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp5MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp5MouseDown
         end
         object BtnApp15: TBitBtn
           AnchorSideLeft.Control = ImgApp15
@@ -7285,30 +7345,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp15
           AnchorSideBottom.Side = asrBottom
-          Left = 40
-          Height = 32
-          Top = 346
-          Width = 154
+          Left = 64
+          Height = 51
+          Top = 327
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp15Click
-          OnMouseDown = BtnApp15MouseDown
           ParentFont = False
           TabOrder = 14
+          OnClick = BtnApp15Click
+          OnMouseDown = BtnApp15MouseDown
         end
         object ImgApp16: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 208
-          Height = 32
+          Left = 333
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 346
-          Width = 32
+          Top = 554
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp6MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp6MouseDown
         end
         object BtnApp16: TBitBtn
           AnchorSideLeft.Control = ImgApp16
@@ -7317,30 +7377,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp16
           AnchorSideBottom.Side = asrBottom
-          Left = 240
-          Height = 32
-          Top = 346
-          Width = 154
+          Left = 384
+          Height = 51
+          Top = 327
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp16Click
-          OnMouseDown = BtnApp16MouseDown
           ParentFont = False
           TabOrder = 15
+          OnClick = BtnApp16Click
+          OnMouseDown = BtnApp16MouseDown
         end
         object ImgApp17: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 8
-          Height = 32
+          Left = 13
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 394
-          Width = 32
+          Top = 630
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp7MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp7MouseDown
         end
         object BtnApp17: TBitBtn
           AnchorSideLeft.Control = ImgApp17
@@ -7349,30 +7409,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp17
           AnchorSideBottom.Side = asrBottom
-          Left = 40
-          Height = 32
-          Top = 394
-          Width = 154
+          Left = 64
+          Height = 51
+          Top = 375
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp17Click
-          OnMouseDown = BtnApp17MouseDown
           ParentFont = False
           TabOrder = 16
+          OnClick = BtnApp17Click
+          OnMouseDown = BtnApp17MouseDown
         end
         object ImgApp18: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 208
-          Height = 32
+          Left = 333
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 392
-          Width = 32
+          Top = 627
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp8MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp8MouseDown
         end
         object BtnApp18: TBitBtn
           AnchorSideLeft.Control = ImgApp18
@@ -7381,30 +7441,30 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp18
           AnchorSideBottom.Side = asrBottom
-          Left = 240
-          Height = 32
-          Top = 392
-          Width = 154
+          Left = 384
+          Height = 51
+          Top = 373
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp18Click
-          OnMouseDown = BtnApp18MouseDown
           ParentFont = False
           TabOrder = 17
+          OnClick = BtnApp18Click
+          OnMouseDown = BtnApp18MouseDown
         end
         object ImgApp19: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 8
-          Height = 32
+          Left = 13
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 442
-          Width = 32
+          Top = 707
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp9MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp9MouseDown
         end
         object BtnApp19: TBitBtn
           AnchorSideLeft.Control = ImgApp19
@@ -7413,16 +7473,16 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp19
           AnchorSideBottom.Side = asrBottom
-          Left = 40
-          Height = 32
-          Top = 442
-          Width = 154
+          Left = 64
+          Height = 51
+          Top = 423
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp19Click
-          OnMouseDown = BtnApp19MouseDown
           ParentFont = False
           TabOrder = 18
+          OnClick = BtnApp19Click
+          OnMouseDown = BtnApp19MouseDown
         end
         object BtnApp20: TBitBtn
           AnchorSideLeft.Control = ImgApp20
@@ -7431,265 +7491,275 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = ImgApp20
           AnchorSideBottom.Side = asrBottom
-          Left = 240
-          Height = 32
-          Top = 442
-          Width = 154
+          Left = 384
+          Height = 51
+          Top = 423
+          Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
-          OnClick = BtnApp20Click
-          OnMouseDown = BtnApp20MouseDown
           ParentFont = False
           TabOrder = 19
+          OnClick = BtnApp20Click
+          OnMouseDown = BtnApp20MouseDown
         end
         object ImgApp20: TImage
           AnchorSideTop.Side = asrBottom
-          Left = 208
-          Height = 32
+          Left = 333
+          Height = 51
           Hint = 'click derecho opciones'
-          Top = 442
-          Width = 32
+          Top = 707
+          Width = 51
           Center = True
-          OnMouseDown = ImgApp10MouseDown
           ParentShowHint = False
           ShowHint = True
           Stretch = True
           Transparent = True
+          OnMouseDown = ImgApp10MouseDown
         end
       end
     end
     object Opciones: TPage
       OnBeforeShow = OpcionesBeforeShow
       object Panel1: TPanel
-        Left = 16
-        Height = 26
-        Top = 16
-        Width = 170
+        Left = 26
+        Height = 42
+        Top = 26
+        Width = 272
         Caption = 'OPCIONES WEB UTILS'
         ParentFont = False
         TabOrder = 0
       end
       object GroupBox1: TGroupBox
-        Left = 16
-        Height = 200
-        Top = 56
-        Width = 371
+        Left = 26
+        Height = 320
+        Top = 90
+        Width = 594
         Caption = 'Minimiza a la Bandeja de Sistema...'
-        ClientHeight = 175
-        ClientWidth = 367
+        ClientHeight = 295
+        ClientWidth = 590
         ParentFont = False
         TabOrder = 1
         object ToTray: TCheckBox
-          Left = 16
+          Left = 26
           Height = 24
-          Top = 8
+          Top = 13
           Width = 173
-          Caption = 'Al Presionar Minimizar'
-          OnChange = ToTrayChange
+          Caption = 'Al presionar Minimizar.'
           ParentFont = False
           TabOrder = 0
+          OnChange = ToTrayChange
         end
         object MinGenWar: TCheckBox
-          Left = 16
+          Left = 26
           Height = 24
-          Top = 72
+          Top = 115
           Width = 125
-          Caption = 'Al Generar War'
-          OnChange = MinGenWarChange
+          Caption = 'Al generar WAR'
           ParentFont = False
           TabOrder = 1
+          OnChange = MinGenWarChange
         end
         object MinScriptFDE: TCheckBox
-          Left = 16
+          Left = 26
           Height = 24
-          Top = 40
+          Top = 64
           Width = 167
-          Caption = 'Al Ejecutar Script FDE'
-          OnChange = MinScriptFDEChange
+          Caption = 'Al ejecutar script FDE.'
           ParentFont = False
           TabOrder = 2
+          OnChange = MinScriptFDEChange
         end
         object MinAppRun: TCheckBox
-          Left = 16
+          Left = 26
           Height = 24
-          Top = 104
+          Top = 166
           Width = 241
           Caption = 'Al Abrir una Aplicación(Ejecutor)'
-          OnChange = MinAppRunChange
           ParentFont = False
           TabOrder = 3
+          OnChange = MinAppRunChange
         end
       end
       object GroupBox2: TGroupBox
-        Left = 16
-        Height = 200
-        Top = 272
-        Width = 728
+        Left = 26
+        Height = 320
+        Top = 435
+        Width = 1165
         Caption = 'Otras Opciones'
-        ClientHeight = 175
-        ClientWidth = 724
+        ClientHeight = 295
+        ClientWidth = 1161
         ParentFont = False
         TabOrder = 2
         object CheckBox5: TCheckBox
-          Left = 16
+          Left = 26
           Height = 24
-          Top = 104
+          Top = 166
           Width = 277
-          Caption = 'Beep Al Terminar de ejecutar un script'
-          OnChange = CheckBox5Change
+          Caption = '''Beep'' al terminar de ejecutar un script.'
           ParentFont = False
           TabOrder = 0
+          OnChange = CheckBox5Change
         end
         object CheckBox6: TCheckBox
-          Left = 16
+          Left = 26
           Height = 24
-          Top = 72
+          Top = 115
           Width = 340
           Caption = 'Ordenar las Aplicaciones por Frecuencia de uso.'
-          OnChange = CheckBox6Change
           ParentFont = False
           TabOrder = 1
+          OnChange = CheckBox6Change
         end
         object CheckBox8: TCheckBox
-          Left = 16
+          Left = 26
           Height = 24
-          Top = 40
+          Top = 64
           Width = 183
           Caption = 'Recordar Opción al salir'
-          OnChange = CheckBox8Change
           ParentFont = False
           TabOrder = 2
+          OnChange = CheckBox8Change
         end
         object CheckBox1: TCheckBox
-          Left = 16
+          Left = 26
           Height = 24
-          Top = 8
+          Top = 13
           Width = 369
           Caption = 'Excluir ROOT, manager, host-manager, docs y probe'
-          OnChange = CheckBox1Change
           ParentFont = False
           TabOrder = 3
+          OnChange = CheckBox1Change
         end
         object CheckBox10: TCheckBox
-          Left = 16
+          Left = 26
           Height = 24
-          Top = 136
+          Top = 218
           Width = 305
-          Caption = 'Eliminar *.war antes de generar nuevo war.'
-          OnChange = CheckBox10Change
+          Caption = 'Eliminar *.war antes de generar nuevo war'
           ParentFont = False
           TabOrder = 4
+          OnChange = CheckBox10Change
         end
         object CheckBox12: TCheckBox
-          Left = 392
+          Left = 627
           Height = 24
-          Top = 8
+          Top = 13
           Width = 323
-          Caption = 'Ocultar plantillas de ejemplo en DataSources'
-          OnChange = CheckBox12Change
+          Caption = 'Ocultar plantillas de ejemplo en DataSources.'
           ParentFont = False
           TabOrder = 5
+          OnChange = CheckBox12Change
+        end
+        object CheckBox13: TCheckBox
+          Left = 627
+          Height = 24
+          Top = 64
+          Width = 201
+          Caption = 'Habilitar modo War/Zip.'
+          ParentFont = False
+          TabOrder = 6
+          OnChange = CheckBox13Change
         end
       end
       object GroupBox7: TGroupBox
-        Left = 392
-        Height = 200
-        Top = 56
-        Width = 352
+        Left = 627
+        Height = 320
+        Top = 90
+        Width = 563
         Caption = 'Opciones de Consola'
-        ClientHeight = 175
-        ClientWidth = 348
+        ClientHeight = 295
+        ClientWidth = 559
         ParentFont = False
         TabOrder = 3
         object CheckBox2: TCheckBox
-          Left = 16
+          Left = 26
           Height = 24
           Hint = 'Muestra Mensajes OK'
-          Top = 8
+          Top = 13
           Width = 169
           Caption = 'Muestra Mensajes OK.'
-          OnChange = CheckBox2Change
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           TabOrder = 0
+          OnChange = CheckBox2Change
         end
         object CheckBox4: TCheckBox
-          Left = 16
+          Left = 26
           Height = 24
           Hint = 'Muestra Mensajes de Usuario(MSGRUN)'
-          Top = 72
+          Top = 115
           Width = 286
           Caption = 'Muestra mensajes de usuario(MSGRUN)'
-          OnChange = CheckBox4Change
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           TabOrder = 1
+          OnChange = CheckBox4Change
         end
         object CheckBox7: TCheckBox
-          Left = 16
+          Left = 26
           Height = 24
           Hint = 'Pide Confirmación antes de eliminar.'
-          Top = 40
+          Top = 64
           Width = 265
           Caption = 'Pide confirmación antes de eliminar.'
-          OnChange = CheckBox7Change
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           TabOrder = 2
+          OnChange = CheckBox7Change
         end
         object CheckBox9: TCheckBox
-          Left = 16
+          Left = 26
           Height = 24
           Hint = 'Limpia la Consola Antes de Cada Ejecución'
-          Top = 136
+          Top = 218
           Width = 306
           Caption = 'Limpia la consola antes de cada ejecución.'
-          OnChange = CheckBox9Change
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           TabOrder = 3
+          OnChange = CheckBox9Change
         end
         object CheckBox3: TCheckBox
-          Left = 16
+          Left = 26
           Height = 24
           Hint = 'Muestra Mensajes de Error'
-          Top = 104
+          Top = 166
           Width = 199
           Caption = 'Muestra mensajes de Error'
-          OnChange = CheckBox3Change
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           TabOrder = 4
+          OnChange = CheckBox3Change
         end
       end
       object GroupBox12: TGroupBox
-        Left = 752
-        Height = 200
-        Top = 56
-        Width = 464
+        Left = 1203
+        Height = 320
+        Top = 90
+        Width = 742
         Caption = 'Parámetros'
-        ClientHeight = 175
-        ClientWidth = 460
+        ClientHeight = 295
+        ClientWidth = 738
         TabOrder = 4
         object EditDSDescription: TEdit
-          Left = 8
+          Left = 13
           Height = 28
-          Top = 24
-          Width = 216
+          Top = 38
+          Width = 346
           Enabled = False
-          OnChange = EditDSDescriptionChange
           TabOrder = 0
+          OnChange = EditDSDescriptionChange
         end
         object Label22: TLabel
           AnchorSideLeft.Control = EditDSDescription
           AnchorSideBottom.Control = EditDSDescription
           Cursor = crHandPoint
-          Left = 8
+          Left = 13
           Height = 20
           Hint = 'Clic para habilitar/deshabilitar'
           Top = 4
@@ -7705,19 +7775,19 @@ object Form1: TForm1
           OnClick = Label22Click
         end
         object EditDSRestype: TEdit
-          Left = 232
+          Left = 371
           Height = 28
-          Top = 24
-          Width = 216
+          Top = 38
+          Width = 346
           Enabled = False
-          OnChange = EditDSRestypeChange
           TabOrder = 1
+          OnChange = EditDSRestypeChange
         end
         object Label23: TLabel
           AnchorSideLeft.Control = EditDSRestype
           AnchorSideBottom.Control = EditDSRestype
           Cursor = crHandPoint
-          Left = 232
+          Left = 371
           Height = 20
           Hint = 'Clic para habilitar/deshabilitar'
           Top = 4
@@ -7733,19 +7803,19 @@ object Form1: TForm1
           OnClick = Label23Click
         end
         object EditDSResAuth: TEdit
-          Left = 8
+          Left = 13
           Height = 28
-          Top = 80
-          Width = 216
+          Top = 128
+          Width = 346
           Enabled = False
-          OnChange = EditDSResAuthChange
           TabOrder = 2
+          OnChange = EditDSResAuthChange
         end
         object Label24: TLabel
           AnchorSideLeft.Control = EditDSResAuth
           AnchorSideBottom.Control = EditDSResAuth
           Cursor = crHandPoint
-          Left = 8
+          Left = 13
           Height = 20
           Hint = 'Clic para habilitar/deshabilitar'
           Top = 60
@@ -7761,21 +7831,21 @@ object Form1: TForm1
           OnClick = Label24Click
         end
         object EditDSUseJdbcDataSource: TEdit
-          Left = 232
+          Left = 371
           Height = 28
-          Top = 80
-          Width = 32
+          Top = 128
+          Width = 51
           Enabled = False
           MaxLength = 3
+          TabOrder = 3
           OnChange = EditDSUseJdbcDataSourceChange
           OnKeyPress = EditDSUseJdbcDataSourceKeyPress
-          TabOrder = 3
         end
         object Label25: TLabel
           AnchorSideLeft.Control = EditDSUseJdbcDataSource
           AnchorSideBottom.Control = EditDSUseJdbcDataSource
           Cursor = crHandPoint
-          Left = 232
+          Left = 371
           Height = 20
           Hint = 'Clic para habilitar/deshabilitar'
           Top = 60
@@ -7791,34 +7861,34 @@ object Form1: TForm1
           OnClick = Label25Click
         end
         object Edit5: TEdit
-          Left = 8
+          Left = 13
           Height = 28
-          Top = 132
-          Width = 424
+          Top = 211
+          Width = 678
           Enabled = False
-          OnChange = Edit5Change
           ParentFont = False
           TabOrder = 4
+          OnChange = Edit5Change
         end
         object BitBtn19: TBitBtn
           AnchorSideTop.Control = Edit5
           AnchorSideBottom.Control = Edit5
           AnchorSideBottom.Side = asrBottom
-          Left = 424
+          Left = 678
           Height = 28
-          Top = 132
-          Width = 24
+          Top = 211
+          Width = 38
           Anchors = [akTop, akLeft, akBottom]
           Caption = '...'
-          OnClick = BitBtn19Click
           ParentFont = False
           TabOrder = 5
+          OnClick = BitBtn19Click
         end
         object Label8: TLabel
           AnchorSideLeft.Control = Edit5
           AnchorSideBottom.Control = Edit5
           Cursor = crHandPoint
-          Left = 8
+          Left = 13
           Height = 20
           Hint = 'Clic para habilitar/deshabilitar'
           Top = 112
@@ -8592,17 +8662,17 @@ object Form1: TForm1
         AnchorSideTop.Control = BitBtn10
         AnchorSideBottom.Control = BitBtn10
         AnchorSideBottom.Side = asrBottom
-        Left = 585
+        Left = 936
         Height = 41
-        Top = 4
-        Width = 225
+        Top = 6
+        Width = 360
         Anchors = [akTop, akLeft, akBottom]
         AutoSize = False
-        BorderSpacing.Left = 20
-        BorderSpacing.Top = 4
+        BorderSpacing.Left = 32
+        BorderSpacing.Top = 6
         Caption = '.'
         Font.Color = clBlue
-        Font.Height = -18
+        Font.Height = -29
         ParentColor = False
         ParentFont = False
       end
@@ -8612,10 +8682,10 @@ object Form1: TForm1
         AnchorSideTop.Control = BitBtn10
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Side = asrBottom
-        Left = 567
-        Height = 40
-        Top = 2
-        Width = 40
+        Left = 907
+        Height = 64
+        Top = 3
+        Width = 64
         Brush.Style = bsBDiagonal
         Pen.Color = clSilver
         Pen.Style = psinsideFrame
@@ -8626,72 +8696,51 @@ object Form1: TForm1
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = About
         AnchorSideBottom.Side = asrBottom
-        Left = 920
-        Height = 166
-        Top = 488
-        Width = 380
+        Left = 692
+        Height = 266
+        Top = 388
+        Width = 608
         Anchors = [akRight, akBottom]
-        BorderSpacing.Bottom = 29
-        ClientHeight = 141
-        ClientWidth = 376
+        BorderSpacing.Bottom = 46
+        ClientHeight = 241
+        ClientWidth = 604
         ParentFont = False
         TabOrder = 1
         object LblOriginalFilename: TLabel
-          Left = 16
-          Height = 20
-          Top = 56
-          Width = 304
+          Left = 26
+          Height = 32
+          Top = 90
+          Width = 486
           Alignment = taRightJustify
           AutoSize = False
           ParentColor = False
           ParentFont = False
         end
         object LblProductVersion: TLabel
-          Left = 16
-          Height = 20
-          Top = 32
-          Width = 304
+          Left = 26
+          Height = 32
+          Top = 51
+          Width = 486
           Alignment = taRightJustify
           AutoSize = False
           ParentColor = False
           ParentFont = False
         end
         object LblProductName: TLabel
-          Left = 16
-          Height = 20
-          Top = 8
-          Width = 304
+          Left = 26
+          Height = 32
+          Top = 13
+          Width = 486
           Alignment = taRightJustify
           AutoSize = False
           ParentColor = False
           ParentFont = False
-        end
-        object LblLinkUpdate: TLabel
-          AnchorSideLeft.Control = LblOriginalFilename
-          AnchorSideTop.Control = LblOriginalFilename
-          AnchorSideTop.Side = asrBottom
-          AnchorSideRight.Control = LblOriginalFilename
-          AnchorSideRight.Side = asrBottom
-          Cursor = crHandPoint
-          Left = 16
-          Height = 28
-          Top = 76
-          Width = 304
-          Alignment = taRightJustify
-          Anchors = [akTop, akLeft, akRight]
-          AutoSize = False
-          Caption = 'Revisa si existe una nueva versión'
-          Font.Color = clBlue
-          Font.Style = [fsUnderline]
-          ParentColor = False
-          ParentFont = False
-          OnClick = LblLinkUpdateClick
         end
       end
       object LblFullInfo: TLabel
-        Left = 24
+        Left = 38
         Height = 20
-        Top = 24
+        Top = 38
         Width = 9
         Caption = '...'
         ParentColor = False
@@ -8700,9 +8749,9 @@ object Form1: TForm1
       object BitBtn10: TBitBtn
         AnchorSideTop.Control = About
         Left = 565
-        Height = 45
+        Height = 72
         Top = 0
-        Width = 45
+        Width = 72
         Anchors = [akTop]
         Color = clNone
         Glyph.Data = {
@@ -8837,21 +8886,21 @@ object Form1: TForm1
           4EF95A564CE259554AC8595349AC5652487F57514A26FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
         }
-        OnClick = BitBtn10Click
         ParentFont = False
         Spacing = 0
         TabOrder = 0
+        OnClick = BitBtn10Click
       end
     end
     object EditScript: TPage
       OnBeforeShow = EditScriptBeforeShow
       object Panel5: TPanel
         Left = 0
-        Height = 218
-        Top = 465
+        Height = 349
+        Top = 334
         Width = 1300
         Align = alBottom
-        ClientHeight = 218
+        ClientHeight = 349
         ClientWidth = 1300
         ParentFont = False
         TabOrder = 0
@@ -8861,14 +8910,14 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = Panel5
           AnchorSideBottom.Side = asrBottom
-          Left = 24
+          Left = 38
           Height = 186
           Hint = 'Utilice:'#13#10'{M} para mostrar el mensaje por defecto.'#13#10'{Q} para mostrar la cantidad de coincidencias.'
-          Top = 1
+          Top = 2
           Width = 1205
           Anchors = [akTop, akLeft, akRight, akBottom]
-          BorderSpacing.Right = 70
-          BorderSpacing.Bottom = 30
+          BorderSpacing.Right = 112
+          BorderSpacing.Bottom = 48
           Caption = 'web.xml'
           ClientHeight = 161
           ClientWidth = 1201
@@ -8884,21 +8933,21 @@ object Form1: TForm1
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = GroupBox9
             AnchorSideBottom.Side = asrBottom
-            Left = 10
+            Left = 16
             Height = 141
-            Top = 10
+            Top = 16
             Width = 1181
             Anchors = [akTop, akLeft, akRight, akBottom]
-            BorderSpacing.Left = 10
-            BorderSpacing.Top = 10
-            BorderSpacing.Right = 10
-            BorderSpacing.Bottom = 10
+            BorderSpacing.Left = 16
+            BorderSpacing.Top = 16
+            BorderSpacing.Right = 16
+            BorderSpacing.Bottom = 16
             ColCount = 8
             Columns = <            
               item
                 ReadOnly = True
                 Title.Caption = '#'
-                Width = 30
+                Width = 48
               end            
               item
                 ButtonStyle = cbsPickList
@@ -8912,11 +8961,11 @@ object Form1: TForm1
                   'url-pattern'
                 )
                 Title.Caption = 'Etiqueta'
-                Width = 100
+                Width = 160
               end            
               item
                 Title.Caption = 'Valor'
-                Width = 200
+                Width = 320
               end            
               item
                 ButtonStyle = cbsPickList
@@ -8925,7 +8974,7 @@ object Form1: TForm1
                   'Etiqueta y Valor'
                 )
                 Title.Caption = 'Considerar'
-                Width = 120
+                Width = 192
               end            
               item
                 ButtonStyle = cbsPickList
@@ -8936,16 +8985,16 @@ object Form1: TForm1
                   'MENOS de [X] veces'
                 )
                 Title.Caption = 'Se encuentra ...'
-                Width = 210
+                Width = 336
               end            
               item
-                MaxSize = 10
+                MaxSize = 16
                 Title.Caption = '[X]'
-                Width = 38
+                Width = 61
               end            
               item
                 Title.Caption = 'Mensaje'
-                Width = 318
+                Width = 509
               end            
               item
                 ButtonStyle = cbsPickList
@@ -8955,7 +9004,7 @@ object Form1: TForm1
                   'Advertencia (Azul)'
                 )
                 Title.Caption = 'Color Mensaje'
-                Width = 150
+                Width = 240
               end>
             FixedCols = 0
             Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSizing, goColSizing, goEditing, goRowSelect, goAlwaysShowEditor, goDblClickAutoSize, goSmoothScroll, goSelectionActive, goFixedColSizing]
@@ -8967,14 +9016,14 @@ object Form1: TForm1
             OnSelectEditor = StringGrid5SelectEditor
             OnSetEditText = StringGrid5SetEditText
             ColWidths = (
-              30
-              100
-              200
-              120
-              210
-              38
-              318
-              150
+              48
+              160
+              320
+              192
+              336
+              61
+              509
+              240
             )
           end
         end
@@ -8982,14 +9031,14 @@ object Form1: TForm1
           AnchorSideTop.Control = BitBtn25
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrCenter
-          Left = 1234
-          Height = 25
+          Left = 1194
+          Height = 40
           Hint = 'Bajar Fila Seleccionada'
-          Top = 101
-          Width = 25
+          Top = 162
+          Width = 40
           Anchors = [akTop, akRight]
-          BorderSpacing.Top = 5
-          BorderSpacing.Right = 2
+          BorderSpacing.Top = 8
+          BorderSpacing.Right = 3
           Glyph.Data = {
             36040000424D3604000000000000360000002800000010000000100000000100
             2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
@@ -9026,25 +9075,25 @@ object Form1: TForm1
             0017FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
             FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF009BB1001796AE006B
           }
-          OnClick = BitBtn26Click
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           Spacing = 0
           TabOrder = 1
+          OnClick = BitBtn26Click
         end
         object BitBtn25: TBitBtn
           AnchorSideTop.Control = BitBtn22
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrCenter
-          Left = 1234
-          Height = 25
+          Left = 1194
+          Height = 40
           Hint = 'Subir Fila Seleccionada'
-          Top = 71
-          Width = 25
+          Top = 114
+          Width = 40
           Anchors = [akTop, akRight]
-          BorderSpacing.Top = 5
-          BorderSpacing.Right = 2
+          BorderSpacing.Top = 8
+          BorderSpacing.Right = 3
           Glyph.Data = {
             36040000424D3604000000000000360000002800000010000000100000000100
             200000000000000400006400000064000000000000000000000097AF006C9BB1
@@ -9081,26 +9130,26 @@ object Form1: TForm1
             FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0097AF004097AF0040FFFF
             FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
           }
-          OnClick = BitBtn25Click
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           Spacing = 0
           TabOrder = 2
+          OnClick = BitBtn25Click
         end
         object BitBtn22: TBitBtn
           AnchorSideLeft.Control = BitBtn24
           AnchorSideTop.Control = BitBtn24
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrBottom
-          Left = 1234
-          Height = 25
+          Left = 1194
+          Height = 40
           Hint = 'Eliminar Fila'
-          Top = 41
-          Width = 25
+          Top = 66
+          Width = 40
           Anchors = [akTop, akRight]
-          BorderSpacing.Top = 5
-          BorderSpacing.Right = 10
+          BorderSpacing.Top = 8
+          BorderSpacing.Right = 16
           Glyph.Data = {
             36030000424D3603000000000000360000002800000010000000100000000100
             1800000000000003000064000000640000000000000000000000000000000000
@@ -9129,26 +9178,26 @@ object Form1: TForm1
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000
           }
-          OnClick = BitBtn22Click
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           Spacing = 0
           TabOrder = 3
+          OnClick = BitBtn22Click
         end
         object BitBtn24: TBitBtn
           AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = Panel5
           AnchorSideRight.Side = asrBottom
-          Left = 1234
-          Height = 25
+          Left = 1194
+          Height = 40
           Hint = 'Agregar fila'
-          Top = 11
-          Width = 25
+          Top = 18
+          Width = 40
           Anchors = [akTop, akRight]
-          BorderSpacing.Left = 20
-          BorderSpacing.Top = 10
-          BorderSpacing.Right = 10
+          BorderSpacing.Left = 32
+          BorderSpacing.Top = 16
+          BorderSpacing.Right = 16
           Glyph.Data = {
             36030000424D3603000000000000360000002800000010000000100000000100
             1800000000000003000064000000640000000000000000000000000000000000
@@ -9177,12 +9226,12 @@ object Form1: TForm1
             F7738EF70049F700000000000000000000000000000000000000000000000000
             00000000000000000000000049F70049F7000000000000000000
           }
-          OnClick = BitBtn24Click
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           Spacing = 0
           TabOrder = 4
+          OnClick = BitBtn24Click
         end
       end
       object Panel6: TPanel
@@ -9194,20 +9243,21 @@ object Form1: TForm1
         ClientHeight = 453
         ClientWidth = 1300
         Color = clWhite
+        ParentBackground = False
         ParentColor = False
         ParentFont = False
         TabOrder = 1
         object haycambios: TCheckBox
-          Left = 712
+          Left = 1139
           Height = 23
-          Top = 8
+          Top = 13
           Width = 24
           Color = clNone
           Enabled = False
-          OnChange = haycambiosChange
           ParentColor = False
           ParentFont = False
           TabOrder = 9
+          OnChange = haycambiosChange
         end
         object GroupBox5: TGroupBox
           AnchorSideTop.Control = Edit6
@@ -9216,18 +9266,19 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = Panel6
           AnchorSideBottom.Side = asrBottom
-          Left = 24
+          Left = 38
           Height = 378
           Hint = 'Utilice:'#13#10'{MOD} para mostrar el nombre del modulo'
-          Top = 74
+          Top = 118
           Width = 1205
           Anchors = [akTop, akLeft, akRight, akBottom]
-          BorderSpacing.Top = 4
-          BorderSpacing.Right = 70
+          BorderSpacing.Top = 6
+          BorderSpacing.Right = 112
           Caption = 'webapps'
           ClientHeight = 353
           ClientWidth = 1201
           Font.Style = [fsBold]
+          ParentBackground = False
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
@@ -9239,20 +9290,20 @@ object Form1: TForm1
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = GroupBox5
             AnchorSideBottom.Side = asrBottom
-            Left = 10
+            Left = 16
             Height = 333
-            Top = 10
+            Top = 16
             Width = 1181
             Anchors = [akTop, akLeft, akRight, akBottom]
-            BorderSpacing.Left = 10
-            BorderSpacing.Top = 10
-            BorderSpacing.Right = 10
-            BorderSpacing.Bottom = 10
+            BorderSpacing.Left = 16
+            BorderSpacing.Top = 16
+            BorderSpacing.Right = 16
+            BorderSpacing.Bottom = 16
             ColCount = 3
             Columns = <            
               item
                 Title.Caption = '#'
-                Width = 30
+                Width = 48
               end            
               item
                 ButtonStyle = cbsPickList
@@ -9266,11 +9317,11 @@ object Form1: TForm1
                   'CLRDIR'
                 )
                 Title.Caption = 'Comando'
-                Width = 150
+                Width = 240
               end            
               item
                 Title.Caption = 'Valor'
-                Width = 360
+                Width = 576
               end>
             FixedCols = 0
             Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goRowMoving, goEditing, goRowSelect, goSmoothScroll, goFixedColSizing]
@@ -9280,23 +9331,23 @@ object Form1: TForm1
             OnSelectEditor = StringGrid4SelectEditor
             OnSetEditText = StringGrid4SetEditText
             ColWidths = (
-              30
-              150
-              360
+              48
+              240
+              576
             )
           end
           object ListFilterEdit2: TListFilterEdit
-            Left = 191
+            Left = 306
             Height = 28
-            Top = -19
-            Width = 248
-            ButtonWidth = 29
+            Top = -30
+            Width = 397
+            ButtonWidth = 46
             NumGlyphs = 1
             MaxLength = 0
             ParentFont = False
             TabOrder = 1
-            OnChange = ListFilterEdit2Change
             TextHint = '(Filtro webapps)'
+            OnChange = ListFilterEdit2Change
           end
         end
         object BitBtn23: TBitBtn
@@ -9304,15 +9355,15 @@ object Form1: TForm1
           AnchorSideTop.Control = Edit6
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrBottom
-          Left = 1234
-          Height = 25
+          Left = 1194
+          Height = 40
           Hint = 'Agregar fila'
-          Top = 80
-          Width = 25
+          Top = 128
+          Width = 40
           Anchors = [akTop, akRight]
-          BorderSpacing.Left = 20
-          BorderSpacing.Top = 10
-          BorderSpacing.Right = 10
+          BorderSpacing.Left = 32
+          BorderSpacing.Top = 16
+          BorderSpacing.Right = 16
           Glyph.Data = {
             36030000424D3603000000000000360000002800000010000000100000000100
             1800000000000003000064000000640000000000000000000000000000000000
@@ -9341,26 +9392,26 @@ object Form1: TForm1
             F7738EF70049F700000000000000000000000000000000000000000000000000
             00000000000000000000000049F70049F7000000000000000000
           }
-          OnClick = BitBtn23Click
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           Spacing = 0
           TabOrder = 1
+          OnClick = BitBtn23Click
         end
         object BitBtn21: TBitBtn
           AnchorSideLeft.Control = BitBtn23
           AnchorSideTop.Control = BitBtn23
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrBottom
-          Left = 1234
-          Height = 25
+          Left = 1194
+          Height = 40
           Hint = 'Eliminar Fila'
-          Top = 110
-          Width = 25
+          Top = 176
+          Width = 40
           Anchors = [akTop, akRight]
-          BorderSpacing.Top = 5
-          BorderSpacing.Right = 10
+          BorderSpacing.Top = 8
+          BorderSpacing.Right = 16
           Glyph.Data = {
             36030000424D3603000000000000360000002800000010000000100000000100
             1800000000000003000064000000640000000000000000000000000000000000
@@ -9389,25 +9440,25 @@ object Form1: TForm1
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000
           }
-          OnClick = BitBtn21Click
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           Spacing = 0
           TabOrder = 2
+          OnClick = BitBtn21Click
         end
         object BitBtn7: TBitBtn
           AnchorSideTop.Control = BitBtn21
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrCenter
-          Left = 1234
-          Height = 25
+          Left = 1194
+          Height = 40
           Hint = 'Subir Fila Seleccionada'
-          Top = 140
-          Width = 25
+          Top = 224
+          Width = 40
           Anchors = [akTop, akRight]
-          BorderSpacing.Top = 5
-          BorderSpacing.Right = 2
+          BorderSpacing.Top = 8
+          BorderSpacing.Right = 3
           Glyph.Data = {
             36040000424D3604000000000000360000002800000010000000100000000100
             200000000000000400006400000064000000000000000000000097AF006C9BB1
@@ -9444,25 +9495,25 @@ object Form1: TForm1
             FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0097AF004097AF0040FFFF
             FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
           }
-          OnClick = BitBtn7Click
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           Spacing = 0
           TabOrder = 3
+          OnClick = BitBtn7Click
         end
         object BitBtn8: TBitBtn
           AnchorSideTop.Control = BitBtn7
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrCenter
-          Left = 1234
-          Height = 25
+          Left = 1194
+          Height = 40
           Hint = 'Bajar Fila Seleccionada'
-          Top = 170
-          Width = 25
+          Top = 272
+          Width = 40
           Anchors = [akTop, akRight]
-          BorderSpacing.Top = 5
-          BorderSpacing.Right = 2
+          BorderSpacing.Top = 8
+          BorderSpacing.Right = 3
           Glyph.Data = {
             36040000424D3604000000000000360000002800000010000000100000000100
             2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
@@ -9499,17 +9550,17 @@ object Form1: TForm1
             0017FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
             FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF009BB1001796AE006B
           }
-          OnClick = BitBtn8Click
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           Spacing = 0
           TabOrder = 4
+          OnClick = BitBtn8Click
         end
         object Label13: TLabel
-          Left = 24
+          Left = 38
           Height = 20
-          Top = 8
+          Top = 13
           Width = 29
           Caption = 'Info:'
           ParentColor = False
@@ -9517,10 +9568,10 @@ object Form1: TForm1
         end
         object BitBtn20: TBitBtn
           AnchorSideRight.Control = BitBtn17
-          Left = 862
-          Height = 35
+          Left = 1379
+          Height = 56
           Hint = 'Nuevo archivo .fde'
-          Top = 8
+          Top = 13
           Width = 128
           Anchors = [akTop, akLeft, akRight]
           Caption = 'Nuevo'
@@ -9560,18 +9611,18 @@ object Form1: TForm1
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000
           }
-          OnClick = BitBtn20Click
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           TabOrder = 6
+          OnClick = BitBtn20Click
         end
         object BitBtn17: TBitBtn
           AnchorSideRight.Control = BitBtn18
-          Left = 990
-          Height = 35
+          Left = 1584
+          Height = 56
           Hint = 'Guardar archivo .fde actual'
-          Top = 8
+          Top = 13
           Width = 128
           Anchors = [akTop, akLeft, akRight]
           Caption = 'Guardar'
@@ -9612,19 +9663,19 @@ object Form1: TForm1
             71F1F0EAEDFFF0EAEDFFF0EAEDFFF0EAEDFFF0EAEDFFF0EAEDFFF0EAEDFFF0EA
             EDFFF0EAEDFFF0EAEDFFF0EAEDFFD65E7AF3DA70895400000000
           }
-          OnClick = BitBtn17Click
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           TabOrder = 7
+          OnClick = BitBtn17Click
         end
         object BitBtn18: TBitBtn
           AnchorSideRight.Control = BitBtn23
           AnchorSideRight.Side = asrBottom
-          Left = 1118
-          Height = 35
+          Left = 1789
+          Height = 56
           Hint = 'Guardar archivo .fde con nuevo nombre'
-          Top = 8
+          Top = 13
           Width = 141
           Anchors = [akTop, akLeft, akRight]
           Caption = 'Guardar como'
@@ -9664,11 +9715,11 @@ object Form1: TForm1
             00F1E1E1E1FFE1E1E1FFE1E1E1FFE1E1E1FFE1E1E1FFE1E1E1FFE1E1E1FFE1E1
             E1FFE1E1E1FFE1E1E1FFE1E1E1FF159700F317A0005400000000
           }
-          OnClick = BitBtn18Click
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           TabOrder = 8
+          OnClick = BitBtn18Click
         end
         object Edit6: TEdit
           AnchorSideTop.Control = BitBtn16
@@ -9676,31 +9727,31 @@ object Form1: TForm1
           AnchorSideRight.Control = EditScript
           AnchorSideRight.Side = asrBottom
           Cursor = crHandPoint
-          Left = 722
+          Left = 402
           Height = 17
-          Top = 53
-          Width = 534
+          Top = 85
+          Width = 854
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
-          BorderSpacing.Top = 10
-          BorderSpacing.Right = 70
+          BorderSpacing.Top = 16
+          BorderSpacing.Right = 112
           BorderStyle = bsNone
           Color = clMenu
           Font.Color = clHighlight
-          Font.Height = -13
+          Font.Height = -21
           Font.Style = [fsUnderline]
-          OnChange = Edit6Change
-          OnClick = Edit6Click
           ParentFont = False
           ReadOnly = True
           TabOrder = 10
+          OnChange = Edit6Change
+          OnClick = Edit6Click
         end
         object BitBtn16: TBitBtn
           AnchorSideRight.Control = BitBtn20
-          Left = 735
-          Height = 35
+          Left = 1176
+          Height = 56
           Hint = 'Abrir un archivo .fde'
-          Top = 8
+          Top = 13
           Width = 127
           Anchors = [akTop, akLeft, akRight]
           Caption = 'Abrir'
@@ -9740,41 +9791,41 @@ object Form1: TForm1
             000000000000000000000000000000000000168025041680251E168025FF1680
             25FF168025FF168025FF1680251E168025040000000000000000
           }
-          OnClick = BitBtn16Click
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
           TabOrder = 5
+          OnClick = BitBtn16Click
         end
         object Memo1: TMemo
-          Left = 64
-          Height = 62
-          Top = 8
-          Width = 588
-          OnChange = Memo1Change
+          Left = 102
+          Height = 99
+          Top = 13
+          Width = 941
           ParentFont = False
           ScrollBars = ssBoth
           TabOrder = 11
+          OnChange = Memo1Change
         end
       end
       object Splitter2: TSplitter
         Cursor = crVSplit
         Left = 0
-        Height = 12
-        Top = 453
+        Height = 19
+        Top = 446
         Width = 1300
         Align = alBottom
         MinSize = 50
-        OnCanOffset = Splitter2CanOffset
         ResizeAnchor = akBottom
+        OnCanOffset = Splitter2CanOffset
       end
     end
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Height = 29
-    Top = 654
-    Width = 1300
+    Height = 44
+    Top = 1089
+    Width = 2080
     Panels = <>
     ParentFont = False
     SimplePanel = False
@@ -9782,18 +9833,18 @@ object Form1: TForm1
   end
   object SelectDirectoryDialog1: TSelectDirectoryDialog
     InitialDir = '.\'
-    left = 304
-    top = 536
+    Left = 486
+    Top = 858
   end
   object OpenDialog1: TOpenDialog
     DefaultExt = '.fde'
     Filter = '*.fde'
-    left = 273
-    top = 536
+    Left = 437
+    Top = 858
   end
   object PopupMenu1: TPopupMenu
-    left = 208
-    top = 536
+    Left = 333
+    Top = 858
     object ItemCheck_Uncheck: TMenuItem
       Caption = 'Check/Uncheck'
       OnClick = ItemCheck_UncheckClick
@@ -9855,8 +9906,8 @@ object Form1: TForm1
     end
   end
   object MainMenu1: TMainMenu
-    left = 176
-    top = 536
+    Left = 282
+    Top = 858
     object MenuItem14: TMenuItem
       Bitmap.Data = {
         36090000424D3609000000000000360000002800000018000000180000000100
@@ -10266,87 +10317,6 @@ object Form1: TForm1
     end
     object MenuItem10: TMenuItem
       Caption = 'Ayuda'
-      object MenuItem15: TMenuItem
-        Caption = 'Buscar Actualizaciones'
-        Bitmap.Data = {
-          36090000424D3609000000000000360000002800000018000000180000000100
-          2000000000000009000064000000640000000000000000000000000000000000
-          00000000000000000000000000000000000000000000B16C4E1AB370516BB370
-          52BDB37051F2B46F51FEB46F51FEB37051F1B37051BDB271526AB87052190000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000B66D5515B2715188B36F51F7B37051FFB370
-          51FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB36F51F7B271
-          5188B3734D140000000000000000000000000000000000000000000000000000
-          00000000000000000000B46F5155B37051F5B37051FFB36F51F7B36F52E7B370
-          51FFB27052D1B16F532EB5705530B27051D4B37051FFB36F50E5B37051F8B370
-          51FFB37052F4B26F505300000000000000000000000000000000000000000000
-          000000000000B4715273B37051FEB37051FFB47051A9B16F505CB37051FFB370
-          51EDB16F4E170000000000000000B5755518B37151EEB37051FFB06F4F5AB370
-          51ABB37051FFB37051FEB3705172000000000000000000000000000000000000
-          0000B3715251B37051FEB37051FBB36F506C00000000B37051B4B37051FFB270
-          517400000000000000000000000000000000B46F5177B37051FFB47051B00000
-          0000B371506FB37051FBB37051FDB271514F000000000000000000000000B66D
-          521CB47050F4B37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB370
-          51FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB370
-          51FFB37051FFB37051FFB37051FFB36F51F3B16C4E1A0000000000000000B370
-          51A0B37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB370
-          51FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB370
-          51FFB37051FFB37051FFB37051FFB37051FFB370519D00000000AF705020B370
-          51FDB37051F8B47153220000000000000000B3715191B37051FFB46F51770000
-          00000000000000000000000000000000000000000000B270517BB37051FFB270
-          508F0000000000000000B1714E24B37051F9B37051FCB36F551EB371506FB370
-          51FFB47051A6000000000000000000000000B37051B9B37051FFB27050490000
-          00000000000000000000000000000000000000000000B3714F4DB37051FFB370
-          51B6000000000000000000000000B47051A9B37051FFB36F506CB37051B9B370
-          51FFB36F5257000000000000000000000000B37051DDB37051FFB57251260000
-          00000000000000000000000000000000000000000000B4705129B37051FFB370
-          51DA000000000000000000000000B371525AB37051FFB37051B6B37051DAB370
-          51FFB5725126000000000000000000000000B37051EFB37051FFB4694B110000
-          00000000000000000000000000000000000000000000AE6B5113B37051FFB370
-          51EC000000000000000000000000B3735328B37051FFB36F51D7B37052F4B370
-          51FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB370
-          51FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB370
-          51FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051F2B37051F3B370
-          51FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB370
-          51FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB370
-          51FFB37051FFB37051FFB37051FFB37051FFB37051FFB36F51F7B37051DAB370
-          51FFB36E5325000000000000000000000000B37051EFB37051FFAF7050100000
-          00000000000000000000000000000000000000000000AE6B5113B37051FFB370
-          51ED000000000000000000000000AA715509B370518DB37152ACB37050B8B370
-          51FFB36F5257000000000000000000000000B37051DDB37051FFB57251260000
-          00000000000000000000000000000000000000000000B3735328B37051FFB370
-          52DB0000000000000000B26F514CB27050490000000000000000B371506FB370
-          51FFB47051A6000000000000000000000000B37151BCB37051FFB46F53470000
-          00000000000000000000000000000000000000000000B36E534AB37051FFB370
-          51B900000000AA805506B37051D9B37051D4BF80400400000000AF705020B370
-          51FDB37051F8B573521F0000000000000000B3705194B37051FFB46F51770000
-          00000000000000000000000000000000000000000000B471527AB37051FFB371
-          519100000000B270517BB37051FFB37051FFB37051720000000000000000B370
-          51A0B37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB370
-          51FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB46F
-          5155AA805506B37051E6B37051FFB37051FFB37050E1CC66660500000000B66D
-          521CB47050F4B37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB370
-          51FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB27050FBB373
-          4D14B4705162B37051FFB37051FFB37051FFB37051FFB2705060000000000000
-          0000B3715251B37051FEB37051FBB470526D00000000B37051B4B37051FFB270
-          517400000000000000000000000000000000B46F5177B37051FFB47051B00000
-          0000B37050BBB37051FFB37051F8B37051F8B37051FFB47051BA000000000000
-          000000000000B2705174B37051FEB37051FFB37050A8B16F505CB37051FFB370
-          51EDB16F4E170000000000000000B5755518B37151EEB37051FFB27051420000
-          0000B37051F0B37051F8B573521FAF705020B37051F8B37051EF000000000000
-          00000000000000000000B46F5155B37051F5B37051FFB36F51F7B47051E6B370
-          51FFB36F50CEB36B4D32B3715036B47051D2B37051FFB36F51EAB271513F0000
-          0000B37051E6B37051F9B573521FAF705020B37051F9B37051E4000000000000
-          0000000000000000000000000000B0724F1DB370519BB37051FBB37051FFB370
-          51FFB37051FFB37051FFB37051FFB37051FFB37051FFB37051FFB47051BA0000
-          0000B46F518EB37051FFB37051F8B37051F8B37051FFB36F508C000000000000
-          00000000000000000000000000000000000000000000B16C4E1AB370516BB471
-          51BEB37051EFB37052FCB37052FCB37052EFB36F51C3B370516BB3734D140000
-          0000B3664D0AB3705190B37051E0B37051E0B270508FAA715509
-        }
-        Visible = False
-        OnClick = MenuItem15Click
-      end
       object MenuItem18: TMenuItem
         Caption = 'Ir a GitHub'
         Bitmap.Data = {
@@ -10546,21 +10516,28 @@ object Form1: TForm1
         0000000000000000000000000000000000000000000000000000
       }
       Hint = 'Modo Bebé.'
-      OnClick = MenuItem2Click
+      Visible = False
     end
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = '.fde'
     Filter = '*.fde'
-    left = 440
-    top = 536
+    Left = 704
+    Top = 858
   end
   object Timer1: TTimer
     Enabled = False
     Interval = 100
     OnTimer = Timer1Timer
-    left = 473
-    top = 536
+    Left = 757
+    Top = 858
+  end
+  object Timer2: TTimer
+    Enabled = False
+    Interval = 1000
+    OnTimer = Timer2Timer
+    Left = 808
+    Top = 858
   end
   object TrayIcon1: TTrayIcon
     PopUpMenu = TrayPopMenu
@@ -14851,18 +14828,18 @@ object Form1: TForm1
     }
     Hint = 'FDE Web Utils'
     OnClick = TrayIcon1Click
-    left = 368
-    top = 536
+    Left = 589
+    Top = 858
   end
   object OpenDialog2: TOpenDialog
     DefaultExt = '.exe'
     Filter = '*.exe'
-    left = 336
-    top = 536
+    Left = 538
+    Top = 858
   end
   object PopupMenu3: TPopupMenu
-    left = 144
-    top = 536
+    Left = 230
+    Top = 858
     object MenuItem13: TMenuItem
       Caption = 'Borrar APP'
       OnClick = MenuItem13Click
@@ -14885,8 +14862,8 @@ object Form1: TForm1
     end
   end
   object TrayPopMenu: TPopupMenu
-    left = 113
-    top = 536
+    Left = 181
+    Top = 858
     object MenuTrayClose: TMenuItem
       Caption = 'Cerrar Aplicacion'
       OnClick = MenuTrayCloseClick
@@ -14896,13 +14873,13 @@ object Form1: TForm1
     Enabled = True
     Identifier = 'a1'
     OnOtherInstance = UniqueInstance1OtherInstance
-    left = 408
-    top = 536
+    Left = 653
+    Top = 858
   end
   object IniPropStorage1: TIniPropStorage
     StoredValues = <>
     IniFileName = 'fde.ini'
-    left = 513
-    top = 536
+    Left = 821
+    Top = 858
   end
 end

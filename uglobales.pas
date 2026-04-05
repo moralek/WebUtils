@@ -26,6 +26,11 @@ private
     Procedure setWebappsDir(Valor:String);
     Function getWebappsDir():String;
 
+    Procedure setScanMode(Valor:String);
+    Function getScanMode():String;
+    Procedure setEnableArchiveMode(Valor:Boolean);
+    Function getEnableArchiveMode():Boolean;
+
     Procedure setJavaHome(Valor:String);
     Function getJavaHome():String;
 
@@ -157,6 +162,8 @@ public
 
     Property FdeFilePath: string read getFdeFilepath write setFdeFilePath;
     Property WebAppsDir:  String read getWebappsDir write setWebappsDir;
+    Property ScanMode: String read getScanMode write setScanMode;
+    Property EnableArchiveMode: Boolean read getEnableArchiveMode write setEnableArchiveMode;
     Property JavaHome:   String read getJavaHome write setJavaHome;
     Property OcultarDirROOT: Boolean read getOcultarDirROOT write setOcultarDirROOT;
     Property MostrarOK: Boolean read getMostrarOK write setMostrarOK;
@@ -300,6 +307,18 @@ begin
    setVarstr('WebappsDir',Valor);
 end;
 
+Procedure TGlobales.setScanMode(Valor:String);
+begin
+   Seccion:='CONFIG';
+   setVarstr('ScanMode',LowerCase(Trim(Valor)));
+end;
+
+Procedure TGlobales.setEnableArchiveMode(Valor:Boolean);
+begin
+   Seccion:='CONFIG';
+   setBoolean('EnableArchiveMode',Valor);
+end;
+
 Procedure TGlobales.setOcultarDirROOT(Valor:Boolean);
 begin
    Seccion:='CONFIG';
@@ -334,6 +353,20 @@ Function TGlobales.getWebappsDir():String;
 begin
    Seccion:='CONFIG';
    Result:=getVarStr('WebappsDir',ExtractFilePath(Application.ExeName));
+end;
+
+Function TGlobales.getScanMode():String;
+begin
+   Seccion:='CONFIG';
+   Result:=LowerCase(Trim(getVarStr('ScanMode','carpeta')));
+   if (Result<>'carpeta') and (Result<>'war/zip') then
+      Result:='carpeta';
+end;
+
+Function TGlobales.getEnableArchiveMode():Boolean;
+begin
+   Seccion:='CONFIG';
+   Result:=getBoolean('EnableArchiveMode',False);
 end;
 Function TGlobales.getJavaHome():String;
 begin

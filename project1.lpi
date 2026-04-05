@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="11"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
+      <Flags>
+        <CompatibilityMode Value="True"/>
+      </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <Title Value="FDE - WEB UTILS"/>
       <Scaled Value="True"/>
       <UseAppBundle Value="False"/>
@@ -13,6 +15,7 @@
       <UseXPManifest Value="True"/>
       <XPManifest>
         <DpiAware Value="True"/>
+        <ExecutionLevel Value="requireAdministrator"/>
       </XPManifest>
       <Icon Value="0"/>
     </General>
@@ -22,11 +25,11 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="1"/>
-      <MinorVersionNr Value="5"/>
-      <RevisionNr Value="1"/>
+      <MinorVersionNr Value="6"/>
+      <RevisionNr Value="0"/>
       <Language Value="080A"/>
       <CharSet Value="04E6"/>
-      <StringTable OriginalFilename="[WEB UTILS] Del-Find Files" ProductName="WEB UTILS" ProductVersion="1.5.1.0"/>
+      <StringTable OriginalFilename="[WEB UTILS] Del-Find Files" ProductName="WEB UTILS" ProductVersion="1.6.0.0"/>
     </VersionInfo>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
@@ -139,12 +142,12 @@
   <CompilerOptions>
     <Version Value="11"/>
     <PathDelim Value="\"/>
-    <Target>
-      <Filename Value="..\DelFind"/>
-    </Target>
+      <Target>
+        <Filename Value="target\DelFind"/>
+      </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+      <UnitOutputDirectory Value="tmp\obj\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
       <Debugging>
@@ -160,9 +163,15 @@
       </Options>
     </Linking>
     <Other>
+      <ExecuteBefore>
+          <Command Value="cmd.exe /c &quot;if exist tmp\obj\$(TargetCPU)-$(TargetOS) rmdir /s /q tmp\obj\$(TargetCPU)-$(TargetOS) &amp; if not exist resources\build-resources.bat exit /b 1 else if not exist resources\resources.obj call resources\build-resources.bat&quot;"/>
+        <CompileReasons Compile="True" Build="True" Run="False"/>
+        <ShowAllMessages Value="True"/>
+      </ExecuteBefore>
       <Verbosity>
-        <ShoLineNum Value="True"/>
+        <ShowLineNum Value="True"/>
       </Verbosity>
+      <CustomOptions Value="-vd"/>
     </Other>
   </CompilerOptions>
   <Debugging>

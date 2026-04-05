@@ -10,7 +10,6 @@ uses
   Buttons, ExtCtrls, Menus, Grids, LCLType, ComCtrls, IniPropStorage, EditBtn,
   ActnList, UMyApps, LazFileUtils, SynEdit, SynHighlighterXML, UMyGridString,
   UniqueInstance, atshapeline, CalendarLite, ShellApi, UMyXml, lazutf8, UMyWin,
-  UMyRCS,
 {$IFDEF UNIX}{$IFDEF UseCThreads}
 cthreads,
 {$ENDIF}{$ENDIF}
@@ -81,7 +80,9 @@ type
     CheckBox10: TCheckBox;
     CheckBox11: TCheckBox;
     CheckBox12: TCheckBox;
+    CheckBox13: TCheckBox;
     ComboBox1: TComboBox;
+    ComboBoxModo: TComboBox;
     ComboBoxPRUEBA: TComboBox;
     ComboBoxDsCopyFrom: TComboBox;
     DATASOURCEPRUEBA: TEdit;
@@ -142,6 +143,7 @@ type
     Label32: TLabel;
     Label33: TLabel;
     Label34: TLabel;
+    Label35: TLabel;
     Label4: TLabel;
     Label5: TLabel;
     Label9: TLabel;
@@ -149,9 +151,9 @@ type
     linkFolderApp: TLabel;
     linkClientCfg: TLabel;
     linkwar: TLabel;
+    LblAdminRequired: TLabel;
     LblPdfReportIni: TLabel;
     LblFullInfo: TLabel;
-    LblLinkUpdate: TLabel;
     linkPDFReport: TLabel;
     ListBox1: TListBox;
     ListBox2: TListBox;
@@ -193,7 +195,6 @@ type
     MenuItem11: TMenuItem;
     MenuItem12: TMenuItem;
     MenuItem13: TMenuItem;
-    MenuItem15: TMenuItem;
     MenuItem16: TMenuItem;
     ItemCOPIAR: TMenuItem;
     ItemCopyWar: TMenuItem;
@@ -208,7 +209,6 @@ type
     ItemInvertirSel: TMenuItem;
     MenuItem17: TMenuItem;
     MenuItem18: TMenuItem;
-    MenuItem2: TMenuItem;
     MenuItem23: TMenuItem;
     MenuItem6: TMenuItem;
     MenuTrayClose: TMenuItem;
@@ -282,6 +282,7 @@ type
     SelectDirectoryDialog1: TSelectDirectoryDialog;
     Shape3: TShape;
     Timer1: TTimer;
+    Timer2: TTimer;
     TrayIcon1: TTrayIcon;
     UniqueInstance1: TUniqueInstance;
 
@@ -380,6 +381,7 @@ type
     procedure CheckBox10Change(Sender: TObject);
     procedure CheckBox11Change(Sender: TObject);
     procedure CheckBox12Change(Sender: TObject);
+    procedure CheckBox13Change(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);
     procedure CheckBox2Change(Sender: TObject);
     procedure CheckBox3Change(Sender: TObject);
@@ -390,6 +392,7 @@ type
     procedure CheckBox8Change(Sender: TObject);
     procedure CheckBox9Change(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
+    procedure ComboBoxModoChange(Sender: TObject);
     procedure ComboBoxDsCopyFromChange(Sender: TObject);
     procedure Edit2Change(Sender: TObject);
     procedure EditFolderAppChange(Sender: TObject);
@@ -454,7 +457,6 @@ type
     procedure Label5Click(Sender: TObject);
     procedure Label8Click(Sender: TObject);
     procedure LblPdfReportIniClick(Sender: TObject);
-    procedure LblLinkUpdateClick(Sender: TObject);
     procedure linkClientCfgClick(Sender: TObject);
     procedure linkFolderAppClick(Sender: TObject);
     procedure linkPDFReportClick(Sender: TObject);
@@ -467,12 +469,10 @@ type
     procedure MenuItem11Click(Sender: TObject);
     procedure MenuItem13Click(Sender: TObject);
     procedure MenuItem14Click(Sender: TObject);
-    procedure MenuItem15Click(Sender: TObject);
     procedure MenuItem18Click(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
     procedure ItemAjustarClick(Sender: TObject);
     procedure MenuItem23Click(Sender: TObject);
-    procedure MenuItem2Click(Sender: TObject);
     procedure MenuItem6Click(Sender: TObject);
     procedure MenuTrayCloseClick(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
@@ -533,6 +533,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure StringGrid1DblClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
     procedure TrayIcon1Click(Sender: TObject);
     procedure UniqueInstance1OtherInstance(Sender: TObject;
       ParamCount: Integer; const Parameters: array of String);
@@ -542,11 +543,15 @@ type
     procedure Procesar();
     procedure Refrescar();
     Procedure MinimizeToTray();
+    Procedure ActivateMainWindow();
     Procedure RestoreFromTray();
     procedure RefreshAPPS();
     Procedure ChangeStringGrid1();
+    procedure ApplyScanModeUI();
+    function IsArchiveScanMode(): Boolean;
     procedure loadMemo3();
     procedure loadComboboxDataSources();
+    procedure RefreshScanModeSelector();
     { private declarations }
   public
     { public declarations }
@@ -577,11 +582,9 @@ var
   FileVerInfo: TFileVersionInfo;
   X:Integer;
 begin
+  Firstload:=0;
   Label16.Caption:=Utils.versionStr(EditModulo.Text,EditVersion.Text,EditFechaVersion.Text);
   Application.AddOnActivateHandler(@HandleApplicationActivate);
-  If FileExists(ExtractFilePath(ParamStr(0))+'DelFind_UPD.exe') then DeleteFile(ExtractFilePath(ParamStr(0))+'DelFind_UPD.exe');
-  If FileExists(ExtractFilePath(ParamStr(0))+'libeay32.dll') then DeleteFile(ExtractFilePath(ParamStr(0))+'libeay32.dll');
-  If FileExists(ExtractFilePath(ParamStr(0))+'ssleay32.dll') then DeleteFile(ExtractFilePath(ParamStr(0))+'ssleay32.dll');
   //TrayIcon1.Hide;
   FileVerInfo:=TFileVersionInfo.Create(nil);
   If  TrayIcon1.Hide then TrayIcon1.Show;
@@ -590,7 +593,6 @@ begin
     LblProductName.Caption:=FileVerInfo.VersionStrings.Values['ProductName'];
     LblProductVersion.Caption:='Ver.'+FileVerInfo.VersionStrings.Values['ProductVersion'];
     LblOriginalFilename.Caption:=FileVerInfo.VersionStrings.Values['OriginalFilename'];
-    LblLinkUpdate.Caption:='Ver si existe una nueva versión';
   finally
     FileVerInfo.Free;
   end;
@@ -605,6 +607,8 @@ begin
   SelectDirectoryDialog1.InitialDir:=Edit1.Text;
   OpenDialog1.InitialDir := fdedir;
   Edit2.Text:=fdefilepath;
+  CheckBox13.Checked:=varGlobales.EnableArchiveMode;
+  RefreshScanModeSelector();
   //Pagina
   CheckBox2.Checked:=varGlobales.MostrarOK;
   CheckBox3.Checked:=varGlobales.MostrarERR;
@@ -625,6 +629,27 @@ begin
   CheckBox8.Checked:=varGlobales.OpcSalir;
   CheckBox10.Checked:=varGlobales.DelWars;
   CheckBox12.Checked:=varGlobales.OcultaEjemplosDS;
+  ToTray.Caption:='Al presionar Minimizar.';
+  MinGenWar.Caption:='Al generar WAR';
+  MinScriptFDE.Caption:='Al ejecutar script FDE.';
+  MinAppRun.Caption:='Al abrir una aplicación (ejecutor).';
+  CheckBox5.Caption:='''Beep'' al terminar de ejecutar un script.';
+  CheckBox6.Caption:='Reordenar las aplicaciones por frecuencia de uso.';
+  CheckBox8.Caption:='Recordar opción al salir.';
+  CheckBox1.Caption:='Excluir ROOT, manager, host-manager, docs y probe.';
+  CheckBox10.Caption:='Eliminar *.war antes de generar nuevo war';
+  CheckBox12.Caption:='Ocultar plantillas de ejemplo en DataSources.';
+  CheckBox13.Caption:='Habilitar modo War/Zip (experimental).';
+  CheckBox2.Caption:='Muestra mensajes OK.';
+  CheckBox2.Hint:='Muestra mensajes OK.';
+  CheckBox3.Caption:='Muestra mensajes de error.';
+  CheckBox3.Hint:='Muestra mensajes de error.';
+  CheckBox4.Caption:='Muestra mensajes de usuario (MSGRUN).';
+  CheckBox4.Hint:='Muestra mensajes de usuario (MSGRUN).';
+  CheckBox7.Caption:='Pide confirmación antes de eliminar.';
+  CheckBox7.Hint:='Pide confirmación antes de eliminar.';
+  CheckBox9.Caption:='Limpia la consola antes de cada ejecución.';
+  CheckBox9.Hint:='Limpia la consola antes de cada ejecución.';
   If (Not(FileExists(Utils.clearDirPath(varGlobales.JavaHome)+'bin\jar.exe'))) then
      begin
      Edit5.Text:=Utils.retJavaHome();
@@ -635,7 +660,19 @@ begin
   TrayIcon1.BalloonTitle:=LblProductName.Caption;
   RefreshAPPS();
   Form1.Caption:=LblProductName.Caption+' '+LblProductVersion.Caption;
-  MenuItem2.Visible:=(Not(Utils.isElevated()));
+  LblAdminRequired.Visible:=(Not(Utils.isElevated()));
+  LblAdminRequired.Color:=RGBToColor(176,32,32);
+  LblAdminRequired.Font.Color:=clWhite;
+  if LblAdminRequired.Visible then
+    begin
+    PageControl1.BorderSpacing.Top:=LblAdminRequired.Height+8;
+    end
+  else
+    begin
+    PageControl1.BorderSpacing.Top:=0;
+    end;
+  Timer2.Enabled:=LblAdminRequired.Visible;
+  ApplyScanModeUI();
   //Web.Xml
   CalendarLite1.Date:=Date;
   EditFechaVersion.Text:=Utils.getFechaHoraForm(Date);
@@ -659,6 +696,7 @@ begin
   if (varGlobales.OcultaEjemplosDS) then x:=1 else x:=4;
   BitBtn28.Enabled:=(ComboBoxDsCopyFrom.ItemIndex>X);
   //INFO
+  Firstload:=1;
   ChangeStringGrid1();
 end;
 procedure TForm1.loadComboboxDataSources();
@@ -1165,6 +1203,11 @@ procedure TForm1.BitBtn9Click(Sender: TObject);
 var
   rutajar,MensajeError:String;
 begin
+  if IsArchiveScanMode() then
+  begin
+    ShowMessage('La generación de WAR no está disponible en el modo War/Zip.');
+    Exit;
+  end;
   PageControl1.ActivePage:=TabSheet1;
   If (varGlobales.ClearMemo) Then RichMemo1.Clear;
   varGlobales.WebAppsDir:= Edit1.Text;
@@ -1943,18 +1986,27 @@ begin
     loadComboboxDataSources();
 end;
 
+procedure TForm1.CheckBox13Change(Sender: TObject);
+begin
+  varGlobales.EnableArchiveMode:=CheckBox13.Checked;
+  RefreshScanModeSelector();
+  ApplyScanModeUI();
+  Refrescar();
+  ChangeStringGrid1();
+end;
+
 procedure TForm1.CheckBox1Change(Sender: TObject);
 begin
   varGlobales.OcultarDirROOT:=CheckBox1.Checked;
     Utils.FilDirGrid(Utils.clearDirPath(varGlobales.WebAppsDir),
-                       ListFilterEdit1.Text,StringGrid1);
+                       ListFilterEdit1.Text,varGlobales.ScanMode,StringGrid1);
 //  StringGrid1.AutoSizeColumn(3);
 end;
 
 procedure Tform1.Refrescar();
 begin
   Utils.FilDirGrid(Utils.clearDirPath(varGlobales.WebAppsDir),
-  ListFilterEdit1.Text,StringGrid1);
+  ListFilterEdit1.Text,varGlobales.ScanMode,StringGrid1);
   //StringGrid1.AutoSizeColumn(1);
  // StringGrid1.Cols[1].;
   //StringGrid1.AutoSizeColumn(3);
@@ -2026,6 +2078,55 @@ begin
   varGlobales.PDFReportselection:=(ComboBox1.ItemIndex);
 end;
 
+procedure TForm1.ComboBoxModoChange(Sender: TObject);
+begin
+  if Firstload=0 then Exit;
+  if (ComboBoxModo.ItemIndex=1) and (not varGlobales.EnableArchiveMode) then
+    ComboBoxModo.ItemIndex:=0;
+  case ComboBoxModo.ItemIndex of
+    1: varGlobales.ScanMode:='war/zip';
+  else
+    varGlobales.ScanMode:='carpeta';
+  end;
+  ApplyScanModeUI();
+  Refrescar();
+  ChangeStringGrid1();
+end;
+
+procedure TForm1.RefreshScanModeSelector();
+var
+  PrevFirstLoad: Integer;
+begin
+  PrevFirstLoad:=Firstload;
+  Firstload:=0;
+  try
+    if not varGlobales.EnableArchiveMode then
+      varGlobales.ScanMode:='carpeta';
+    ComboBoxModo.Items.Clear;
+    ComboBoxModo.Items.Add('Carpeta');
+    if varGlobales.EnableArchiveMode then
+      ComboBoxModo.Items.Add('War/Zip');
+    if (varGlobales.EnableArchiveMode) and (varGlobales.ScanMode='war/zip') then
+      ComboBoxModo.ItemIndex:=1
+    else
+      ComboBoxModo.ItemIndex:=0;
+    Label35.Visible:=varGlobales.EnableArchiveMode;
+    ComboBoxModo.Visible:=varGlobales.EnableArchiveMode;
+    if varGlobales.EnableArchiveMode then
+    begin
+      StringGrid1.AnchorSideTop.Control:=ComboBoxModo;
+      StringGrid1.BorderSpacing.Top:=13;
+    end
+    else
+    begin
+      StringGrid1.AnchorSideTop.Control:=ListFilterEdit1;
+      StringGrid1.BorderSpacing.Top:=16;
+    end;
+  finally
+    Firstload:=PrevFirstLoad;
+  end;
+end;
+
 procedure TForm1.ComboBoxDsCopyFromChange(Sender: TObject);
 var x:integer;
 begin
@@ -2051,9 +2152,22 @@ var aRow:Integer;
   Files:TStringList;
 begin
 
+  if StringGrid1.RowCount<2 then Exit;
   aRow:=StringGrid1.Row;
   EditDisplayName.Text:=StringGrid1.Rows[aRow][5];
   EditModuleName.Text:=StringGrid1.Rows[aRow][4];
+  if IsArchiveScanMode() then
+  begin
+    linkwar.Visible:=FileExistsUTF8(StringGrid1.Rows[aRow][2]);
+    EditWar.Text:=StringGrid1.Rows[aRow][3];
+    EditPDFReport.Text:='NO APLICA';
+    EditClientCfg.Text:='NO APLICA';
+    Editwebxml.Text:='NO APLICA';
+    linkPDFReport.Visible:=False;
+    linkClientCfg.Visible:=False;
+    linkwebxml.Visible:=False;
+    Exit;
+  end;
   //WAR;
   Files:=TStringList.Create;
   FindAllFiles(Files, StringGrid1.Rows[aRow][2], '*.war', true);
@@ -2315,18 +2429,24 @@ end;
 
 procedure TForm1.ItemCopyRutaClick(Sender: TObject);
 begin
-  Utils.ClipboardCopy(Utils.clearDirPath(StringGrid1.Rows[StringGrid1.Row][2]));
+  if IsArchiveScanMode() then
+    Utils.ClipboardCopy(StringGrid1.Rows[StringGrid1.Row][2])
+  else
+    Utils.ClipboardCopy(Utils.clearDirPath(StringGrid1.Rows[StringGrid1.Row][2]));
 end;
 
 procedure TForm1.ItemCopyWarClick(Sender: TObject);
 var path:String;
 begin
-  path:= Utils.clearDirPath(StringGrid1.Rows[StringGrid1.Row][2])+StringGrid1.Rows[StringGrid1.Row][3]+'.war';
+  if IsArchiveScanMode() then
+    path:=StringGrid1.Rows[StringGrid1.Row][2]
+  else
+    path:=Utils.clearDirPath(StringGrid1.Rows[StringGrid1.Row][2])+StringGrid1.Rows[StringGrid1.Row][3]+'.war';
   if FileExists(path) then
   begin
    Utils.FileToClipboard(path)
   end else
-  ShowMessage('NO EXISTE ARCHIVO ['+StringGrid1.Rows[StringGrid1.Row][3]+'.war]');
+  ShowMessage('NO EXISTE ARCHIVO ['+StringGrid1.Rows[StringGrid1.Row][3]+']');
 end;
 
 procedure TForm1.ItemInvertirSelClick(Sender: TObject);
@@ -2417,9 +2537,40 @@ begin
   If FileExists(PdfReport) then ShellExecute(0,nil, PChar(PdfReport),PChar(PdfReport),nil,1) else showMessage('No se Encuentra PdfReport.ini');
 end;
 
-procedure TForm1.LblLinkUpdateClick(Sender: TObject);
+function TForm1.IsArchiveScanMode(): Boolean;
 begin
-  ShellExecute(0,nil, PChar('explorer.exe'),Pchar('"https://www.evernote.com/shard/s201/sh/4e60e820-8eac-4134-a146-841c94d76d10/89c888a93ea73a36"'),PChar('%WINDIR%'),1);
+  Result:=(varGlobales.ScanMode='war/zip');
+end;
+
+procedure TForm1.ApplyScanModeUI();
+begin
+  if varGlobales.EnableArchiveMode then
+  begin
+    CheckBox10.Caption:='Eliminar *.war antes de generar nuevo war (solo en modo carpeta)';
+    MinGenWar.Caption:='Al generar WAR (solo en modo carpeta)';
+  end
+  else
+  begin
+    CheckBox10.Caption:='Eliminar *.war antes de generar nuevo war';
+    MinGenWar.Caption:='Al generar WAR';
+  end;
+
+  if IsArchiveScanMode() then
+  begin
+    ListFilterEdit1.TextHint:='(Filtro War/Zip)';
+    StringGrid1.Hint:='Archivos .war/.zip (Doble click para ver en Explorador de Windows)';
+    StringGrid1.Columns[3].ReadOnly:=True;
+    ItemCopyWar.Caption:='Copiar archivo';
+    BitBtn9.Enabled:=False;
+  end
+  else
+  begin
+    ListFilterEdit1.TextHint:='(Filtro Carpeta)';
+    StringGrid1.Hint:='Subdirectorios (Doble click para ver en Explorador de Windows )';
+    StringGrid1.Columns[3].ReadOnly:=False;
+    ItemCopyWar.Caption:='Copiar [.war]';
+    BitBtn9.Enabled:=True;
+  end;
 end;
 
 procedure TForm1.linkClientCfgClick(Sender: TObject);
@@ -2434,6 +2585,12 @@ end;
 procedure TForm1.linkFolderAppClick(Sender: TObject);
 begin
   If StringGrid1.RowCount<2 Then exit;
+  if IsArchiveScanMode() then
+  begin
+    if FileExistsUTF8(StringGrid1.Rows[StringGrid1.Row][2]) then
+      ShellExecute(0,nil, PChar('explorer.exe'),Pchar('/select,'+'"'+StringGrid1.Rows[StringGrid1.Row][2]+'"'),PChar(ExtractFilePath(StringGrid1.Rows[StringGrid1.Row][2])),1);
+    Exit;
+  end;
   If DirectoryExistsUTF8(StringGrid1.Rows[StringGrid1.Row][2]) Then
   ShellExecute(0,nil, PChar('explorer.exe'),Pchar('/select,'+'"'+StringGrid1.Rows[StringGrid1.Row][2]+'"'),PChar(StringGrid1.Rows[StringGrid1.Row][2]),1);
 end;
@@ -2452,6 +2609,12 @@ procedure TForm1.linkwarClick(Sender: TObject);
 var Files:TStringList;
 begin
   If StringGrid1.RowCount<2 Then exit;
+  if IsArchiveScanMode() then
+  begin
+    if FileExistsUTF8(StringGrid1.Rows[StringGrid1.Row][2]) then
+      ShellExecute(0,nil, PChar('explorer.exe'),Pchar('/select,'+'"'+StringGrid1.Rows[StringGrid1.Row][2]+'"'),PChar(ExtractFilePath(StringGrid1.Rows[StringGrid1.Row][2])),1);
+    Exit;
+  end;
   Files:=TStringList.Create;
   FindAllFiles(Files,StringGrid1.Rows[StringGrid1.Row][2],'*.war',True);
   If Files.Count>0 Then
@@ -2516,23 +2679,6 @@ begin
   Utils.goNotebookPage(RunFDE,Notebook1);
 end;
 
-procedure TForm1.MenuItem15Click(Sender: TObject);
-var RCS:TMyRCS;
-params,filepath,Dll1,Dll2:String;
-begin
-  RCS:=TMyRCS.Create;
-  filePath:=RCS.getRCS(RCS.DelFind_UPD_exe);
-  Dll1:=RCS.getRCS(RCS.SSLEAY32_DLL);
-  Dll2:=RCS.getRCS(RCS.LIBEAY32_DLL);
-  RCS.Free;
-  params:= '"'+ParamStr(0)+'" ' + varGlobales.ProductVersion +' ' + varGlobales.IniUpdate;
-  Application.Terminate;
-  if ShellExecute(0,nil, PChar(filePath),PChar(params),PChar(ExtractFilePath(ParamStr(0))),1) =0 then;
-
-  //Utils.RunAsAdmin(filePath,params);
-
-end;
-
 procedure TForm1.MenuItem18Click(Sender: TObject);
 begin
   ShellExecute(0,nil, PChar('explorer.exe'),Pchar('"https://github.com/moralek/WebUtils/releases"'),PChar('%WINDIR%'),1);
@@ -2569,15 +2715,6 @@ begin
     else
         varGlobales.setAPPNombre(POPAPP,NombreNuevo);
   RefreshAPPS();
-end;
-
-procedure TForm1.MenuItem2Click(Sender: TObject);
-var  tipo: TMsgDlgType;
-     botones: TMsgDlgButtons;
-begin
- tipo := mtWarning;
- botones:= [mbOK];
- MessageDlg ('Advertencia', 'Recuerda: Ejecutar como ADMINISTRADOR', tipo, botones,0);
 end;
 
 procedure TForm1.MenuItem6Click(Sender: TObject);
@@ -2661,7 +2798,10 @@ end;
 
 procedure TForm1.ItemVerWinClick(Sender: TObject);
 begin
-  Utils.MostrarCarpeta(StringGrid1.Rows[StringGrid1.Row][2]);
+  if IsArchiveScanMode() then
+    Utils.MostrarCarpeta(ExtractFilePath(StringGrid1.Rows[StringGrid1.Row][2]))
+  else
+    Utils.MostrarCarpeta(StringGrid1.Rows[StringGrid1.Row][2]);
 end;
 
 procedure TForm1.StringGrid1MouseDown(Sender: TObject; Button: TMouseButton;
@@ -2675,9 +2815,12 @@ begin
   StringGrid1.Col := col;
   if button = mbRight then
   Begin
-   war:= Utils.clearDirPath(StringGrid1.Rows[StringGrid1.Row][2])+StringGrid1.Rows[StringGrid1.Row][3]+'.war';
+   if IsArchiveScanMode() then
+     war:=StringGrid1.Rows[StringGrid1.Row][2]
+   else
+     war:=Utils.clearDirPath(StringGrid1.Rows[StringGrid1.Row][2])+StringGrid1.Rows[StringGrid1.Row][3]+'.war';
    If FileExists(war) Then ItemCopyWar.Visible:=True else ItemCopyWar.Visible:=False;
-   ItemCopyWar.Caption:='Copiar ['+StringGrid1.Rows[row][3]+'.war]';
+   ItemCopyWar.Caption:='Copiar ['+StringGrid1.Rows[row][3]+']';
    popupmenu1.Popup;
   end;
 end;
@@ -2690,13 +2833,26 @@ end;
 Procedure TForm1.ChangeStringGrid1();
 var aRow:Integer;
 begin
+  if StringGrid1.RowCount<2 then Exit;
   aRow:=StringGrid1.Row;
+  if (aRow<1) or (aRow>=StringGrid1.RowCount) then Exit;
   RichMemo3.Text:=StringGrid1.Rows[aRow][5];
-  Label9.Caption:='display-name: ['+StringGrid1.Rows[aRow][3]+']';
-  ComboBoxDsCopyFrom.Items[1]:='Actual:['+StringGrid1.Rows[aRow][3]+']';
+  if ComboBoxDsCopyFrom.Items.Count>1 then
+    ComboBoxDsCopyFrom.Items[1]:='Actual:['+StringGrid1.Rows[aRow][3]+']';
   Label18.Caption:='['+StringGrid1.Rows[aRow][3]+']';
-  Utils.getDataSource(Utils.clearFilePath(StringGrid1.Rows[aRow][7]),Utils.clearFilePath(StringGrid1.Rows[aRow][6]),StringGrid1.Rows[aRow][8],StringGrid1.Rows[aRow][4],EditEJJdbcDatasource,EditEJResRefName);
-  EditFolderApp.Text:=StringGrid1.Rows[aRow][1];
+  if IsArchiveScanMode() then
+  begin
+    Label9.Caption:='archivo: ['+StringGrid1.Rows[aRow][3]+']';
+    EditFolderApp.Text:='webapps';
+    EditEJJdbcDatasource.Text:='';
+    EditEJResRefName.Text:='';
+  end
+  else
+  begin
+    Label9.Caption:='display-name: ['+StringGrid1.Rows[aRow][3]+']';
+    Utils.getDataSource(Utils.clearFilePath(StringGrid1.Rows[aRow][7]),Utils.clearFilePath(StringGrid1.Rows[aRow][6]),StringGrid1.Rows[aRow][8],StringGrid1.Rows[aRow][4],EditEJJdbcDatasource,EditEJResRefName);
+    EditFolderApp.Text:=StringGrid1.Rows[aRow][1];
+  end;
 end;
 
 {procedure TForm1.StringGrid1MouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -2761,16 +2917,26 @@ end;
 procedure TForm1.TabSheet3Show(Sender: TObject);
 begin
    Label16.Caption:=Utils.versionStr(EditModulo.Text,EditVersion.Text,EditFechaVersion.Text);
-   Label9.Caption:='display-name: ['+StringGrid1.Rows[StringGrid1.Row][3]+']';
+   if IsArchiveScanMode() then
+     Label9.Caption:='archivo: ['+StringGrid1.Rows[StringGrid1.Row][3]+']'
+   else
+     Label9.Caption:='display-name: ['+StringGrid1.Rows[StringGrid1.Row][3]+']';
    RichMemo3.Text:=StringGrid1.Rows[StringGrid1.Row][5];
 end;
 
 procedure TForm1.TabSheet4Show(Sender: TObject);
 Var X:Integer;
 begin
-  ComboBoxDsCopyFrom.Items[1]:='Actual:['+StringGrid1.Rows[StringGrid1.Row][3]+']';
+  if ComboBoxDsCopyFrom.Items.Count>1 then
+    ComboBoxDsCopyFrom.Items[1]:='Actual:['+StringGrid1.Rows[StringGrid1.Row][3]+']';
   Label18.Caption:='['+StringGrid1.Rows[StringGrid1.Row][3]+']';
-  Utils.getDataSource(Utils.clearFilePath(StringGrid1.Rows[StringGrid1.Row][7]),StringGrid1.Rows[StringGrid1.Row][6],StringGrid1.Rows[StringGrid1.Row][8],StringGrid1.Rows[StringGrid1.Row][4],EditEJJdbcDatasource,EditEJResRefName);
+  if IsArchiveScanMode() then
+  begin
+    EditEJJdbcDatasource.Text:='';
+    EditEJResRefName.Text:='';
+  end
+  else
+    Utils.getDataSource(Utils.clearFilePath(StringGrid1.Rows[StringGrid1.Row][7]),StringGrid1.Rows[StringGrid1.Row][6],StringGrid1.Rows[StringGrid1.Row][8],StringGrid1.Rows[StringGrid1.Row][4],EditEJJdbcDatasource,EditEJResRefName);
   if (varGlobales.OcultaEjemplosDS) then x:=1 else x:=4;
   BitBtn28.Enabled:=(ComboBoxDsCopyFrom.ItemIndex>X);
 end;
@@ -2789,12 +2955,24 @@ begin
      Form1.Hide;
 end;
 
+Procedure TForm1.ActivateMainWindow();
+begin
+     Form1.WindowState:=wsNormal;
+     Form1.ShowInTaskBar:=stDefault;
+     Form1.Show;
+     Application.Restore;
+     LCLIntf.ShowWindow(Form1.Handle, SW_RESTORE);
+     Form1.BringToFront;
+     LCLIntf.SetWindowPos(Form1.Handle, HWND_TOPMOST, 0, 0, 0, 0,
+       SWP_NOMOVE or SWP_NOSIZE or SWP_NOACTIVATE);
+     LCLIntf.SetWindowPos(Form1.Handle, HWND_NOTOPMOST, 0, 0, 0, 0,
+       SWP_NOMOVE or SWP_NOSIZE or SWP_SHOWWINDOW);
+     LCLIntf.SetForegroundWindow(Form1.Handle);
+end;
+
 Procedure TForm1.RestoreFromTray();
 begin
- //    TrayIcon1.Hide;
-     Form1.WindowState:=wsNormal;
-     Form1.ShowInTaskBar := stDefault;
-     Form1.Show;
+     ActivateMainWindow();
 end;
 procedure TForm1.ToTrayChange(Sender: TObject);
 begin
@@ -2838,7 +3016,7 @@ end;
 procedure TForm1.ListFilterEdit1Change(Sender: TObject);
 begin
   Utils.FilDirGrid(Utils.clearDirPath(varGlobales.WebAppsDir),
-                       ListFilterEdit1.Text,StringGrid1);
+                       ListFilterEdit1.Text,varGlobales.ScanMode,StringGrid1);
   ChangeStringGrid1();
   //StringGrid1.AutoSizeColumn(1);
 end;
@@ -2970,6 +3148,26 @@ begin
   Label7.Caption:= Copy(txt, 2, length(txt)-1) + Copy(txt,1,1)
 end;
 
+procedure TForm1.Timer2Timer(Sender: TObject);
+begin
+  if not LblAdminRequired.Visible then
+  begin
+    Timer2.Enabled:=False;
+    Exit;
+  end;
+
+  if LblAdminRequired.Color=RGBToColor(176,32,32) then
+  begin
+    LblAdminRequired.Color:=RGBToColor(255,242,242);
+    LblAdminRequired.Font.Color:=RGBToColor(140,24,24);
+  end
+  else
+  begin
+    LblAdminRequired.Color:=RGBToColor(176,32,32);
+    LblAdminRequired.Font.Color:=clWhite;
+  end;
+end;
+
 procedure TForm1.TrayIcon1Click(Sender: TObject);
 begin
  RestoreFromTray();
@@ -2978,11 +3176,8 @@ end;
 procedure TForm1.UniqueInstance1OtherInstance(Sender: TObject;
   ParamCount: Integer; const Parameters: array of String);
 begin
-      //TrayIcon1.Hide;
       If TrayIcon1.Hide then TrayIcon1.Show;
-      Form1.WindowState:=wsNormal;
-      Form1.ShowInTaskBar := stDefault;
-      Form1.Show;
+      ActivateMainWindow();
  //  ShowMessage('Ya existe una instancia de FDE web Utils ejecutándose.');
 end;
 
@@ -2994,6 +3189,11 @@ end;
 procedure TForm1.Iniciar();
 var MensajeError:String;
 begin
+    if IsArchiveScanMode() then
+    begin
+      ShowMessage('El modo War/Zip por ahora solo lista archivos. El procesamiento aún no está implementado.');
+      Exit;
+    end;
     If (not FileExists(Edit2.Text)) then
         MensajeError:='No se encuentra archivo .fde';
     If (Not DirectoryExists(Utils.clearDirPath(Edit1.Text))) then

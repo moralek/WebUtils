@@ -15,27 +15,107 @@ const
   MICROSS_TTF         = 'micross.ttf';
   TIMES_TTF           = 'times.ttf';
   VERDANA_TTF         = 'verdana.ttf';
-  DelFind_UPD_exe     = 'DelFind_UPD.exe';
-  SSLEAY32_DLL        = 'ssleay32.dll';
-  LIBEAY32_DLL        = 'libeay32.dll';
 
 Function getRCS(resource:String):String;
 Private
+  Function getResourceName(resource:String):String;
+  Function getResourceFileName(resource:String):String;
+  Function getResourceStream(resource:String):TResourceStream;
   //Private Declarations
 end;
 implementation
-{$R .\updater\upd.rc}
-{$R .\resources\resources.rc}
+{$R resources\resources.res}
+
+Function TMyRCS.getResourceName(resource:String):String;
+begin
+  case UpperCase(resource) of
+    'ARIAL.TTF',
+    'ARIAL_TTF',
+    'ARIALN_TTF',
+    'ARIALN.TTF': Result:='ARIALN_TTF';
+    'COUR.TTF': Result:='COUR_TTF';
+    'COURI.TTF': Result:='COURI_TTF';
+    'MICROSS.TTF': Result:='MICROSS_TTF';
+    'TIMES.TTF': Result:='TIMES_TTF';
+    'VERDANA.TTF': Result:='VERDANA_TTF';
+  else
+    Result:=UpperCase(ChangeFileExt(ExtractFileName(resource), '')).Replace('.', '_');
+  end;
+end;
+
+Function TMyRCS.getResourceFileName(resource:String):String;
+begin
+  case UpperCase(resource) of
+    'ARIAL.TTF',
+    'ARIAL_TTF',
+    'ARIALN_TTF',
+    'ARIALN.TTF': Result:='ARIALN.TTF';
+    'COUR_TTF',
+    'COUR.TTF': Result:='cour.ttf';
+    'COURI_TTF',
+    'COURI.TTF': Result:='couri.ttf';
+    'MICROSS_TTF',
+    'MICROSS.TTF': Result:='micross.ttf';
+    'TIMES_TTF',
+    'TIMES.TTF': Result:='times.ttf';
+    'VERDANA_TTF',
+    'VERDANA.TTF': Result:='verdana.ttf';
+  else
+    Result:=ExtractFileName(resource);
+  end;
+end;
+
+Function TMyRCS.getResourceStream(resource:String):TResourceStream;
+var
+  ResourceName: String;
+  ModuleHandle: HMODULE;
+begin
+  ResourceName:=getResourceName(resource);
+  ModuleHandle:=GetModuleHandle(nil);
+  if FindResource(ModuleHandle, PChar(ResourceName), RT_RCDATA)<>0 then
+    Exit(TResourceStream.Create(ModuleHandle, PChar(ResourceName), RT_RCDATA));
+
+  if (ModuleHandle<>HInstance) and (FindResource(HInstance, PChar(ResourceName), RT_RCDATA)<>0) then
+    Exit(TResourceStream.Create(HInstance, PChar(ResourceName), RT_RCDATA));
+
+  if UpperCase(resource)='ARIALN.TTF' then
+  begin
+    if FindResource(ModuleHandle, 'ARIAL_TTF', RT_RCDATA)<>0 then
+      Exit(TResourceStream.Create(ModuleHandle, 'ARIAL_TTF', RT_RCDATA));
+    if (ModuleHandle<>HInstance) and (FindResource(HInstance, 'ARIAL_TTF', RT_RCDATA)<>0) then
+      Exit(TResourceStream.Create(HInstance, 'ARIAL_TTF', RT_RCDATA));
+  end;
+
+  raise EResNotFound.CreateFmt('Resource "%s" not found', [ResourceName]);
+end;
 
 Function TMyRCS.getRCS(resource:String):String;
 var
   S: TResourceStream;
   F: TFileStream;
+  ResourceFileName: String;
+  RuntimePath: String;
+  CandidatePaths: array[0..4] of String;
+  I: Integer;
 begin
   Result:='';
-  S := TResourceStream.Create(HInstance, resource, RT_RCDATA);
+  ResourceFileName:=getResourceFileName(resource);
+  CandidatePaths[0]:=ExtractFilePath(ParamStr(0))+ResourceFileName;
+  CandidatePaths[1]:=ExtractFilePath(ParamStr(0))+'resources\'+ResourceFileName;
+  CandidatePaths[2]:=ExtractFilePath(ParamStr(0))+'WebUtils2\resources\'+ResourceFileName;
+  CandidatePaths[3]:=GetCurrentDir+'\'+ResourceFileName;
+  CandidatePaths[4]:=GetCurrentDir+'\resources\'+ResourceFileName;
+
+  for I:=Low(CandidatePaths) to High(CandidatePaths) do
+  begin
+    RuntimePath:=ExpandFileName(CandidatePaths[I]);
+    if FileExists(RuntimePath) then Exit(RuntimePath);
+  end;
+
+  RuntimePath:=ExpandFileName(ExtractFilePath(ParamStr(0))+ResourceFileName);
+  S := getResourceStream(resource);
   try
-    F := TFileStream.Create(ExtractFilePath(ParamStr(0))+resource, fmCreate);
+    F := TFileStream.Create(RuntimePath, fmCreate);
     try
       F.CopyFrom(S, S.Size);
     finally
@@ -44,7 +124,8 @@ begin
   finally
     S.Free;
   end;
-  If FileExists(ExtractFilePath(ParamStr(0))+resource) then Result:=ExtractFilePath(ParamStr(0))+resource;
+  If FileExists(RuntimePath) then Result:=RuntimePath;
+
 end;
 end.
 
