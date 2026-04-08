@@ -63,6 +63,7 @@ ejemplo fde.ini:
 ```ini
 [CONFIG]
 SoloDir=0
+TempDir=.\tmp\
 
 [MEMO_CONSOLE]
 MostrarOK=1
@@ -79,6 +80,20 @@ TrayRunAPP=1
 Beep=1
 OrderByUso=1
 RecOpcSalir=0
+```
+
+`TempDir` define la carpeta temporal del programa. Por defecto es `.\tmp\` relativa a `DelFind.exe`. Si la clave no existe, la aplicacion la crea automaticamente con ese valor.
+
+Para el modo `warzip`, la carpeta de trabajo debe organizarse dentro de `TempDir\warzip\` usando la convencion:
+
+```text
+<nombre>_<tipo>_<id>
+```
+
+Ejemplo:
+
+```text
+.\tmp\warzip\cgu90ca-tst_war_a13f2c\
 ```
 
 ------

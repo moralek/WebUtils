@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rules date="2019-03-17" title="SIGAS, Script para Subir a Taurus y Subversion.">
+<rules date="2021-11-16" title="SIGAS, Script para Subir a Taurus y Subversion.">
   <webappsRules>
     <MSGRUN>#Borra Librerias Conectores (DATASOURCE)#</MSGRUN>
     <DELFIL>WEB-INF\lib\jtds-1.2.jar</DELFIL>

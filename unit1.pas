@@ -607,7 +607,7 @@ begin
   SelectDirectoryDialog1.InitialDir:=Edit1.Text;
   OpenDialog1.InitialDir := fdedir;
   Edit2.Text:=fdefilepath;
-  CheckBox13.Checked:=varGlobales.EnableArchiveMode;
+  CheckBox13.Checked:=varGlobales.EnableWarZipMode;
   RefreshScanModeSelector();
   //Pagina
   CheckBox2.Checked:=varGlobales.MostrarOK;
@@ -1988,7 +1988,7 @@ end;
 
 procedure TForm1.CheckBox13Change(Sender: TObject);
 begin
-  varGlobales.EnableArchiveMode:=CheckBox13.Checked;
+  varGlobales.EnableWarZipMode:=CheckBox13.Checked;
   RefreshScanModeSelector();
   ApplyScanModeUI();
   Refrescar();
@@ -2081,10 +2081,10 @@ end;
 procedure TForm1.ComboBoxModoChange(Sender: TObject);
 begin
   if Firstload=0 then Exit;
-  if (ComboBoxModo.ItemIndex=1) and (not varGlobales.EnableArchiveMode) then
+  if (ComboBoxModo.ItemIndex=1) and (not varGlobales.EnableWarZipMode) then
     ComboBoxModo.ItemIndex:=0;
   case ComboBoxModo.ItemIndex of
-    1: varGlobales.ScanMode:='war/zip';
+    1: varGlobales.ScanMode:='warzip';
   else
     varGlobales.ScanMode:='carpeta';
   end;
@@ -2100,19 +2100,19 @@ begin
   PrevFirstLoad:=Firstload;
   Firstload:=0;
   try
-    if not varGlobales.EnableArchiveMode then
+    if not varGlobales.EnableWarZipMode then
       varGlobales.ScanMode:='carpeta';
     ComboBoxModo.Items.Clear;
     ComboBoxModo.Items.Add('Carpeta');
-    if varGlobales.EnableArchiveMode then
+    if varGlobales.EnableWarZipMode then
       ComboBoxModo.Items.Add('War/Zip');
-    if (varGlobales.EnableArchiveMode) and (varGlobales.ScanMode='war/zip') then
+    if (varGlobales.EnableWarZipMode) and (varGlobales.ScanMode='warzip') then
       ComboBoxModo.ItemIndex:=1
     else
       ComboBoxModo.ItemIndex:=0;
-    Label35.Visible:=varGlobales.EnableArchiveMode;
-    ComboBoxModo.Visible:=varGlobales.EnableArchiveMode;
-    if varGlobales.EnableArchiveMode then
+    Label35.Visible:=varGlobales.EnableWarZipMode;
+    ComboBoxModo.Visible:=varGlobales.EnableWarZipMode;
+    if varGlobales.EnableWarZipMode then
     begin
       StringGrid1.AnchorSideTop.Control:=ComboBoxModo;
       StringGrid1.BorderSpacing.Top:=13;
@@ -2539,12 +2539,12 @@ end;
 
 function TForm1.IsArchiveScanMode(): Boolean;
 begin
-  Result:=(varGlobales.ScanMode='war/zip');
+  Result:=(varGlobales.ScanMode='warzip');
 end;
 
 procedure TForm1.ApplyScanModeUI();
 begin
-  if varGlobales.EnableArchiveMode then
+  if varGlobales.EnableWarZipMode then
   begin
     CheckBox10.Caption:='Eliminar *.war antes de generar nuevo war (solo en modo carpeta)';
     MinGenWar.Caption:='Al generar WAR (solo en modo carpeta)';

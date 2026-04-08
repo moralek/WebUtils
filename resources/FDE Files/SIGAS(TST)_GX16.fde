@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rules date="2019-10-15" title="(SIGAS) para Subir a TST ----&gt; VERSION PARA GENEXUS 16&#xD;&#xA;http://10.7.13.52:8883/probe/">
+<rules date="2020-06-22" title="(SIGAS) para Subir a TST ----&gt; VERSION PARA GENEXUS 16&#xD;&#xA;http://10.7.13.52:8883/probe/">
   <webappsRules>
     <MSGRUN>#Borra Librerias Conectores (DATASOURCE)#{MOD}</MSGRUN>
     <DELFIL>WEB-INF\lib\jtds-1.2.jar</DELFIL>
@@ -86,6 +86,24 @@
       <found>MAS de [X] veces</found>
       <X>0</X>
       <msgtxt>Datasource CGU  - (WAS)</msgtxt>
+      <msgcolor>Error (Rojo)</msgcolor>
+    </rule>
+    <rule>
+      <tag>param-name</tag>
+      <value>webapp-quartz</value>
+      <consider>Etiqueta y Valor</consider>
+      <found>MENOS O MAS de [X] veces</found>
+      <X>1</X>
+      <msgtxt>(solo aplica a JS) Quartz se encuentra {Q} veces</msgtxt>
+      <msgcolor>Error (Rojo)</msgcolor>
+    </rule>
+    <rule>
+      <tag>listener-class</tag>
+      <value>cgu.quartz.CGUInicializaListener</value>
+      <consider>Etiqueta y Valor</consider>
+      <found>MENOS O MAS de [X] veces</found>
+      <X>1</X>
+      <msgtxt>(solo aplica a JS) Listener Qartz se encuentra {Q} veces</msgtxt>
       <msgcolor>Error (Rojo)</msgcolor>
     </rule>
   </webxmlrules>
