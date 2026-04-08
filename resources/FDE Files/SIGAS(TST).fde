@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rules date="2019-06-24" title="(SIGAS) para Subir a TST&#xD;&#xA;http://10.7.13.52:8883/probe/">
+<rules date="2024-08-23" title="(SIGAS) para Subir a TST&#xD;&#xA;https://test.browse.cl/probe/">
   <webappsRules>
     <MSGRUN>#Borra Librerias Conectores (DATASOURCE)#</MSGRUN>
     <DELFIL>WEB-INF\lib\jtds-1.2.jar</DELFIL>
@@ -18,9 +18,9 @@
     <DELFIL>WEB-INF\lib\upload.jar</DELFIL>
     <DELFIL>WEB-INF\lib\commons-fileupload-1.2.1.jar</DELFIL>
     <DELFIL>WEB-INF\lib\JsonJava.jar</DELFIL>
-    <MSGRUN>#Clase Uploadify REST(aplica a AFX-ADX-CA-PAS-TF-MA)#</MSGRUN>
+    <MSGRUN>#Clase Uploadify REST(aplica a AFX-ADX-CA-PAS-TF-MA-EXX)#</MSGRUN>
     <CHKFIL>WEB-INF\classes\cgu\services\FileUploadService.class</CHKFIL>
-    <MSGRUN>#Uploadify REST(aplica a AFX-ADX-CA-PAS-TF-MA)#</MSGRUN>
+    <MSGRUN>#Uploadify REST(aplica a AFX-ADX-CA-PAS-TF-MA-EXX)#</MSGRUN>
     <CHKFIL>WEB-INF\lib\jersey-servlet-1.17.1.jar</CHKFIL>
     <CHKFIL>WEB-INF\lib\jettison-1.1.jar</CHKFIL>
     <CHKFIL>WEB-INF\lib\stax-api-1.0.1.jar</CHKFIL>
@@ -49,8 +49,8 @@
     <MSGRUN>#QRCODE (aplica a AFX-GA)#</MSGRUN>
     <CHKFIL>WEB-INF\lib\QRCode.jar</CHKFIL>
     <MSGRUN>#TEST PDFREPORT#</MSGRUN>
-    <CHKFIL>WEB-INF\PDFREPORT.INI</CHKFIL>
-    <CHKDIR>WEB-INF\FONTS</CHKDIR>
+    <DELFIL>WEB-INF\PDFREPORT.INI</DELFIL>
+    <DELDIR>WEB-INF\FONTS</DELDIR>
     <MSGRUN>#Chk Resources#</MSGRUN>
     <CHKFIL>static\calendar.js</CHKFIL>
     <CHKFIL>static\Resources\*.png</CHKFIL>
