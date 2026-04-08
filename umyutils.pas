@@ -234,7 +234,7 @@ begin
  Directorios:=TStringList.Create;
  DelAllRowsGrid(StringGrid1);
  myxml:=TMyXml.create('');
- if LowerCase(Trim(ScanMode))='war/zip' then
+ if LowerCase(Trim(ScanMode))='warzip' then
    begin
      FindAllFiles(Directorios,FilePath,'*.war',false);
      FindAllFiles(Directorios,FilePath,'*.zip',false);

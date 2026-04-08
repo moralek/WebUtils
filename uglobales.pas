@@ -28,8 +28,10 @@ private
 
     Procedure setScanMode(Valor:String);
     Function getScanMode():String;
-    Procedure setEnableArchiveMode(Valor:Boolean);
-    Function getEnableArchiveMode():Boolean;
+    Procedure setEnableWarZipMode(Valor:Boolean);
+    Function getEnableWarZipMode():Boolean;
+    Procedure setTempDir(Valor:String);
+    Function getTempDir():String;
 
     Procedure setJavaHome(Valor:String);
     Function getJavaHome():String;
@@ -163,7 +165,8 @@ public
     Property FdeFilePath: string read getFdeFilepath write setFdeFilePath;
     Property WebAppsDir:  String read getWebappsDir write setWebappsDir;
     Property ScanMode: String read getScanMode write setScanMode;
-    Property EnableArchiveMode: Boolean read getEnableArchiveMode write setEnableArchiveMode;
+    Property EnableWarZipMode: Boolean read getEnableWarZipMode write setEnableWarZipMode;
+    Property TempDir: String read getTempDir write setTempDir;
     Property JavaHome:   String read getJavaHome write setJavaHome;
     Property OcultarDirROOT: Boolean read getOcultarDirROOT write setOcultarDirROOT;
     Property MostrarOK: Boolean read getMostrarOK write setMostrarOK;
@@ -313,10 +316,16 @@ begin
    setVarstr('ScanMode',LowerCase(Trim(Valor)));
 end;
 
-Procedure TGlobales.setEnableArchiveMode(Valor:Boolean);
+Procedure TGlobales.setEnableWarZipMode(Valor:Boolean);
 begin
    Seccion:='CONFIG';
-   setBoolean('EnableArchiveMode',Valor);
+   setBoolean('EnableWarZipMode',Valor);
+end;
+
+Procedure TGlobales.setTempDir(Valor:String);
+begin
+   Seccion:='CONFIG';
+   setVarstr('TempDir',Valor);
 end;
 
 Procedure TGlobales.setOcultarDirROOT(Valor:Boolean);
@@ -359,14 +368,35 @@ Function TGlobales.getScanMode():String;
 begin
    Seccion:='CONFIG';
    Result:=LowerCase(Trim(getVarStr('ScanMode','carpeta')));
-   if (Result<>'carpeta') and (Result<>'war/zip') then
+   if (Result<>'carpeta') and (Result<>'warzip') then
       Result:='carpeta';
 end;
 
-Function TGlobales.getEnableArchiveMode():Boolean;
+Function TGlobales.getEnableWarZipMode():Boolean;
 begin
    Seccion:='CONFIG';
-   Result:=getBoolean('EnableArchiveMode',False);
+   Result:=getBoolean('EnableWarZipMode',False);
+end;
+
+Function TGlobales.getTempDir():String;
+var
+  DefaultDir, ConfigDir: String;
+begin
+   Seccion:='CONFIG';
+   DefaultDir:=ExtractFilePath(Application.ExeName)+'tmp\';
+   ConfigDir:=Trim(getVarStr('TempDir',''));
+   if ConfigDir.IsEmpty then
+   begin
+      Result:=DefaultDir;
+      setVarstr('TempDir','.\tmp\');
+   end
+   else if (ExtractFileDrive(ConfigDir)<>'') or ((Length(ConfigDir)>0) and (ConfigDir[1]='\')) then
+      Result:=IncludeTrailingPathDelimiter(ConfigDir)
+   else
+      Result:=IncludeTrailingPathDelimiter(ExpandFileName(ExtractFilePath(Application.ExeName)+ConfigDir));
+
+   if not DirectoryExists(Result) then
+      ForceDirectories(Result);
 end;
 Function TGlobales.getJavaHome():String;
 begin
