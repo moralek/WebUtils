@@ -51,6 +51,8 @@ Public
   Procedure FileToClipboard(Text:String);
   Procedure goNotebookPage(Page1:TPage;var Notebook1:TNotebook);
   Function isElevated():Boolean;
+  Function GenJavaArchive(RutaBase,javahome,OutputFileName:String):String;
+  Function ExtractJavaArchive(ArchivePath,TargetDir,javahome:String):String;
   Procedure loadOldVar(when:String;var consider:String;var found:String;var X:String);
   Function getModuleName(String1:String):String;
   Procedure ProcesaPDFReport(StringGrid1:TStringGrid;CopyFonts:Boolean;PathFonts:String;PDfReportTXT:String);
@@ -505,6 +507,90 @@ begin
   AProcess.Execute;
   // This is not reached until ppc386 stops running.
   AProcess.Free;
+end;
+
+Function TMyUtils.GenJavaArchive(RutaBase,javahome,OutputFileName:String):String;
+var
+  parms:TStrings;
+  rutaJar,GeneratedFile:String;
+  umw:TMyWin;
+begin
+  Result:='';
+  parms:=TStringList.Create;
+  try
+    rutaJar:=clearFilePath(clearDirPath(javahome)+'bin\jar.exe');
+    GeneratedFile:=clearFilePath(clearDirPath(RutaBase)+OutputFileName);
+    if not FileExists(rutaJar) then
+    begin
+      Result:='No se encuentra jar.exe';
+      Exit;
+    end;
+
+    if FileExists(GeneratedFile) then
+      DeleteFile(GeneratedFile);
+
+    parms.Add('cfM');
+    parms.Add(OutputFileName);
+    parms.Add('.');
+    runProgram(rutaJar,RutaBase,parms);
+
+    if not FileExists(GeneratedFile) then
+    begin
+      umw:=TMyWin.Create;
+      try
+        if umw.IsElevated=False then
+          Result:='Error: Ejecute como Administrador.'
+        else
+          Result:='Error generando archivo '+OutputFileName;
+      finally
+        umw.Free;
+      end;
+    end;
+  finally
+    parms.Free;
+  end;
+end;
+
+Function TMyUtils.ExtractJavaArchive(ArchivePath,TargetDir,javahome:String):String;
+var
+  parms:TStrings;
+  rutaJar,ArchiveFullPath,ExtractedPath:String;
+  ExtractedFiles:TStringList;
+begin
+  Result:='';
+  parms:=TStringList.Create;
+  ExtractedFiles:=TStringList.Create;
+  try
+    rutaJar:=clearFilePath(clearDirPath(javahome)+'bin\jar.exe');
+    if not FileExists(rutaJar) then
+    begin
+      Result:='No se encuentra jar.exe';
+      Exit;
+    end;
+
+    ArchiveFullPath:=clearFilePath(ArchivePath);
+    if not FileExists(ArchiveFullPath) then
+    begin
+      Result:='No se encuentra el archivo '+ArchiveFullPath;
+      Exit;
+    end;
+
+    if DirectoryExists(TargetDir) then
+      DeleteDirectory(TargetDir,False);
+    ForceDirectories(TargetDir);
+
+    parms.Add('xf');
+    parms.Add(ArchiveFullPath);
+    runProgram(rutaJar,TargetDir,parms);
+
+    ExtractedPath:=clearFilePath(TargetDir+'WEB-INF\web.xml');
+    FindAllFiles(ExtractedFiles,TargetDir,'*',True);
+    if not FileExists(ExtractedPath) and (ExtractedFiles.Count=0) then
+      Result:='No se extrajo contenido del archivo';
+  finally
+    ExtractedFiles.Free;
+    parms.Free;
+  end;
 end;
 
 Procedure TMyUtils.ClipboardCopy(Text:String);

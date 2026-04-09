@@ -10,6 +10,7 @@ uses
   Buttons, ExtCtrls, Menus, Grids, LCLType, ComCtrls, IniPropStorage, EditBtn,
   ActnList, UMyApps, LazFileUtils, SynEdit, SynHighlighterXML, UMyGridString,
   UniqueInstance, atshapeline, CalendarLite, ShellApi, UMyXml, lazutf8, UMyWin,
+  DateUtils,
 {$IFDEF UNIX}{$IFDEF UseCThreads}
 cthreads,
 {$ENDIF}{$ENDIF}
@@ -552,6 +553,15 @@ type
     procedure loadMemo3();
     procedure loadComboboxDataSources();
     procedure RefreshScanModeSelector();
+    function BuildArchiveTempRoot(): String;
+    function BuildArchiveTempDir(const ArchivePath: String): String;
+    function BuildArchiveModuleName(const ArchivePath: String): String;
+    function BuildArchiveId(const ArchivePath: String): String;
+    function SanitizeArchiveName(const Value: String): String;
+    function ExtractArchiveToTemp(const ArchivePath, TargetDir: String): String;
+    function RepackTempToArchive(const SourceDir, ArchivePath: String): String;
+    function FormatElapsedMs(const ElapsedMs: Int64): String;
+    procedure ProcesarWarZip();
     { private declarations }
   public
     { public declarations }
@@ -2542,6 +2552,219 @@ begin
   Result:=(varGlobales.ScanMode='warzip');
 end;
 
+function TForm1.BuildArchiveTempRoot(): String;
+begin
+  Result:=IncludeTrailingPathDelimiter(varGlobales.TempDir)+'warzip\';
+  if not DirectoryExists(Result) then
+    ForceDirectories(Result);
+end;
+
+function TForm1.BuildArchiveId(const ArchivePath: String): String;
+var
+  HashValue: QWord;
+  Input: String;
+  I: Integer;
+begin
+  Input:=LowerCase(Trim(ArchivePath))+'|'+IntToStr(FileAge(ArchivePath))+'|'+IntToStr(FileSize(ArchivePath));
+  HashValue:=5381;
+  for I:=1 to Length(Input) do
+    HashValue:=((HashValue shl 5)+HashValue) xor Ord(Input[I]);
+  Result:=LowerCase(IntToHex(HashValue and $FFFFFF,6));
+end;
+
+function TForm1.SanitizeArchiveName(const Value: String): String;
+var
+  I: Integer;
+  Ch: Char;
+begin
+  Result:='';
+  for I:=1 to Length(Value) do
+  begin
+    Ch:=Value[I];
+    if Ch in ['a'..'z','A'..'Z','0'..'9','-','_'] then
+      Result:=Result+LowerCase(Ch)
+    else
+      Result:=Result+'_';
+  end;
+  while Pos('__',Result)>0 do
+    Result:=StringReplace(Result,'__','_',[rfReplaceAll]);
+  Result:=Trim(Result);
+  while (Result<>'') and (Result[1]='_') do
+    Delete(Result,1,1);
+  while (Result<>'') and (Result[Length(Result)]='_') do
+    Delete(Result,Length(Result),1);
+  if Result='' then
+    Result:='archivo';
+end;
+
+function TForm1.BuildArchiveTempDir(const ArchivePath: String): String;
+var
+  BaseName, FileType: String;
+begin
+  BaseName:=SanitizeArchiveName(ExtractFileNameOnly(ArchivePath));
+  FileType:=LowerCase(ExtractFileExt(ArchivePath));
+  if (FileType<>'') and (FileType[1]='.') then
+    Delete(FileType,1,1);
+  if FileType='' then
+    FileType:='zip';
+  Result:=BuildArchiveTempRoot()+BaseName+'_'+FileType+'_'+BuildArchiveId(ArchivePath)+'\';
+end;
+
+function TForm1.BuildArchiveModuleName(const ArchivePath: String): String;
+begin
+  Result:=Utils.getModuleName(ExtractFileNameOnly(ArchivePath));
+  if Trim(Result).IsEmpty then
+    Result:=ExtractFileNameOnly(ArchivePath);
+end;
+
+function TForm1.ExtractArchiveToTemp(const ArchivePath, TargetDir: String): String;
+begin
+  Result:=Utils.ExtractJavaArchive(ArchivePath,TargetDir,varGlobales.JavaHome);
+end;
+
+function TForm1.RepackTempToArchive(const SourceDir, ArchivePath: String): String;
+var
+  TempArchivePath: String;
+begin
+  TempArchivePath:=Utils.clearFilePath(IncludeTrailingPathDelimiter(SourceDir)+ExtractFileName(ArchivePath));
+  Result:=Utils.GenJavaArchive(SourceDir,varGlobales.JavaHome,ExtractFileName(ArchivePath));
+  if not Trim(Result).IsEmpty then
+    Exit;
+  if not FileExists(TempArchivePath) then
+  begin
+    Result:='No se encontro el archivo generado '+ExtractFileName(ArchivePath);
+    Exit;
+  end;
+  if FileExists(ArchivePath) then
+    DeleteFile(ArchivePath);
+  if not CopyFile(TempArchivePath,ArchivePath,[cffOverwriteFile]) then
+    Result:='No se pudo copiar el archivo generado a '+ArchivePath;
+end;
+
+function TForm1.FormatElapsedMs(const ElapsedMs: Int64): String;
+begin
+  Result:=FormatFloat('0.000',ElapsedMs/1000)+' s';
+end;
+
+procedure TForm1.ProcesarWarZip();
+var
+  FdeFile: TFdeFile;
+  TempGrid: TStringGrid;
+  ArchiveMap: TStringList;
+  I, NewRow: Integer;
+  ArchivePath, TempDir, ErrorMsg, ArchiveLabel: String;
+  StartAt, EndAt: TDateTime;
+  ElapsedMs: Int64;
+begin
+  TempGrid:=TStringGrid.Create(nil);
+  ArchiveMap:=TStringList.Create;
+  try
+    Utils.addToRichMemo('Inicio ('+TimeToStr(Time)+') [War/Zip]',RichMemo1,StatusBar1,clBlue);
+    Application.ProcessMessages;
+    TempGrid.ColCount:=StringGrid1.ColCount;
+    TempGrid.RowCount:=1;
+    TempGrid.FixedRows:=1;
+
+    for I:=1 to StringGrid1.RowCount-1 do
+    begin
+      if StringGrid1.Cells[0,I]<>'1' then
+        Continue;
+      ArchivePath:=Utils.clearFilePath(StringGrid1.Cells[2,I]);
+      ArchiveLabel:=StringGrid1.Cells[3,I];
+      Utils.addToRichMemo('Preparando ['+ArchiveLabel+']...',RichMemo1,StatusBar1,clBlue);
+      Application.ProcessMessages;
+      if not FileExists(ArchivePath) then
+      begin
+        Utils.addToRichMemo('Archivo no encontrado: '+ArchivePath,RichMemo1,StatusBar1,clRed);
+        Continue;
+      end;
+
+      TempDir:=BuildArchiveTempDir(ArchivePath);
+      StartAt:=Now;
+      Utils.addToRichMemo('Inicio extraccion ('+TimeToStr(StartAt)+') ['+ArchiveLabel+']',RichMemo1,StatusBar1,clBlue);
+      Utils.addToRichMemo('Extrayendo ['+ArchiveLabel+'] a ['+TempDir+']',RichMemo1,StatusBar1,clBlue);
+      Application.ProcessMessages;
+      ErrorMsg:=ExtractArchiveToTemp(ArchivePath,TempDir);
+      EndAt:=Now;
+      ElapsedMs:=MilliSecondsBetween(EndAt,StartAt);
+      if not Trim(ErrorMsg).IsEmpty then
+      begin
+        Utils.addToRichMemo('Fin extraccion ('+TimeToStr(EndAt)+') ['+ArchiveLabel+'] duracion: '+FormatElapsedMs(ElapsedMs),RichMemo1,StatusBar1,clRed);
+        Utils.addToRichMemo('Error al extraer ['+ArchiveLabel+']: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
+        Continue;
+      end;
+      Utils.addToRichMemo('Fin extraccion ('+TimeToStr(EndAt)+') ['+ArchiveLabel+'] duracion: '+FormatElapsedMs(ElapsedMs),RichMemo1,StatusBar1,clBlue);
+      Utils.addToRichMemo('Extraccion finalizada ['+ArchiveLabel+']',RichMemo1,StatusBar1,clBlue);
+      Application.ProcessMessages;
+
+      if not FileExists(Utils.clearFilePath(TempDir+'WEB-INF\web.xml')) then
+      begin
+        Utils.addToRichMemo('No se encontró WEB-INF\\web.xml en ['+ArchiveLabel+']',RichMemo1,StatusBar1,clRed);
+        Continue;
+      end;
+
+      NewRow:=TempGrid.RowCount;
+      TempGrid.RowCount:=TempGrid.RowCount+1;
+      TempGrid.Cells[0,NewRow]:='1';
+      TempGrid.Cells[1,NewRow]:=StringGrid1.Cells[1,I];
+      TempGrid.Cells[2,NewRow]:=TempDir;
+      TempGrid.Cells[3,NewRow]:=ArchiveLabel;
+      TempGrid.Cells[4,NewRow]:=BuildArchiveModuleName(ArchivePath);
+      TempGrid.Cells[5,NewRow]:=StringGrid1.Cells[5,I];
+      TempGrid.Cells[6,NewRow]:='';
+      TempGrid.Cells[7,NewRow]:=Utils.clearFilePath(TempDir+'WEB-INF\web.xml');
+      TempGrid.Cells[8,NewRow]:='';
+      ArchiveMap.Add(ArchivePath+'='+TempDir);
+    end;
+
+    if ArchiveMap.Count=0 then
+    begin
+      ShowMessage('No hay archivos war/zip válidos para procesar.');
+      Exit;
+    end;
+
+    varGlobales.WebAppsDir:=Edit1.Text;
+    varGlobales.FdeFilePath:=Edit2.Text;
+    FdeFile:=TFdeFile.create(Edit2.Text);
+    try
+      if MinScriptFDE.Checked then
+        MinimizeToTray();
+      Utils.addToRichMemo('Aplicando script FDE sobre archivos extraidos...',RichMemo1,StatusBar1,clBlue);
+      Application.ProcessMessages;
+      FdeFile.Procesar(TempGrid,RichMemo1,TrayIcon1,StatusBar1);
+    finally
+      FdeFile.Free;
+    end;
+
+    for I:=0 to ArchiveMap.Count-1 do
+    begin
+      ArchivePath:=ArchiveMap.Names[I];
+      TempDir:=ArchiveMap.ValueFromIndex[I];
+      StartAt:=Now;
+      Utils.addToRichMemo('Inicio reempaquetado ('+TimeToStr(StartAt)+') ['+ExtractFileName(ArchivePath)+']',RichMemo1,StatusBar1,clBlue);
+      Utils.addToRichMemo('Reempaquetando ['+ExtractFileName(ArchivePath)+']...',RichMemo1,StatusBar1,clBlue);
+      Application.ProcessMessages;
+      ErrorMsg:=RepackTempToArchive(TempDir,ArchivePath);
+      EndAt:=Now;
+      ElapsedMs:=MilliSecondsBetween(EndAt,StartAt);
+      if Trim(ErrorMsg).IsEmpty then
+      begin
+        Utils.addToRichMemo('Fin reempaquetado ('+TimeToStr(EndAt)+') ['+ExtractFileName(ArchivePath)+'] duracion: '+FormatElapsedMs(ElapsedMs),RichMemo1,StatusBar1,clBlue);
+        Utils.addToRichMemo('Archivo actualizado: '+ExtractFileName(ArchivePath),RichMemo1,StatusBar1,clBlue)
+      end
+      else
+      begin
+        Utils.addToRichMemo('Fin reempaquetado ('+TimeToStr(EndAt)+') ['+ExtractFileName(ArchivePath)+'] duracion: '+FormatElapsedMs(ElapsedMs),RichMemo1,StatusBar1,clRed);
+        Utils.addToRichMemo('Error al reempaquetar ['+ExtractFileName(ArchivePath)+']: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
+      end;
+      Application.ProcessMessages;
+    end;
+  finally
+    ArchiveMap.Free;
+    TempGrid.Free;
+  end;
+end;
+
 procedure TForm1.ApplyScanModeUI();
 begin
   if varGlobales.EnableWarZipMode then
@@ -3189,11 +3412,6 @@ end;
 procedure TForm1.Iniciar();
 var MensajeError:String;
 begin
-    if IsArchiveScanMode() then
-    begin
-      ShowMessage('El modo War/Zip por ahora solo lista archivos. El procesamiento aún no está implementado.');
-      Exit;
-    end;
     If (not FileExists(Edit2.Text)) then
         MensajeError:='No se encuentra archivo .fde';
     If (Not DirectoryExists(Utils.clearDirPath(Edit1.Text))) then
@@ -3211,6 +3429,11 @@ end;
 procedure TForm1.Procesar();
 var fdefile:Tfdefile;
 begin
+  if IsArchiveScanMode() then
+  begin
+    ProcesarWarZip();
+    Exit;
+  end;
   //INICIO
   varGlobales.WebAppsDir:=Edit1.Text;
   varGlobales.FdeFilePath:=Edit2.Text;
