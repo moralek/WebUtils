@@ -10,7 +10,7 @@ uses
   Buttons, ExtCtrls, Menus, Grids, LCLType, ComCtrls, IniPropStorage, EditBtn,
   ActnList, UMyApps, LazFileUtils, SynEdit, SynHighlighterXML, UMyGridString,
   UniqueInstance, atshapeline, CalendarLite, ShellApi, UMyXml, lazutf8, UMyWin,
-  DateUtils,
+  DateUtils, DOM, XMLRead, Masks,
 {$IFDEF UNIX}{$IFDEF UseCThreads}
 cthreads,
 {$ENDIF}{$ENDIF}
@@ -559,8 +559,21 @@ type
     function BuildArchiveId(const ArchivePath: String): String;
     function SanitizeArchiveName(const Value: String): String;
     function ExtractArchiveToTemp(const ArchivePath, TargetDir: String): String;
+    function ExtractArchiveSelectiveToTemp(const ArchivePath, TargetDir,
+      AppDir: String): String;
     function RepackTempToArchive(const SourceDir, ArchivePath: String): String;
     function FormatElapsedMs(const ElapsedMs: Int64): String;
+    function NormalizeArchiveEntryPath(const Value: String): String;
+    function ArchiveHasAnyEntry(const ArchiveEntries: TStrings; const Pattern: String): Boolean;
+    function FindArchiveEntry(const ArchiveEntries: TStrings; const EntryPath: String; out ExactEntry: String): Boolean;
+    procedure AddArchiveMatches(const ArchiveEntries: TStrings; const Pattern: String; Matches: TStrings);
+    function ArchiveDirExists(const ArchiveEntries: TStrings; const DirPath: String): Boolean;
+    function ArchiveDirHasFiles(const ArchiveEntries: TStrings; const DirPath: String): Boolean;
+    procedure AddDirWithParents(const DirPath: String; Dirs: TStrings);
+    procedure AddArchiveDirMatches(const ArchiveEntries: TStrings; const DirPath: String; Dirs: TStrings);
+    function BuildArchiveSelectivePlan(const AppDir: String; const ArchiveEntries,
+      FilesToExtract, DirsToCreate: TStrings; out NeedFullExtract, NeedsRepack: Boolean;
+      out Reason: String): String;
     procedure ProcesarWarZip();
     { private declarations }
   public
@@ -2617,9 +2630,345 @@ begin
     Result:=ExtractFileNameOnly(ArchivePath);
 end;
 
+function TForm1.NormalizeArchiveEntryPath(const Value: String): String;
+begin
+  Result:=Trim(Value);
+  Result:=StringReplace(Result,'\','/',[rfReplaceAll]);
+  while Pos('//',Result)>0 do
+    Result:=StringReplace(Result,'//','/',[rfReplaceAll]);
+  while (Result<>'') and (Result[1]='/') do
+    Delete(Result,1,1);
+  if Copy(Result,1,2)='./' then
+    Delete(Result,1,2);
+  if (Result<>'') and (Result[Length(Result)]='/') then
+    Delete(Result,Length(Result),1);
+end;
+
+function TForm1.ArchiveHasAnyEntry(const ArchiveEntries: TStrings; const Pattern: String): Boolean;
+var
+  I: Integer;
+  EntryName, PatternNorm: String;
+begin
+  Result:=False;
+  PatternNorm:=NormalizeArchiveEntryPath(Pattern);
+  for I:=0 to ArchiveEntries.Count-1 do
+  begin
+    EntryName:=NormalizeArchiveEntryPath(ArchiveEntries[I]);
+    if MatchesMask(EntryName,PatternNorm) then
+    begin
+      Result:=True;
+      Exit;
+    end;
+  end;
+end;
+
+function TForm1.FindArchiveEntry(const ArchiveEntries: TStrings; const EntryPath: String; out ExactEntry: String): Boolean;
+var
+  I: Integer;
+  EntryName, TargetName: String;
+begin
+  ExactEntry:='';
+  Result:=False;
+  TargetName:=NormalizeArchiveEntryPath(EntryPath);
+  for I:=0 to ArchiveEntries.Count-1 do
+  begin
+    EntryName:=NormalizeArchiveEntryPath(ArchiveEntries[I]);
+    if EntryName=TargetName then
+    begin
+      ExactEntry:=ArchiveEntries[I];
+      Result:=True;
+      Exit;
+    end;
+  end;
+end;
+
+procedure TForm1.AddArchiveMatches(const ArchiveEntries: TStrings; const Pattern: String; Matches: TStrings);
+var
+  I: Integer;
+  EntryName, PatternNorm: String;
+begin
+  PatternNorm:=NormalizeArchiveEntryPath(Pattern);
+  for I:=0 to ArchiveEntries.Count-1 do
+  begin
+    EntryName:=NormalizeArchiveEntryPath(ArchiveEntries[I]);
+    if MatchesMask(EntryName,PatternNorm) and (Matches.IndexOf(ArchiveEntries[I])=-1) then
+      Matches.Add(ArchiveEntries[I]);
+  end;
+end;
+
+function TForm1.ArchiveDirExists(const ArchiveEntries: TStrings; const DirPath: String): Boolean;
+var
+  I: Integer;
+  EntryName, Prefix: String;
+begin
+  Result:=False;
+  Prefix:=NormalizeArchiveEntryPath(DirPath);
+  if Prefix='' then
+    Exit;
+  Prefix:=Prefix+'/';
+  for I:=0 to ArchiveEntries.Count-1 do
+  begin
+    EntryName:=NormalizeArchiveEntryPath(ArchiveEntries[I]);
+    if (EntryName=Copy(Prefix,1,Length(Prefix)-1)) or (Copy(EntryName,1,Length(Prefix))=Prefix) then
+    begin
+      Result:=True;
+      Exit;
+    end;
+  end;
+end;
+
+function TForm1.ArchiveDirHasFiles(const ArchiveEntries: TStrings; const DirPath: String): Boolean;
+var
+  I: Integer;
+  EntryName, Prefix: String;
+begin
+  Result:=False;
+  Prefix:=NormalizeArchiveEntryPath(DirPath);
+  if Prefix='' then
+    Exit;
+  Prefix:=Prefix+'/';
+  for I:=0 to ArchiveEntries.Count-1 do
+  begin
+    EntryName:=NormalizeArchiveEntryPath(ArchiveEntries[I]);
+    if (Copy(EntryName,1,Length(Prefix))=Prefix) and (Length(EntryName)>Length(Prefix)) then
+    begin
+      Result:=True;
+      Exit;
+    end;
+  end;
+end;
+
+procedure TForm1.AddDirWithParents(const DirPath: String; Dirs: TStrings);
+var
+  CurrentDir: String;
+  P: Integer;
+begin
+  CurrentDir:=NormalizeArchiveEntryPath(DirPath);
+  while CurrentDir<>'' do
+  begin
+    if Dirs.IndexOf(CurrentDir)=-1 then
+      Dirs.Add(CurrentDir);
+    P:=LastDelimiter('/',CurrentDir);
+    if P<=0 then
+      Break;
+    CurrentDir:=Copy(CurrentDir,1,P-1);
+  end;
+end;
+
+procedure TForm1.AddArchiveDirMatches(const ArchiveEntries: TStrings; const DirPath: String; Dirs: TStrings);
+var
+  I, BaseLen, P: Integer;
+  EntryName, BaseDir, ChildDir: String;
+begin
+  BaseDir:=NormalizeArchiveEntryPath(DirPath);
+  if BaseDir='' then
+    Exit;
+
+  if (Length(BaseDir)>=2) and (Copy(BaseDir,Length(BaseDir)-1,2)='/*') then
+  begin
+    Delete(BaseDir,Length(BaseDir)-1,2);
+    BaseDir:=NormalizeArchiveEntryPath(BaseDir);
+    AddDirWithParents(BaseDir,Dirs);
+    BaseLen:=Length(BaseDir)+1;
+    for I:=0 to ArchiveEntries.Count-1 do
+    begin
+      EntryName:=NormalizeArchiveEntryPath(ArchiveEntries[I]);
+      if Copy(EntryName,1,BaseLen)<>BaseDir+'/' then
+        Continue;
+      ChildDir:=Copy(EntryName,1,BaseLen-1);
+      P:=Pos('/',Copy(EntryName,BaseLen,MaxInt));
+      if P>0 then
+        ChildDir:=BaseDir+'/'+Copy(Copy(EntryName,BaseLen,MaxInt),1,P-1);
+      AddDirWithParents(ChildDir,Dirs);
+    end;
+    Exit;
+  end;
+
+  if ArchiveDirExists(ArchiveEntries,BaseDir) then
+    AddDirWithParents(BaseDir,Dirs);
+end;
+
+function TForm1.BuildArchiveSelectivePlan(const AppDir: String; const ArchiveEntries,
+  FilesToExtract, DirsToCreate: TStrings; out NeedFullExtract, NeedsRepack: Boolean;
+  out Reason: String): String;
+var
+  Doc: TXMLDocument;
+  WebAppsNode: TDOMNode;
+  X: Integer;
+  TipoRead, DatoRead, ExactEntry: String;
+begin
+  Result:='';
+  NeedFullExtract:=False;
+  NeedsRepack:=False;
+  Reason:='Sin cambios previstos';
+  FilesToExtract.Clear;
+  DirsToCreate.Clear;
+  WebAppsNode:=nil;
+  Doc:=TXMLDocument.Create;
+  try
+    ReadXMLFile(Doc,Edit2.Text);
+    if (UpperCase(Trim(Doc.DocumentElement.NodeName))<>'RULES') or
+       (Doc.DocumentElement.ChildNodes.Count=0) then
+    begin
+      NeedFullExtract:=True;
+      Reason:='Archivo FDE invalido';
+      Exit;
+    end;
+
+    for X:=0 to Doc.DocumentElement.ChildNodes.Count-1 do
+      if UpperCase(Trim(Doc.DocumentElement.ChildNodes.Item[X].NodeName))='WEBAPPSRULES' then
+      begin
+        WebAppsNode:=Doc.DocumentElement.ChildNodes.Item[X];
+        Break;
+      end;
+
+    if WebAppsNode=nil then
+    begin
+      NeedFullExtract:=True;
+      Reason:='Sin WEBAPPSRULES';
+      Exit;
+    end;
+
+    for X:=0 to WebAppsNode.ChildNodes.Count-1 do
+    begin
+      TipoRead:=UpperCase(Trim(WebAppsNode.ChildNodes.Item[X].NodeName));
+      DatoRead:='';
+      if WebAppsNode.ChildNodes.Item[X].ChildNodes.Count>0 then
+        DatoRead:=WebAppsNode.ChildNodes.Item[X].FirstChild.NodeValue;
+      DatoRead:=DatoRead.Replace('{MOD}',AppDir);
+      DatoRead:=Utils.clearDirPath(DatoRead);
+
+      case TipoRead of
+        'MSGRUN': ;
+        'CHKFIL':
+          begin
+            if (Pos('*',DatoRead)>0) or (Pos('?',DatoRead)>0) then
+              AddArchiveMatches(ArchiveEntries,DatoRead,FilesToExtract)
+            else if FindArchiveEntry(ArchiveEntries,DatoRead,ExactEntry) then
+              FilesToExtract.Add(ExactEntry);
+          end;
+        'CHKDIR':
+          AddArchiveDirMatches(ArchiveEntries,DatoRead,DirsToCreate);
+        'DELFIL':
+          begin
+            if ArchiveHasAnyEntry(ArchiveEntries,DatoRead) then
+            begin
+              NeedFullExtract:=True;
+              NeedsRepack:=True;
+              Reason:='DELFIL con cambios';
+              Exit;
+            end;
+          end;
+        'DELDIR':
+          begin
+            if ArchiveDirExists(ArchiveEntries,DatoRead) then
+            begin
+              NeedFullExtract:=True;
+              NeedsRepack:=True;
+              Reason:='DELDIR con cambios';
+              Exit;
+            end;
+          end;
+        'CLRDIR':
+          begin
+            if ArchiveDirHasFiles(ArchiveEntries,DatoRead) then
+            begin
+              NeedFullExtract:=True;
+              NeedsRepack:=True;
+              Reason:='CLRDIR con cambios';
+              Exit;
+            end;
+            if ArchiveDirExists(ArchiveEntries,DatoRead) then
+              AddDirWithParents(DatoRead,DirsToCreate);
+          end;
+        'CREDIR':
+          begin
+            if not ArchiveDirExists(ArchiveEntries,DatoRead) then
+            begin
+              NeedFullExtract:=True;
+              NeedsRepack:=True;
+              Reason:='CREDIR con cambios';
+              Exit;
+            end;
+            AddDirWithParents(DatoRead,DirsToCreate);
+          end;
+      else
+        begin
+          NeedFullExtract:=True;
+          Reason:='Comando '+TipoRead;
+          Exit;
+        end;
+      end;
+    end;
+
+    if FindArchiveEntry(ArchiveEntries,'WEB-INF\web.xml',ExactEntry) and
+       (FilesToExtract.IndexOf(ExactEntry)=-1) then
+      FilesToExtract.Add(ExactEntry);
+  except
+    on E: Exception do
+    begin
+      NeedFullExtract:=True;
+      Reason:='Error leyendo FDE';
+      Result:=E.Message;
+    end;
+  end;
+  Doc.Free;
+end;
+
 function TForm1.ExtractArchiveToTemp(const ArchivePath, TargetDir: String): String;
 begin
   Result:=Utils.ExtractJavaArchive(ArchivePath,TargetDir,varGlobales.JavaHome);
+end;
+
+function TForm1.ExtractArchiveSelectiveToTemp(const ArchivePath, TargetDir,
+  AppDir: String): String;
+var
+  ArchiveEntries: TStringList;
+  FilesToExtract: TStringList;
+  DirsToCreate: TStringList;
+  NeedFullExtract, NeedsRepack: Boolean;
+  Reason: String;
+  I: Integer;
+begin
+  Result:='';
+  ArchiveEntries:=TStringList.Create;
+  FilesToExtract:=TStringList.Create;
+  DirsToCreate:=TStringList.Create;
+  try
+    Result:=Utils.ListZipEntries(ArchivePath,ArchiveEntries);
+    if not Trim(Result).IsEmpty then
+      Exit;
+
+    Result:=BuildArchiveSelectivePlan(AppDir,ArchiveEntries,FilesToExtract,DirsToCreate,NeedFullExtract,NeedsRepack,Reason);
+    if not Trim(Result).IsEmpty then
+      Exit;
+    if NeedFullExtract then
+    begin
+      if NeedsRepack then
+        Result:='FULL:REPACK:'+Reason
+      else
+        Result:='FULL:NOREPACK:'+Reason;
+      Exit;
+    end;
+
+    if DirectoryExists(TargetDir) then
+      DeleteDirectory(TargetDir,False);
+    ForceDirectories(TargetDir);
+
+    if FilesToExtract.Count>0 then
+    begin
+      Result:=Utils.ExtractZipEntries(ArchivePath,TargetDir,FilesToExtract);
+      if not Trim(Result).IsEmpty then
+        Exit;
+    end;
+
+    for I:=0 to DirsToCreate.Count-1 do
+      ForceDirectories(Utils.clearDirPath(TargetDir+StringReplace(DirsToCreate[I],'/',PathDelim,[rfReplaceAll])));
+  finally
+    DirsToCreate.Free;
+    FilesToExtract.Free;
+    ArchiveEntries.Free;
+  end;
 end;
 
 function TForm1.RepackTempToArchive(const SourceDir, ArchivePath: String): String;
@@ -2651,13 +3000,15 @@ var
   FdeFile: TFdeFile;
   TempGrid: TStringGrid;
   ArchiveMap: TStringList;
+  RepackMap: TStringList;
   I, NewRow: Integer;
-  ArchivePath, TempDir, ErrorMsg, ArchiveLabel: String;
+  ArchivePath, TempDir, ErrorMsg, ArchiveLabel, AppDir: String;
   StartAt, EndAt: TDateTime;
   ElapsedMs: Int64;
 begin
   TempGrid:=TStringGrid.Create(nil);
   ArchiveMap:=TStringList.Create;
+  RepackMap:=TStringList.Create;
   try
     Utils.addToRichMemo('Inicio ('+TimeToStr(Time)+') [War/Zip]',RichMemo1,StatusBar1,clBlue);
     Application.ProcessMessages;
@@ -2680,13 +3031,44 @@ begin
       end;
 
       TempDir:=BuildArchiveTempDir(ArchivePath);
+      AppDir:=BuildArchiveModuleName(ArchivePath);
       StartAt:=Now;
-      Utils.addToRichMemo('Inicio extraccion ('+TimeToStr(StartAt)+') ['+ArchiveLabel+']',RichMemo1,StatusBar1,clBlue);
-      Utils.addToRichMemo('Extrayendo ['+ArchiveLabel+'] a ['+TempDir+']',RichMemo1,StatusBar1,clBlue);
+      Utils.addToRichMemo('Inicio chequeo ('+TimeToStr(StartAt)+') ['+ArchiveLabel+']',RichMemo1,StatusBar1,clBlue);
       Application.ProcessMessages;
-      ErrorMsg:=ExtractArchiveToTemp(ArchivePath,TempDir);
+      ErrorMsg:=ExtractArchiveSelectiveToTemp(ArchivePath,TempDir,AppDir);
       EndAt:=Now;
       ElapsedMs:=MilliSecondsBetween(EndAt,StartAt);
+      if Pos('FULL:',ErrorMsg)=1 then
+      begin
+        Utils.addToRichMemo('Fin chequeo ('+TimeToStr(EndAt)+') ['+ArchiveLabel+'] duracion: '+FormatElapsedMs(ElapsedMs),RichMemo1,StatusBar1,clBlue);
+        if Pos('FULL:REPACK:',ErrorMsg)=1 then
+        begin
+          RepackMap.Values[ArchivePath]:='1';
+          Utils.addToRichMemo('Se usara extraccion completa ['+ArchiveLabel+']: '+Copy(ErrorMsg,13,MaxInt),RichMemo1,StatusBar1,clBlue);
+        end
+        else
+        begin
+          RepackMap.Values[ArchivePath]:='0';
+          Utils.addToRichMemo('Se usara extraccion completa sin reempaquetado ['+ArchiveLabel+']: '+Copy(ErrorMsg,15,MaxInt),RichMemo1,StatusBar1,clBlue);
+        end;
+        StartAt:=Now;
+        Utils.addToRichMemo('Inicio extraccion ('+TimeToStr(StartAt)+') ['+ArchiveLabel+']',RichMemo1,StatusBar1,clBlue);
+        Utils.addToRichMemo('Extrayendo ['+ArchiveLabel+'] a ['+TempDir+']',RichMemo1,StatusBar1,clBlue);
+        Application.ProcessMessages;
+        ErrorMsg:=ExtractArchiveToTemp(ArchivePath,TempDir);
+        EndAt:=Now;
+        ElapsedMs:=MilliSecondsBetween(EndAt,StartAt);
+      end
+      else
+      begin
+        Utils.addToRichMemo('Fin chequeo ('+TimeToStr(EndAt)+') ['+ArchiveLabel+'] duracion: '+FormatElapsedMs(ElapsedMs),RichMemo1,StatusBar1,clBlue);
+        if Trim(ErrorMsg).IsEmpty then
+        begin
+          RepackMap.Values[ArchivePath]:='0';
+          Utils.addToRichMemo('Se usara extraccion selectiva ['+ArchiveLabel+']',RichMemo1,StatusBar1,clBlue);
+          Utils.addToRichMemo('Extrayendo selectivo ['+ArchiveLabel+'] a ['+TempDir+']',RichMemo1,StatusBar1,clBlue);
+        end;
+      end;
       if not Trim(ErrorMsg).IsEmpty then
       begin
         Utils.addToRichMemo('Fin extraccion ('+TimeToStr(EndAt)+') ['+ArchiveLabel+'] duracion: '+FormatElapsedMs(ElapsedMs),RichMemo1,StatusBar1,clRed);
@@ -2709,7 +3091,7 @@ begin
       TempGrid.Cells[1,NewRow]:=StringGrid1.Cells[1,I];
       TempGrid.Cells[2,NewRow]:=TempDir;
       TempGrid.Cells[3,NewRow]:=ArchiveLabel;
-      TempGrid.Cells[4,NewRow]:=BuildArchiveModuleName(ArchivePath);
+      TempGrid.Cells[4,NewRow]:=AppDir;
       TempGrid.Cells[5,NewRow]:=StringGrid1.Cells[5,I];
       TempGrid.Cells[6,NewRow]:='';
       TempGrid.Cells[7,NewRow]:=Utils.clearFilePath(TempDir+'WEB-INF\web.xml');
@@ -2740,6 +3122,12 @@ begin
     begin
       ArchivePath:=ArchiveMap.Names[I];
       TempDir:=ArchiveMap.ValueFromIndex[I];
+      if RepackMap.Values[ArchivePath]<>'1' then
+      begin
+        Utils.addToRichMemo('Sin cambios efectivos en ['+ExtractFileName(ArchivePath)+']; no se reempaqueta.',RichMemo1,StatusBar1,clBlue);
+        Application.ProcessMessages;
+        Continue;
+      end;
       StartAt:=Now;
       Utils.addToRichMemo('Inicio reempaquetado ('+TimeToStr(StartAt)+') ['+ExtractFileName(ArchivePath)+']',RichMemo1,StatusBar1,clBlue);
       Utils.addToRichMemo('Reempaquetando ['+ExtractFileName(ArchivePath)+']...',RichMemo1,StatusBar1,clBlue);
@@ -2760,6 +3148,7 @@ begin
       Application.ProcessMessages;
     end;
   finally
+    RepackMap.Free;
     ArchiveMap.Free;
     TempGrid.Free;
   end;

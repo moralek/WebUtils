@@ -13,7 +13,7 @@ uses
     fileinfo, winpeimagereader {need this for reading exe info}
   , elfreader {needed for reading ELF executables}
   , machoreader {needed for reading MACH-O executables}
-    ,ShellApi, Regexpr
+    ,ShellApi, Regexpr, Zipper
     ;
 type
   TMyUtils=class
@@ -53,6 +53,8 @@ Public
   Function isElevated():Boolean;
   Function GenJavaArchive(RutaBase,javahome,OutputFileName:String):String;
   Function ExtractJavaArchive(ArchivePath,TargetDir,javahome:String):String;
+  Function ListZipEntries(ArchivePath:String; Entries:TStrings):String;
+  Function ExtractZipEntries(ArchivePath,TargetDir:String; Entries:TStrings):String;
   Procedure loadOldVar(when:String;var consider:String;var found:String;var X:String);
   Function getModuleName(String1:String):String;
   Procedure ProcesaPDFReport(StringGrid1:TStringGrid;CopyFonts:Boolean;PathFonts:String;PDfReportTXT:String);
@@ -591,6 +593,62 @@ begin
     ExtractedFiles.Free;
     parms.Free;
   end;
+end;
+
+Function TMyUtils.ListZipEntries(ArchivePath:String; Entries:TStrings):String;
+var
+  UnZipper: TUnZipper;
+  ArchiveFullPath: String;
+  I: Integer;
+begin
+  Result:='';
+  Entries.Clear;
+  ArchiveFullPath:=clearFilePath(ArchivePath);
+  if not FileExists(ArchiveFullPath) then
+  begin
+    Result:='No se encuentra el archivo '+ArchiveFullPath;
+    Exit;
+  end;
+
+  UnZipper:=TUnZipper.Create;
+  try
+    UnZipper.FileName:=ArchiveFullPath;
+    UnZipper.Examine;
+    for I:=0 to UnZipper.Entries.Count-1 do
+      Entries.Add(UnZipper.Entries[I].ArchiveFileName);
+  except
+    on E: Exception do
+      Result:=E.Message;
+  end;
+  UnZipper.Free;
+end;
+
+Function TMyUtils.ExtractZipEntries(ArchivePath,TargetDir:String; Entries:TStrings):String;
+var
+  UnZipper: TUnZipper;
+  ArchiveFullPath: String;
+begin
+  Result:='';
+  ArchiveFullPath:=clearFilePath(ArchivePath);
+  if not FileExists(ArchiveFullPath) then
+  begin
+    Result:='No se encuentra el archivo '+ArchiveFullPath;
+    Exit;
+  end;
+
+  if DirectoryExists(TargetDir) then
+    DeleteDirectory(TargetDir,False);
+  ForceDirectories(TargetDir);
+
+  UnZipper:=TUnZipper.Create;
+  try
+    UnZipper.OutputPath:=TargetDir;
+    UnZipper.UnZipFiles(ArchiveFullPath,Entries);
+  except
+    on E: Exception do
+      Result:=E.Message;
+  end;
+  UnZipper.Free;
 end;
 
 Procedure TMyUtils.ClipboardCopy(Text:String);
