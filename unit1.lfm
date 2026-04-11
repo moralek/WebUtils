@@ -4312,7 +4312,7 @@ object Form1: TForm1
     Height = 1133
     Top = 0
     Width = 2080
-    PageIndex = 0
+    PageIndex = 4
     Anchors = [akTop, akLeft, akRight, akBottom]
     TabOrder = 0
     object RunFDE: TPage
@@ -4432,7 +4432,6 @@ object Form1: TForm1
           Top = 221
           Width = 470
           ButtonWidth = 35
-          Anchors = [akTop, akLeft]
           BorderSpacing.Left = 160
           BorderSpacing.Top = 48
           AutoSize = False
@@ -4450,8 +4449,7 @@ object Form1: TForm1
           Left = 654
           Height = 32
           Top = 227
-          Width = 64
-          Anchors = [akTop, akLeft]
+          Width = 69
           BorderSpacing.Left = 20
           Caption = 'Modo:'
           ParentColor = False
@@ -4462,13 +4460,13 @@ object Form1: TForm1
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = Panel2
           AnchorSideRight.Side = asrBottom
-          Left = 726
-          Height = 45
+          Left = 771
+          Height = 40
           Top = 221
           Width = 194
           Anchors = [akTop, akRight]
           BorderSpacing.Top = 48
-          ItemHeight = 0
+          ItemHeight = 32
           ParentFont = False
           Style = csDropDownList
           TabOrder = 6
@@ -4572,9 +4570,9 @@ object Form1: TForm1
           AnchorSideBottom.Control = Panel2
           AnchorSideBottom.Side = asrBottom
           Left = 33
-          Height = 805
+          Height = 810
           Hint = 'Subdirectorios (Doble click para ver en Explorador de Windows )'
-          Top = 279
+          Top = 274
           Width = 930
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Left = 32
@@ -4723,28 +4721,26 @@ object Form1: TForm1
           AnchorSideLeft.Control = BitBtn1
           AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = Panel4
-          AnchorSideTop.Side = asrTop
           AnchorSideRight.Control = Panel4
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = Panel4
           AnchorSideBottom.Side = asrBottom
           Left = 66
-          Height = 1084
-          Top = 0
+          Height = 1083
+          Top = 1
           Width = 1021
-          ActivePage = TabSheet2
+          ActivePage = PRUEBAS
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Left = 3
-          BorderSpacing.Top = 0
           BorderSpacing.Right = 16
           BorderSpacing.Bottom = 48
           ParentFont = False
-          TabIndex = 1
+          TabIndex = 5
           TabOrder = 3
           object TabSheet1: TTabSheet
             AnchorSideRight.Side = asrBottom
             Caption = 'Consola'
-            ClientHeight = 981
+            ClientHeight = 1025
             ClientWidth = 1005
             ParentFont = False
             object RichMemo1: TRichMemo
@@ -4755,7 +4751,7 @@ object Form1: TForm1
               AnchorSideBottom.Control = TabSheet1
               AnchorSideBottom.Side = asrBottom
               Left = 0
-              Height = 981
+              Height = 1025
               Top = 0
               Width = 1005
               Anchors = [akTop, akLeft, akRight, akBottom]
@@ -4779,7 +4775,7 @@ object Form1: TForm1
               Left = 957
               Height = 48
               Hint = 'Limpia el Panel'
-              Top = 933
+              Top = 977
               Width = 48
               Anchors = [akRight, akBottom]
               Color = clWhite
@@ -4869,7 +4865,7 @@ object Form1: TForm1
           end
           object TabSheet2: TTabSheet
             Caption = 'PdfReport.ini'
-            ClientHeight = 981
+            ClientHeight = 1025
             ClientWidth = 1005
             object ComboBox1: TComboBox
               Left = 125
@@ -4912,7 +4908,7 @@ object Form1: TForm1
               AnchorSideBottom.Control = TabSheet2
               AnchorSideBottom.Side = asrBottom
               Left = 16
-              Height = 811
+              Height = 855
               Top = 154
               Width = 973
               Anchors = [akTop, akLeft, akRight, akBottom]
@@ -5014,7 +5010,7 @@ object Form1: TForm1
           end
           object TabSheet3: TTabSheet
             Caption = 'Web.xml'
-            ClientHeight = 981
+            ClientHeight = 1025
             ClientWidth = 1005
             OnShow = TabSheet3Show
             object EditModulo: TEdit
@@ -5477,7 +5473,7 @@ object Form1: TForm1
           end
           object TabSheet4: TTabSheet
             Caption = 'DataSource'
-            ClientHeight = 981
+            ClientHeight = 1025
             ClientWidth = 1005
             OnShow = TabSheet4Show
             object GroupBox3: TGroupBox
@@ -6030,7 +6026,7 @@ object Form1: TForm1
           end
           object TabSheet6: TTabSheet
             Caption = 'Info'
-            ClientHeight = 981
+            ClientHeight = 1025
             ClientWidth = 1005
             OnShow = TabSheet6Show
             object GroupBoxINFO: TGroupBox
@@ -6315,7 +6311,7 @@ object Form1: TForm1
               Cursor = crArrow
               Left = 198
               Height = 32
-              Top = 65
+              Top = 69
               Width = 698
               BorderSpacing.Left = 16
               BorderStyle = bsNone
@@ -6332,7 +6328,7 @@ object Form1: TForm1
               AnchorSideTop.Control = GroupBoxINFO
               Left = 26
               Height = 32
-              Top = 65
+              Top = 69
               Width = 156
               Anchors = []
               BorderSpacing.Left = 16
@@ -6343,7 +6339,7 @@ object Form1: TForm1
           end
           object PRUEBAS: TTabSheet
             Caption = 'PRUEBAS'
-            ClientHeight = 981
+            ClientHeight = 1025
             ClientWidth = 1005
             TabVisible = False
             object BitBtnPRUEBA: TBitBtn
@@ -6872,7 +6868,7 @@ object Form1: TForm1
         Top = 26
         Width = 653
         Caption = 'Accesos directos'
-        ClientHeight = 858
+        ClientHeight = 846
         ClientWidth = 649
         ParentFont = False
         TabOrder = 0
@@ -6885,7 +6881,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 64
           Height = 51
-          Top = -11
+          Top = 13
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -6917,7 +6913,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 384
           Height = 51
-          Top = -10
+          Top = 14
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -6949,7 +6945,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 64
           Height = 51
-          Top = 39
+          Top = 93
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -6981,7 +6977,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 384
           Height = 51
-          Top = 39
+          Top = 93
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7013,7 +7009,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 64
           Height = 51
-          Top = 86
+          Top = 168
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7059,7 +7055,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 384
           Height = 51
-          Top = 86
+          Top = 168
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7091,7 +7087,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 64
           Height = 51
-          Top = 133
+          Top = 243
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7123,7 +7119,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 384
           Height = 51
-          Top = 133
+          Top = 243
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7155,7 +7151,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 64
           Height = 51
-          Top = 182
+          Top = 322
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7187,7 +7183,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 384
           Height = 51
-          Top = 182
+          Top = 322
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7219,7 +7215,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 64
           Height = 51
-          Top = 230
+          Top = 398
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7251,7 +7247,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 384
           Height = 51
-          Top = 231
+          Top = 400
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7283,7 +7279,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 64
           Height = 51
-          Top = 279
+          Top = 477
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7315,7 +7311,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 384
           Height = 51
-          Top = 280
+          Top = 478
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7347,7 +7343,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 64
           Height = 51
-          Top = 327
+          Top = 554
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7379,7 +7375,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 384
           Height = 51
-          Top = 327
+          Top = 554
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7411,7 +7407,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 64
           Height = 51
-          Top = 375
+          Top = 630
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7443,7 +7439,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 384
           Height = 51
-          Top = 373
+          Top = 627
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7475,7 +7471,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 64
           Height = 51
-          Top = 423
+          Top = 707
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7493,7 +7489,7 @@ object Form1: TForm1
           AnchorSideBottom.Side = asrBottom
           Left = 384
           Height = 51
-          Top = 423
+          Top = 707
           Width = 246
           Anchors = [akLeft, akBottom]
           Caption = '[...]'
@@ -7535,15 +7531,15 @@ object Form1: TForm1
         Top = 90
         Width = 594
         Caption = 'Minimiza a la Bandeja de Sistema...'
-        ClientHeight = 295
+        ClientHeight = 283
         ClientWidth = 590
         ParentFont = False
         TabOrder = 1
         object ToTray: TCheckBox
           Left = 26
-          Height = 24
+          Height = 36
           Top = 13
-          Width = 173
+          Width = 276
           Caption = 'Al presionar Minimizar.'
           ParentFont = False
           TabOrder = 0
@@ -7551,9 +7547,9 @@ object Form1: TForm1
         end
         object MinGenWar: TCheckBox
           Left = 26
-          Height = 24
+          Height = 36
           Top = 115
-          Width = 125
+          Width = 199
           Caption = 'Al generar WAR'
           ParentFont = False
           TabOrder = 1
@@ -7561,9 +7557,9 @@ object Form1: TForm1
         end
         object MinScriptFDE: TCheckBox
           Left = 26
-          Height = 24
+          Height = 36
           Top = 64
-          Width = 167
+          Width = 261
           Caption = 'Al ejecutar script FDE.'
           ParentFont = False
           TabOrder = 2
@@ -7571,9 +7567,9 @@ object Form1: TForm1
         end
         object MinAppRun: TCheckBox
           Left = 26
-          Height = 24
+          Height = 36
           Top = 166
-          Width = 241
+          Width = 373
           Caption = 'Al Abrir una Aplicación(Ejecutor)'
           ParentFont = False
           TabOrder = 3
@@ -7586,15 +7582,15 @@ object Form1: TForm1
         Top = 435
         Width = 1165
         Caption = 'Otras Opciones'
-        ClientHeight = 295
+        ClientHeight = 283
         ClientWidth = 1161
         ParentFont = False
         TabOrder = 2
         object CheckBox5: TCheckBox
           Left = 26
-          Height = 24
+          Height = 36
           Top = 166
-          Width = 277
+          Width = 449
           Caption = '''Beep'' al terminar de ejecutar un script.'
           ParentFont = False
           TabOrder = 0
@@ -7602,9 +7598,9 @@ object Form1: TForm1
         end
         object CheckBox6: TCheckBox
           Left = 26
-          Height = 24
+          Height = 36
           Top = 115
-          Width = 340
+          Width = 540
           Caption = 'Ordenar las Aplicaciones por Frecuencia de uso.'
           ParentFont = False
           TabOrder = 1
@@ -7612,9 +7608,9 @@ object Form1: TForm1
         end
         object CheckBox8: TCheckBox
           Left = 26
-          Height = 24
+          Height = 36
           Top = 64
-          Width = 183
+          Width = 283
           Caption = 'Recordar Opción al salir'
           ParentFont = False
           TabOrder = 2
@@ -7622,9 +7618,9 @@ object Form1: TForm1
         end
         object CheckBox1: TCheckBox
           Left = 26
-          Height = 24
+          Height = 36
           Top = 13
-          Width = 369
+          Width = 587
           Caption = 'Excluir ROOT, manager, host-manager, docs y probe'
           ParentFont = False
           TabOrder = 3
@@ -7632,9 +7628,9 @@ object Form1: TForm1
         end
         object CheckBox10: TCheckBox
           Left = 26
-          Height = 24
+          Height = 36
           Top = 218
-          Width = 305
+          Width = 480
           Caption = 'Eliminar *.war antes de generar nuevo war'
           ParentFont = False
           TabOrder = 4
@@ -7642,9 +7638,9 @@ object Form1: TForm1
         end
         object CheckBox12: TCheckBox
           Left = 627
-          Height = 24
+          Height = 36
           Top = 13
-          Width = 323
+          Width = 515
           Caption = 'Ocultar plantillas de ejemplo en DataSources.'
           ParentFont = False
           TabOrder = 5
@@ -7652,9 +7648,9 @@ object Form1: TForm1
         end
         object CheckBox13: TCheckBox
           Left = 627
-          Height = 24
+          Height = 36
           Top = 64
-          Width = 201
+          Width = 287
           Caption = 'Habilitar modo War/Zip.'
           ParentFont = False
           TabOrder = 6
@@ -7667,16 +7663,16 @@ object Form1: TForm1
         Top = 90
         Width = 563
         Caption = 'Opciones de Consola'
-        ClientHeight = 295
+        ClientHeight = 283
         ClientWidth = 559
         ParentFont = False
         TabOrder = 3
         object CheckBox2: TCheckBox
           Left = 26
-          Height = 24
+          Height = 36
           Hint = 'Muestra Mensajes OK'
           Top = 13
-          Width = 169
+          Width = 269
           Caption = 'Muestra Mensajes OK.'
           ParentFont = False
           ParentShowHint = False
@@ -7686,10 +7682,10 @@ object Form1: TForm1
         end
         object CheckBox4: TCheckBox
           Left = 26
-          Height = 24
+          Height = 36
           Hint = 'Muestra Mensajes de Usuario(MSGRUN)'
           Top = 115
-          Width = 286
+          Width = 456
           Caption = 'Muestra mensajes de usuario(MSGRUN)'
           ParentFont = False
           ParentShowHint = False
@@ -7699,10 +7695,10 @@ object Form1: TForm1
         end
         object CheckBox7: TCheckBox
           Left = 26
-          Height = 24
+          Height = 36
           Hint = 'Pide Confirmación antes de eliminar.'
           Top = 64
-          Width = 265
+          Width = 419
           Caption = 'Pide confirmación antes de eliminar.'
           ParentFont = False
           ParentShowHint = False
@@ -7712,10 +7708,10 @@ object Form1: TForm1
         end
         object CheckBox9: TCheckBox
           Left = 26
-          Height = 24
+          Height = 36
           Hint = 'Limpia la Consola Antes de Cada Ejecución'
           Top = 218
-          Width = 306
+          Width = 482
           Caption = 'Limpia la consola antes de cada ejecución.'
           ParentFont = False
           ParentShowHint = False
@@ -7725,10 +7721,10 @@ object Form1: TForm1
         end
         object CheckBox3: TCheckBox
           Left = 26
-          Height = 24
+          Height = 36
           Hint = 'Muestra Mensajes de Error'
           Top = 166
-          Width = 199
+          Width = 315
           Caption = 'Muestra mensajes de Error'
           ParentFont = False
           ParentShowHint = False
@@ -7743,12 +7739,12 @@ object Form1: TForm1
         Top = 90
         Width = 742
         Caption = 'Parámetros'
-        ClientHeight = 295
+        ClientHeight = 283
         ClientWidth = 738
         TabOrder = 4
         object EditDSDescription: TEdit
           Left = 13
-          Height = 28
+          Height = 40
           Top = 38
           Width = 346
           Enabled = False
@@ -7760,10 +7756,10 @@ object Form1: TForm1
           AnchorSideBottom.Control = EditDSDescription
           Cursor = crHandPoint
           Left = 13
-          Height = 20
+          Height = 32
           Hint = 'Clic para habilitar/deshabilitar'
-          Top = 4
-          Width = 91
+          Top = 6
+          Width = 145
           Anchors = [akLeft, akBottom]
           Caption = 'DESCRIPTION'
           Font.Color = clBlue
@@ -7776,7 +7772,7 @@ object Form1: TForm1
         end
         object EditDSRestype: TEdit
           Left = 371
-          Height = 28
+          Height = 40
           Top = 38
           Width = 346
           Enabled = False
@@ -7788,10 +7784,10 @@ object Form1: TForm1
           AnchorSideBottom.Control = EditDSRestype
           Cursor = crHandPoint
           Left = 371
-          Height = 20
+          Height = 32
           Hint = 'Clic para habilitar/deshabilitar'
-          Top = 4
-          Width = 63
+          Top = 6
+          Width = 100
           Anchors = [akLeft, akBottom]
           Caption = 'RES-TYPE'
           Font.Color = clBlue
@@ -7804,7 +7800,7 @@ object Form1: TForm1
         end
         object EditDSResAuth: TEdit
           Left = 13
-          Height = 28
+          Height = 40
           Top = 128
           Width = 346
           Enabled = False
@@ -7816,10 +7812,10 @@ object Form1: TForm1
           AnchorSideBottom.Control = EditDSResAuth
           Cursor = crHandPoint
           Left = 13
-          Height = 20
+          Height = 32
           Hint = 'Clic para habilitar/deshabilitar'
-          Top = 60
-          Width = 70
+          Top = 96
+          Width = 110
           Anchors = [akLeft, akBottom]
           Caption = 'RES-AUTH'
           Font.Color = clBlue
@@ -7832,7 +7828,7 @@ object Form1: TForm1
         end
         object EditDSUseJdbcDataSource: TEdit
           Left = 371
-          Height = 28
+          Height = 40
           Top = 128
           Width = 51
           Enabled = False
@@ -7846,10 +7842,10 @@ object Form1: TForm1
           AnchorSideBottom.Control = EditDSUseJdbcDataSource
           Cursor = crHandPoint
           Left = 371
-          Height = 20
+          Height = 32
           Hint = 'Clic para habilitar/deshabilitar'
-          Top = 60
-          Width = 164
+          Top = 96
+          Width = 259
           Anchors = [akLeft, akBottom]
           Caption = 'USE_JDBC_DATASOURCE'
           Font.Color = clBlue
@@ -7862,7 +7858,7 @@ object Form1: TForm1
         end
         object Edit5: TEdit
           Left = 13
-          Height = 28
+          Height = 40
           Top = 211
           Width = 678
           Enabled = False
@@ -7875,7 +7871,7 @@ object Form1: TForm1
           AnchorSideBottom.Control = Edit5
           AnchorSideBottom.Side = asrBottom
           Left = 678
-          Height = 28
+          Height = 40
           Top = 211
           Width = 38
           Anchors = [akTop, akLeft, akBottom]
@@ -7889,10 +7885,10 @@ object Form1: TForm1
           AnchorSideBottom.Control = Edit5
           Cursor = crHandPoint
           Left = 13
-          Height = 20
+          Height = 32
           Hint = 'Clic para habilitar/deshabilitar'
-          Top = 112
-          Width = 91
+          Top = 179
+          Width = 147
           Anchors = [akLeft, akBottom]
           Caption = 'JAVA_HOME:'
           Font.Color = clBlue
@@ -7917,9 +7913,9 @@ object Form1: TForm1
         AnchorSideBottom.Control = About
         AnchorSideBottom.Side = asrBottom
         Left = 0
-        Height = 683
+        Height = 1133
         Top = 0
-        Width = 1300
+        Width = 2080
         Anchors = [akTop, akLeft, akRight, akBottom]
         Center = True
         Picture.Data = {
@@ -8662,8 +8658,8 @@ object Form1: TForm1
         AnchorSideTop.Control = BitBtn10
         AnchorSideBottom.Control = BitBtn10
         AnchorSideBottom.Side = asrBottom
-        Left = 936
-        Height = 41
+        Left = 597
+        Height = 66
         Top = 6
         Width = 360
         Anchors = [akTop, akLeft, akBottom]
@@ -8682,9 +8678,9 @@ object Form1: TForm1
         AnchorSideTop.Control = BitBtn10
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Side = asrBottom
-        Left = 907
+        Left = 569
         Height = 64
-        Top = 3
+        Top = 4
         Width = 64
         Brush.Style = bsBDiagonal
         Pen.Color = clSilver
@@ -8696,13 +8692,13 @@ object Form1: TForm1
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = About
         AnchorSideBottom.Side = asrBottom
-        Left = 692
+        Left = 1472
         Height = 266
-        Top = 388
+        Top = 821
         Width = 608
         Anchors = [akRight, akBottom]
         BorderSpacing.Bottom = 46
-        ClientHeight = 241
+        ClientHeight = 229
         ClientWidth = 604
         ParentFont = False
         TabOrder = 1
@@ -8739,9 +8735,9 @@ object Form1: TForm1
       end
       object LblFullInfo: TLabel
         Left = 38
-        Height = 20
+        Height = 32
         Top = 38
-        Width = 9
+        Width = 15
         Caption = '...'
         ParentColor = False
         ParentFont = False
@@ -8897,11 +8893,11 @@ object Form1: TForm1
       object Panel5: TPanel
         Left = 0
         Height = 349
-        Top = 334
-        Width = 1300
+        Top = 784
+        Width = 2080
         Align = alBottom
         ClientHeight = 349
-        ClientWidth = 1300
+        ClientWidth = 2080
         ParentFont = False
         TabOrder = 0
         object GroupBox9: TGroupBox
@@ -8911,16 +8907,16 @@ object Form1: TForm1
           AnchorSideBottom.Control = Panel5
           AnchorSideBottom.Side = asrBottom
           Left = 38
-          Height = 186
+          Height = 299
           Hint = 'Utilice:'#13#10'{M} para mostrar el mensaje por defecto.'#13#10'{Q} para mostrar la cantidad de coincidencias.'
-          Top = 2
-          Width = 1205
+          Top = 1
+          Width = 1929
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Right = 112
           BorderSpacing.Bottom = 48
           Caption = 'web.xml'
-          ClientHeight = 161
-          ClientWidth = 1201
+          ClientHeight = 262
+          ClientWidth = 1925
           Font.Style = [fsBold]
           ParentFont = False
           ParentShowHint = False
@@ -8934,9 +8930,9 @@ object Form1: TForm1
             AnchorSideBottom.Control = GroupBox9
             AnchorSideBottom.Side = asrBottom
             Left = 16
-            Height = 141
+            Height = 230
             Top = 16
-            Width = 1181
+            Width = 1893
             Anchors = [akTop, akLeft, akRight, akBottom]
             BorderSpacing.Left = 16
             BorderSpacing.Top = 16
@@ -9007,7 +9003,7 @@ object Form1: TForm1
                 Width = 240
               end>
             FixedCols = 0
-            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSizing, goColSizing, goEditing, goRowSelect, goAlwaysShowEditor, goDblClickAutoSize, goSmoothScroll, goSelectionActive, goFixedColSizing]
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSizing, goColSizing, goEditing, goRowSelect, goAlwaysShowEditor, goDblClickAutoSize, goThumbTracking, goSmoothScroll, goSelectionActive, goFixedColSizing]
             ParentFont = False
             RowCount = 1
             TabOrder = 0
@@ -9031,10 +9027,10 @@ object Form1: TForm1
           AnchorSideTop.Control = BitBtn25
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrCenter
-          Left = 1194
+          Left = 1974
           Height = 40
           Hint = 'Bajar Fila Seleccionada'
-          Top = 162
+          Top = 161
           Width = 40
           Anchors = [akTop, akRight]
           BorderSpacing.Top = 8
@@ -9086,10 +9082,10 @@ object Form1: TForm1
           AnchorSideTop.Control = BitBtn22
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrCenter
-          Left = 1194
+          Left = 1974
           Height = 40
           Hint = 'Subir Fila Seleccionada'
-          Top = 114
+          Top = 113
           Width = 40
           Anchors = [akTop, akRight]
           BorderSpacing.Top = 8
@@ -9142,10 +9138,10 @@ object Form1: TForm1
           AnchorSideTop.Control = BitBtn24
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrBottom
-          Left = 1194
+          Left = 1974
           Height = 40
           Hint = 'Eliminar Fila'
-          Top = 66
+          Top = 65
           Width = 40
           Anchors = [akTop, akRight]
           BorderSpacing.Top = 8
@@ -9189,10 +9185,10 @@ object Form1: TForm1
           AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = Panel5
           AnchorSideRight.Side = asrBottom
-          Left = 1194
+          Left = 1974
           Height = 40
           Hint = 'Agregar fila'
-          Top = 18
+          Top = 17
           Width = 40
           Anchors = [akTop, akRight]
           BorderSpacing.Left = 32
@@ -9236,12 +9232,12 @@ object Form1: TForm1
       end
       object Panel6: TPanel
         Left = 0
-        Height = 453
+        Height = 765
         Top = 0
-        Width = 1300
+        Width = 2080
         Align = alClient
-        ClientHeight = 453
-        ClientWidth = 1300
+        ClientHeight = 765
+        ClientWidth = 2080
         Color = clWhite
         ParentBackground = False
         ParentColor = False
@@ -9249,9 +9245,9 @@ object Form1: TForm1
         TabOrder = 1
         object haycambios: TCheckBox
           Left = 1139
-          Height = 23
+          Height = 30
           Top = 13
-          Width = 24
+          Width = 31
           Color = clNone
           Enabled = False
           ParentColor = False
@@ -9267,16 +9263,16 @@ object Form1: TForm1
           AnchorSideBottom.Control = Panel6
           AnchorSideBottom.Side = asrBottom
           Left = 38
-          Height = 378
+          Height = 643
           Hint = 'Utilice:'#13#10'{MOD} para mostrar el nombre del modulo'
-          Top = 118
-          Width = 1205
+          Top = 121
+          Width = 1929
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 6
           BorderSpacing.Right = 112
           Caption = 'webapps'
-          ClientHeight = 353
-          ClientWidth = 1201
+          ClientHeight = 606
+          ClientWidth = 1925
           Font.Style = [fsBold]
           ParentBackground = False
           ParentFont = False
@@ -9291,9 +9287,9 @@ object Form1: TForm1
             AnchorSideBottom.Control = GroupBox5
             AnchorSideBottom.Side = asrBottom
             Left = 16
-            Height = 333
+            Height = 574
             Top = 16
-            Width = 1181
+            Width = 1893
             Anchors = [akTop, akLeft, akRight, akBottom]
             BorderSpacing.Left = 16
             BorderSpacing.Top = 16
@@ -9324,7 +9320,7 @@ object Form1: TForm1
                 Width = 576
               end>
             FixedCols = 0
-            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goRowMoving, goEditing, goRowSelect, goSmoothScroll, goFixedColSizing]
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goRowMoving, goEditing, goRowSelect, goThumbTracking, goSmoothScroll, goFixedColSizing]
             ParentFont = False
             RowCount = 1
             TabOrder = 0
@@ -9338,7 +9334,7 @@ object Form1: TForm1
           end
           object ListFilterEdit2: TListFilterEdit
             Left = 306
-            Height = 28
+            Height = 40
             Top = -30
             Width = 397
             ButtonWidth = 46
@@ -9355,10 +9351,10 @@ object Form1: TForm1
           AnchorSideTop.Control = Edit6
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrBottom
-          Left = 1194
+          Left = 1974
           Height = 40
           Hint = 'Agregar fila'
-          Top = 128
+          Top = 131
           Width = 40
           Anchors = [akTop, akRight]
           BorderSpacing.Left = 32
@@ -9404,10 +9400,10 @@ object Form1: TForm1
           AnchorSideTop.Control = BitBtn23
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrBottom
-          Left = 1194
+          Left = 1974
           Height = 40
           Hint = 'Eliminar Fila'
-          Top = 176
+          Top = 179
           Width = 40
           Anchors = [akTop, akRight]
           BorderSpacing.Top = 8
@@ -9451,10 +9447,10 @@ object Form1: TForm1
           AnchorSideTop.Control = BitBtn21
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrCenter
-          Left = 1194
+          Left = 1974
           Height = 40
           Hint = 'Subir Fila Seleccionada'
-          Top = 224
+          Top = 227
           Width = 40
           Anchors = [akTop, akRight]
           BorderSpacing.Top = 8
@@ -9506,10 +9502,10 @@ object Form1: TForm1
           AnchorSideTop.Control = BitBtn7
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrCenter
-          Left = 1194
+          Left = 1974
           Height = 40
           Hint = 'Bajar Fila Seleccionada'
-          Top = 272
+          Top = 275
           Width = 40
           Anchors = [akTop, akRight]
           BorderSpacing.Top = 8
@@ -9559,9 +9555,9 @@ object Form1: TForm1
         end
         object Label13: TLabel
           Left = 38
-          Height = 20
+          Height = 32
           Top = 13
-          Width = 29
+          Width = 47
           Caption = 'Info:'
           ParentColor = False
           ParentFont = False
@@ -9572,7 +9568,7 @@ object Form1: TForm1
           Height = 56
           Hint = 'Nuevo archivo .fde'
           Top = 13
-          Width = 128
+          Width = 205
           Anchors = [akTop, akLeft, akRight]
           Caption = 'Nuevo'
           Glyph.Data = {
@@ -9623,7 +9619,7 @@ object Form1: TForm1
           Height = 56
           Hint = 'Guardar archivo .fde actual'
           Top = 13
-          Width = 128
+          Width = 205
           Anchors = [akTop, akLeft, akRight]
           Caption = 'Guardar'
           Enabled = False
@@ -9676,7 +9672,7 @@ object Form1: TForm1
           Height = 56
           Hint = 'Guardar archivo .fde con nuevo nombre'
           Top = 13
-          Width = 141
+          Width = 225
           Anchors = [akTop, akLeft, akRight]
           Caption = 'Guardar como'
           Glyph.Data = {
@@ -9727,8 +9723,8 @@ object Form1: TForm1
           AnchorSideRight.Control = EditScript
           AnchorSideRight.Side = asrBottom
           Cursor = crHandPoint
-          Left = 402
-          Height = 17
+          Left = 1182
+          Height = 30
           Top = 85
           Width = 854
           Alignment = taRightJustify
@@ -9752,7 +9748,7 @@ object Form1: TForm1
           Height = 56
           Hint = 'Abrir un archivo .fde'
           Top = 13
-          Width = 127
+          Width = 203
           Anchors = [akTop, akLeft, akRight]
           Caption = 'Abrir'
           Glyph.Data = {
@@ -9812,8 +9808,8 @@ object Form1: TForm1
         Cursor = crVSplit
         Left = 0
         Height = 19
-        Top = 446
-        Width = 1300
+        Top = 765
+        Width = 2080
         Align = alBottom
         MinSize = 50
         ResizeAnchor = akBottom
@@ -10534,7 +10530,6 @@ object Form1: TForm1
   end
   object Timer2: TTimer
     Enabled = False
-    Interval = 1000
     OnTimer = Timer2Timer
     Left = 808
     Top = 858

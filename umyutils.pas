@@ -53,6 +53,9 @@ Public
   Function isElevated():Boolean;
   Function GenJavaArchive(RutaBase,javahome,OutputFileName:String):String;
   Function ExtractJavaArchive(ArchivePath,TargetDir,javahome:String):String;
+  Function ExtractJavaArchiveEntries(ArchivePath,TargetDir,javahome:String; Entries:TStrings):String;
+  Function UpdateJavaArchiveEntries(ArchivePath,SourceDir,javahome:String; Entries:TStrings):String;
+  Function RewriteZipWithoutEntries(ArchivePath:String; EntriesToDelete:TStrings):String;
   Function ListZipEntries(ArchivePath:String; Entries:TStrings):String;
   Function ExtractZipEntries(ArchivePath,TargetDir:String; Entries:TStrings):String;
   Procedure loadOldVar(when:String;var consider:String;var found:String;var X:String);
@@ -74,12 +77,14 @@ end;
 
 implementation
 Procedure TMyUtils.addToRichMemo(Texto:String;var Memo:TRichMemo;var StatusBar1:TStatusBar; color:Tcolor = clDefault);
-var largoText,LargoMemo:Integer;
+var StartPos,EndPos:Integer;
 Begin
-    largoText:=Texto.Length+1;
+    Memo.SelStart:=MaxInt;
+    StartPos:=Memo.SelStart;
     Memo.Lines.Add(Texto);
-    LargoMemo:=Memo.Lines.Text.Length;
-    Memo.SetRangeColor((LargoMemo-largoText),largoText,color);
+    Memo.SelStart:=MaxInt;
+    EndPos:=Memo.SelStart;
+    Memo.SetRangeColor(StartPos,EndPos-StartPos,color);
     StatusBar1.SimpleText:=Texto;
     Application.ProcessMessages;
 end;
@@ -595,11 +600,146 @@ begin
   end;
 end;
 
+Function TMyUtils.ExtractJavaArchiveEntries(ArchivePath,TargetDir,javahome:String; Entries:TStrings):String;
+const
+  MaxCommandChars = 7000;
+var
+  parms:TStrings;
+  rutaJar,ArchiveFullPath:String;
+  I, CurrentChars: Integer;
+
+  function ParamChars(const Value: String): Integer;
+  begin
+    Result:=Length(Value)+3;
+  end;
+
+  procedure InitParams;
+  begin
+    parms.Clear;
+    parms.Add('xf');
+    parms.Add(ArchiveFullPath);
+    CurrentChars:=ParamChars(rutaJar)+ParamChars('xf')+ParamChars(ArchiveFullPath);
+  end;
+begin
+  Result:='';
+  parms:=TStringList.Create;
+  try
+    try
+      rutaJar:=clearFilePath(clearDirPath(javahome)+'bin\jar.exe');
+      if not FileExists(rutaJar) then
+      begin
+        Result:='No se encuentra jar.exe';
+        Exit;
+      end;
+
+      ArchiveFullPath:=clearFilePath(ArchivePath);
+      if not FileExists(ArchiveFullPath) then
+      begin
+        Result:='No se encuentra el archivo '+ArchiveFullPath;
+        Exit;
+      end;
+
+      if DirectoryExists(TargetDir) then
+        DeleteDirectory(TargetDir,False);
+      ForceDirectories(TargetDir);
+
+      InitParams;
+      for I:=0 to Entries.Count-1 do
+      begin
+        if (parms.Count>2) and (CurrentChars+ParamChars(Entries[I])>MaxCommandChars) then
+        begin
+          runProgram(rutaJar,TargetDir,parms);
+          InitParams;
+        end;
+        parms.Add(Entries[I]);
+        CurrentChars:=CurrentChars+ParamChars(Entries[I]);
+      end;
+
+      if parms.Count>2 then
+        runProgram(rutaJar,TargetDir,parms);
+    except
+      on E: Exception do
+        Result:=E.Message;
+    end;
+  finally
+    parms.Free;
+  end;
+end;
+
+Function TMyUtils.UpdateJavaArchiveEntries(ArchivePath,SourceDir,javahome:String; Entries:TStrings):String;
+var
+  parms:TStrings;
+  rutaJar,ArchiveFullPath:String;
+  I: Integer;
+begin
+  Result:='';
+  if Entries.Count=0 then
+    Exit;
+  parms:=TStringList.Create;
+  try
+    try
+      rutaJar:=clearFilePath(clearDirPath(javahome)+'bin\jar.exe');
+      if not FileExists(rutaJar) then
+      begin
+        Result:='No se encuentra jar.exe';
+        Exit;
+      end;
+
+      ArchiveFullPath:=clearFilePath(ArchivePath);
+      if not FileExists(ArchiveFullPath) then
+      begin
+        Result:='No se encuentra el archivo '+ArchiveFullPath;
+        Exit;
+      end;
+
+      parms.Add('ufM');
+      parms.Add(ArchiveFullPath);
+      for I:=0 to Entries.Count-1 do
+        if FileExists(clearFilePath(SourceDir+StringReplace(Entries[I],'/',PathDelim,[rfReplaceAll]))) then
+        begin
+          parms.Add('-C');
+          parms.Add(SourceDir);
+          parms.Add(Entries[I]);
+        end;
+
+      if parms.Count>2 then
+        runProgram(rutaJar,SourceDir,parms);
+    except
+      on E: Exception do
+        Result:=E.Message;
+    end;
+  finally
+    parms.Free;
+  end;
+end;
+
 Function TMyUtils.ListZipEntries(ArchivePath:String; Entries:TStrings):String;
 var
-  UnZipper: TUnZipper;
+  Stream: TFileStream;
+  SearchBuffer: array of Byte;
+  CentralBuffer: array of Byte;
   ArchiveFullPath: String;
-  I: Integer;
+  SearchSize, BytesRead, I, NameLen, ExtraLen, CommentLen: Integer;
+  EocdPos, CentralDirOffset, CentralDirSize, PosCentral, EntryCount: Int64;
+  EntryName: String;
+
+  function ReadUInt16LE(const Buffer: array of Byte; Offset: Integer): Word;
+  begin
+    Result:=Buffer[Offset] or (Buffer[Offset+1] shl 8);
+  end;
+
+  function ReadUInt32LE(const Buffer: array of Byte; Offset: Integer): LongWord;
+  begin
+    Result:=LongWord(Buffer[Offset]) or
+      (LongWord(Buffer[Offset+1]) shl 8) or
+      (LongWord(Buffer[Offset+2]) shl 16) or
+      (LongWord(Buffer[Offset+3]) shl 24);
+  end;
+
+  function IsSignature(const Buffer: array of Byte; Offset: Integer; Signature: LongWord): Boolean;
+  begin
+    Result:=(ReadUInt32LE(Buffer,Offset)=Signature);
+  end;
 begin
   Result:='';
   Entries.Clear;
@@ -610,17 +750,367 @@ begin
     Exit;
   end;
 
-  UnZipper:=TUnZipper.Create;
+  Stream:=TFileStream.Create(ArchiveFullPath,fmOpenRead or fmShareDenyWrite);
   try
-    UnZipper.FileName:=ArchiveFullPath;
-    UnZipper.Examine;
-    for I:=0 to UnZipper.Entries.Count-1 do
-      Entries.Add(UnZipper.Entries[I].ArchiveFileName);
+    if Stream.Size<22 then
+    begin
+      Result:='Archivo ZIP inválido';
+      Exit;
+    end;
+
+    SearchSize:=Stream.Size;
+    if SearchSize>65557 then
+      SearchSize:=65557;
+    SetLength(SearchBuffer,SearchSize);
+    Stream.Position:=Stream.Size-SearchSize;
+    BytesRead:=Stream.Read(SearchBuffer[0],SearchSize);
+    if BytesRead<>SearchSize then
+    begin
+      Result:='No se pudo leer el índice ZIP';
+      Exit;
+    end;
+
+    EocdPos:=-1;
+    for I:=SearchSize-22 downto 0 do
+      if IsSignature(SearchBuffer,I,$06054B50) then
+      begin
+        EocdPos:=I;
+        Break;
+      end;
+
+    if EocdPos<0 then
+    begin
+      Result:='No se encontró el directorio central ZIP';
+      Exit;
+    end;
+
+    EntryCount:=ReadUInt16LE(SearchBuffer,EocdPos+10);
+    CentralDirSize:=ReadUInt32LE(SearchBuffer,EocdPos+12);
+    CentralDirOffset:=ReadUInt32LE(SearchBuffer,EocdPos+16);
+    if (EntryCount=$FFFF) or (CentralDirSize=$FFFFFFFF) or (CentralDirOffset=$FFFFFFFF) then
+    begin
+      Result:='ZIP64 no soportado por lector rapido';
+      Exit;
+    end;
+
+    if (CentralDirOffset<0) or (CentralDirSize<0) or
+       (CentralDirOffset+CentralDirSize>Stream.Size) then
+    begin
+      Result:='Directorio central ZIP inválido';
+      Exit;
+    end;
+
+    SetLength(CentralBuffer,CentralDirSize);
+    Stream.Position:=CentralDirOffset;
+    BytesRead:=Stream.Read(CentralBuffer[0],CentralDirSize);
+    if BytesRead<>CentralDirSize then
+    begin
+      Result:='No se pudo leer el directorio central ZIP';
+      Exit;
+    end;
+
+    PosCentral:=0;
+    while (PosCentral+46<=CentralDirSize) and (Entries.Count<EntryCount) do
+    begin
+      if not IsSignature(CentralBuffer,PosCentral,$02014B50) then
+      begin
+        Result:='Entrada de directorio central ZIP invalida';
+        Exit;
+      end;
+
+      NameLen:=ReadUInt16LE(CentralBuffer,PosCentral+28);
+      ExtraLen:=ReadUInt16LE(CentralBuffer,PosCentral+30);
+      CommentLen:=ReadUInt16LE(CentralBuffer,PosCentral+32);
+      if PosCentral+46+NameLen+ExtraLen+CommentLen>CentralDirSize then
+      begin
+        Result:='Entrada de directorio central ZIP incompleta';
+        Exit;
+      end;
+
+      if NameLen>0 then
+      begin
+        SetString(EntryName,PAnsiChar(@CentralBuffer[PosCentral+46]),NameLen);
+        Entries.Add(EntryName);
+      end;
+      PosCentral:=PosCentral+46+NameLen+ExtraLen+CommentLen;
+    end;
   except
     on E: Exception do
       Result:=E.Message;
   end;
-  UnZipper.Free;
+  Stream.Free;
+end;
+
+type
+  TZipRawEntry = class
+    Name: String;
+    LocalOffset: Int64;
+    CentralOffset: Int64;
+    CentralLen: Int64;
+    RawLen: Int64;
+    NewLocalOffset: Int64;
+  end;
+
+function CompareZipRawEntry(Item1, Item2: Pointer): Integer;
+begin
+  if TZipRawEntry(Item1).LocalOffset<TZipRawEntry(Item2).LocalOffset then
+    Result:=-1
+  else if TZipRawEntry(Item1).LocalOffset>TZipRawEntry(Item2).LocalOffset then
+    Result:=1
+  else
+    Result:=0;
+end;
+
+Function TMyUtils.RewriteZipWithoutEntries(ArchivePath:String; EntriesToDelete:TStrings):String;
+var
+  InStream, OutStream: TFileStream;
+  Entries: TList;
+  DeleteSet: TStringList;
+  SearchBuffer, CentralBuffer, CentralEntry, Eocd: array of Byte;
+  ArchiveFullPath, TempPath, EntryName, EntryNorm: String;
+  SearchSize, BytesRead, I, NameLen, ExtraLen, CommentLen, KeepCount: Integer;
+  EocdPos, CentralDirOffset, CentralDirSize, PosCentral, EntryCount: Int64;
+  CentralStart, CentralSize, NextOffset, BytesLeft, ChunkSize: Int64;
+  Entry: TZipRawEntry;
+  Buffer: array[0..65535] of Byte;
+
+  function ReadUInt16LE(const Buffer: array of Byte; Offset: Integer): Word;
+  begin
+    Result:=Buffer[Offset] or (Buffer[Offset+1] shl 8);
+  end;
+
+  function ReadUInt32LE(const Buffer: array of Byte; Offset: Integer): LongWord;
+  begin
+    Result:=LongWord(Buffer[Offset]) or
+      (LongWord(Buffer[Offset+1]) shl 8) or
+      (LongWord(Buffer[Offset+2]) shl 16) or
+      (LongWord(Buffer[Offset+3]) shl 24);
+  end;
+
+  procedure WriteUInt16LE(var Buffer: array of Byte; Offset: Integer; Value: Word);
+  begin
+    Buffer[Offset]:=Byte(Value and $FF);
+    Buffer[Offset+1]:=Byte((Value shr 8) and $FF);
+  end;
+
+  procedure WriteUInt32LE(var Buffer: array of Byte; Offset: Integer; Value: LongWord);
+  begin
+    Buffer[Offset]:=Byte(Value and $FF);
+    Buffer[Offset+1]:=Byte((Value shr 8) and $FF);
+    Buffer[Offset+2]:=Byte((Value shr 16) and $FF);
+    Buffer[Offset+3]:=Byte((Value shr 24) and $FF);
+  end;
+
+  function IsSignature(const Buffer: array of Byte; Offset: Integer; Signature: LongWord): Boolean;
+  begin
+    Result:=(ReadUInt32LE(Buffer,Offset)=Signature);
+  end;
+
+  function NormalizeEntry(const Value: String): String;
+  begin
+    Result:=LowerCase(StringReplace(Value,'\','/',[rfReplaceAll]));
+  end;
+
+  function ShouldDelete(const Value: String): Boolean;
+  begin
+    Result:=DeleteSet.IndexOf(NormalizeEntry(Value))>=0;
+  end;
+
+  procedure CopyBytes(Count: Int64);
+  begin
+    BytesLeft:=Count;
+    while BytesLeft>0 do
+    begin
+      ChunkSize:=SizeOf(Buffer);
+      if BytesLeft<ChunkSize then
+        ChunkSize:=BytesLeft;
+      InStream.ReadBuffer(Buffer,ChunkSize);
+      OutStream.WriteBuffer(Buffer,ChunkSize);
+      BytesLeft:=BytesLeft-ChunkSize;
+    end;
+  end;
+
+begin
+  Result:='';
+  if EntriesToDelete.Count=0 then
+    Exit;
+
+  ArchiveFullPath:=clearFilePath(ArchivePath);
+  if not FileExists(ArchiveFullPath) then
+  begin
+    Result:='No se encuentra el archivo '+ArchiveFullPath;
+    Exit;
+  end;
+
+  Entries:=TList.Create;
+  DeleteSet:=TStringList.Create;
+  InStream:=nil;
+  OutStream:=nil;
+  try
+    DeleteSet.Sorted:=True;
+    DeleteSet.Duplicates:=dupIgnore;
+    for I:=0 to EntriesToDelete.Count-1 do
+      DeleteSet.Add(NormalizeEntry(EntriesToDelete[I]));
+
+    InStream:=TFileStream.Create(ArchiveFullPath,fmOpenRead or fmShareDenyWrite);
+    if InStream.Size<22 then
+    begin
+      Result:='Archivo ZIP inválido';
+      Exit;
+    end;
+
+    SearchSize:=InStream.Size;
+    if SearchSize>65557 then
+      SearchSize:=65557;
+    SetLength(SearchBuffer,SearchSize);
+    InStream.Position:=InStream.Size-SearchSize;
+    BytesRead:=InStream.Read(SearchBuffer[0],SearchSize);
+    if BytesRead<>SearchSize then
+    begin
+      Result:='No se pudo leer el índice ZIP';
+      Exit;
+    end;
+
+    EocdPos:=-1;
+    for I:=SearchSize-22 downto 0 do
+      if IsSignature(SearchBuffer,I,$06054B50) then
+      begin
+        EocdPos:=I;
+        Break;
+      end;
+    if EocdPos<0 then
+    begin
+      Result:='No se encontró el directorio central ZIP';
+      Exit;
+    end;
+
+    EntryCount:=ReadUInt16LE(SearchBuffer,EocdPos+10);
+    CentralDirSize:=ReadUInt32LE(SearchBuffer,EocdPos+12);
+    CentralDirOffset:=ReadUInt32LE(SearchBuffer,EocdPos+16);
+    if (EntryCount=$FFFF) or (CentralDirSize=$FFFFFFFF) or (CentralDirOffset=$FFFFFFFF) then
+    begin
+      Result:='ZIP64 no soportado por lector rápido';
+      Exit;
+    end;
+
+    SetLength(CentralBuffer,CentralDirSize);
+    InStream.Position:=CentralDirOffset;
+    BytesRead:=InStream.Read(CentralBuffer[0],CentralDirSize);
+    if BytesRead<>CentralDirSize then
+    begin
+      Result:='No se pudo leer el directorio central ZIP';
+      Exit;
+    end;
+
+    PosCentral:=0;
+    while (PosCentral+46<=CentralDirSize) and (Entries.Count<EntryCount) do
+    begin
+      if not IsSignature(CentralBuffer,PosCentral,$02014B50) then
+      begin
+        Result:='Entrada de directorio central ZIP inválida';
+        Exit;
+      end;
+
+      NameLen:=ReadUInt16LE(CentralBuffer,PosCentral+28);
+      ExtraLen:=ReadUInt16LE(CentralBuffer,PosCentral+30);
+      CommentLen:=ReadUInt16LE(CentralBuffer,PosCentral+32);
+      if PosCentral+46+NameLen+ExtraLen+CommentLen>CentralDirSize then
+      begin
+        Result:='Entrada de directorio central ZIP incompleta';
+        Exit;
+      end;
+
+      SetString(EntryName,PAnsiChar(@CentralBuffer[PosCentral+46]),NameLen);
+      Entry:=TZipRawEntry.Create;
+      Entry.Name:=EntryName;
+      Entry.LocalOffset:=ReadUInt32LE(CentralBuffer,PosCentral+42);
+      Entry.CentralOffset:=PosCentral;
+      Entry.CentralLen:=46+NameLen+ExtraLen+CommentLen;
+      Entries.Add(Entry);
+      PosCentral:=PosCentral+Entry.CentralLen;
+    end;
+
+    Entries.Sort(@CompareZipRawEntry);
+    for I:=0 to Entries.Count-1 do
+    begin
+      Entry:=TZipRawEntry(Entries[I]);
+      if I<Entries.Count-1 then
+        NextOffset:=TZipRawEntry(Entries[I+1]).LocalOffset
+      else
+        NextOffset:=CentralDirOffset;
+      Entry.RawLen:=NextOffset-Entry.LocalOffset;
+      if (Entry.LocalOffset<0) or (Entry.RawLen<0) or (Entry.LocalOffset+Entry.RawLen>CentralDirOffset) then
+      begin
+        Result:='Entrada ZIP inválida';
+        Exit;
+      end;
+    end;
+
+    TempPath:=ArchiveFullPath+'.tmp';
+    OutStream:=TFileStream.Create(TempPath,fmCreate);
+    KeepCount:=0;
+    for I:=0 to Entries.Count-1 do
+    begin
+      Entry:=TZipRawEntry(Entries[I]);
+      if ShouldDelete(Entry.Name) then
+        Continue;
+      Entry.NewLocalOffset:=OutStream.Position;
+      InStream.Position:=Entry.LocalOffset;
+      CopyBytes(Entry.RawLen);
+      Inc(KeepCount);
+    end;
+
+    CentralStart:=OutStream.Position;
+    for I:=0 to Entries.Count-1 do
+    begin
+      Entry:=TZipRawEntry(Entries[I]);
+      if ShouldDelete(Entry.Name) then
+        Continue;
+      SetLength(CentralEntry,Entry.CentralLen);
+      Move(CentralBuffer[Entry.CentralOffset],CentralEntry[0],Entry.CentralLen);
+      if Entry.NewLocalOffset>$FFFFFFFF then
+      begin
+        Result:='ZIP64 no soportado por reescritura rápida';
+        Exit;
+      end;
+      WriteUInt32LE(CentralEntry,42,LongWord(Entry.NewLocalOffset));
+      OutStream.WriteBuffer(CentralEntry[0],Length(CentralEntry));
+    end;
+    CentralSize:=OutStream.Position-CentralStart;
+
+    SetLength(Eocd,22);
+    WriteUInt32LE(Eocd,0,$06054B50);
+    WriteUInt16LE(Eocd,4,0);
+    WriteUInt16LE(Eocd,6,0);
+    WriteUInt16LE(Eocd,8,KeepCount);
+    WriteUInt16LE(Eocd,10,KeepCount);
+    WriteUInt32LE(Eocd,12,LongWord(CentralSize));
+    WriteUInt32LE(Eocd,16,LongWord(CentralStart));
+    WriteUInt16LE(Eocd,20,0);
+    OutStream.WriteBuffer(Eocd[0],Length(Eocd));
+
+    FreeAndNil(OutStream);
+    FreeAndNil(InStream);
+    if not DeleteFile(ArchiveFullPath) then
+    begin
+      Result:='No se pudo reemplazar el archivo '+ArchiveFullPath;
+      Exit;
+    end;
+    if not RenameFile(TempPath,ArchiveFullPath) then
+      Result:='No se pudo reemplazar el archivo '+ArchiveFullPath;
+  except
+    on E: Exception do
+      Result:=E.Message;
+  end;
+
+  if Assigned(OutStream) then
+    OutStream.Free;
+  if Assigned(InStream) then
+    InStream.Free;
+  for I:=0 to Entries.Count-1 do
+    TObject(Entries[I]).Free;
+  Entries.Free;
+  DeleteSet.Free;
 end;
 
 Function TMyUtils.ExtractZipEntries(ArchivePath,TargetDir:String; Entries:TStrings):String;
