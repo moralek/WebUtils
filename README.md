@@ -84,7 +84,9 @@ RecOpcSalir=0
 
 `TempDir` define la carpeta temporal del programa. Por defecto es `.\tmp\` relativa a `DelFind.exe`. Si la clave no existe, la aplicacion la crea automaticamente con ese valor.
 
-Para el modo `warzip`, la carpeta de trabajo debe organizarse dentro de `TempDir\warzip\` usando la convencion:
+En modo `warzip`, el contenido de `TempDir` se limpia al iniciar cada ejecucion para evitar reutilizar archivos temporales obsoletos.
+
+Para el modo `warzip`, la carpeta de trabajo se organiza dentro de `TempDir\warzip\` usando la convencion:
 
 ```text
 <nombre>_<tipo>_<id>
@@ -95,6 +97,8 @@ Ejemplo:
 ```text
 .\tmp\warzip\cgu90ca-tst_war_a13f2c\
 ```
+
+El modo `warzip` revisa el indice del archivo `.war`/`.zip` antes de extraer. Si el script FDE no requiere cambios efectivos, no reempaqueta. Cuando necesita trabajar sobre el archivo, usa `jar.exe` desde `JAVA_HOME\bin` para extraer o actualizar el contenido.
 
 ------
 
