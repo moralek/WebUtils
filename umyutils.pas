@@ -232,62 +232,89 @@ procedure TMyUtils.FilDirGrid(FilePath,Filtertxt,ScanMode:String; var StringGrid
 var
  Directorios: TStringList;
  i,x:Integer;
- dirfull,dirtmp, modulo, displayname,ClientCfg, webXml:String;
+ dirfull,dirtmp, modulo, displayname,ClientCfg, webXml, PdfReport, ErrorMsg:String;
  GxVersion:String;
  varglo:TGlobales;
  myxml:TMyXml;
  ex:Boolean;
+ ArchiveEntries:TStringList;
+
+ function ArchiveHasPDFReportIni(const ArchivePath:String):Boolean;
+ var
+   J:Integer;
+   EntryName:String;
+ begin
+   Result:=False;
+   ErrorMsg:=ListZipEntries(ArchivePath,ArchiveEntries);
+   if not ErrorMsg.IsEmpty then
+     Exit;
+   for J:=0 to ArchiveEntries.Count-1 do
+   begin
+     EntryName:=StringReplace(ArchiveEntries[J],'/','\',[rfReplaceAll]);
+     if SameText(EntryName,'WEB-INF\PDFReport.ini') then
+     begin
+       Result:=True;
+       Exit;
+     end;
+   end;
+ end;
 begin
  varglo:=TGlobales.Create;
  x:=0;
  Directorios:=TStringList.Create;
+ ArchiveEntries:=TStringList.Create;
  DelAllRowsGrid(StringGrid1);
  myxml:=TMyXml.create('');
- if LowerCase(Trim(ScanMode))='warzip' then
-   begin
-     FindAllFiles(Directorios,FilePath,'*.war',false);
-     FindAllFiles(Directorios,FilePath,'*.zip',false);
-     Directorios.Sort;
-     for i := 0 to Directorios.Count - 1 do
-       begin
-         dirfull:=clearFilePath(Directorios[i]);
-         dirtmp:=ExtractFileName(dirfull);
-         if ((Trim(Filtertxt).IsEmpty) Or (AnsiPos(LowerCase(Filtertxt),LowerCase(dirtmp))>0)) then
-           begin
-             x:=x+1;
-             StringGrid1.InsertRowWithValues((x),['1','webapps', dirfull, dirtmp, '', '', '', '', '']);
-           end;
-       end;
-   end
- else
-   begin
-     FindAllDirectories(Directorios,FilePath,false);
-     for i := 0 to Directorios.Count - 1 do
-       begin
-         dirfull:=clearDirPath(Directorios[i]);
-         dirtmp:=LastDirName(dirfull);
-         If ((Trim(Filtertxt).IsEmpty) Or (AnsiPos(LowerCase(Filtertxt),LowerCase(dirtmp))>0)) then
-          Begin
-            If ((varglo.OcultarDirROOT=TRUE)
-            and (LowerCase(dirtmp)<> 'probe')
-            and (LowerCase(dirtmp)<> 'root')
-            and (LowerCase(dirtmp)<> 'docs')
-            and (LowerCase(dirtmp)<> 'manager')
-            and (LowerCase(dirtmp)<> 'host-manager')) Or ((varglo.OcultarDirROOT=FALSE)) then
-            begin
-              x:=x+1;
-              GetClientCfgPathModuleGXVersion(dirfull,ClientCfg,modulo,GxVersion);
-              webXml:=clearFilePath(dirfull+'WEB-INF\web.xml');
-              If Not FileExists(webXml) then webXml:='';
-              MyXml.pathxml:=clearFilePath(dirfull+'WEB-INF\web.xml');
-              Displayname:=myxml.getValueTagTXT('<display-name>','</display-name>',ex);
-              StringGrid1.InsertRowWithValues((x),['1',dirtmp, dirfull, dirtmp, modulo, displayname,ClientCfg,webXml,GxVersion]);
+ try
+   if LowerCase(Trim(ScanMode))='warzip' then
+     begin
+       FindAllFiles(Directorios,FilePath,'*.war',false);
+       FindAllFiles(Directorios,FilePath,'*.zip',false);
+       Directorios.Sort;
+       for i := 0 to Directorios.Count - 1 do
+         begin
+           dirfull:=clearFilePath(Directorios[i]);
+           dirtmp:=ExtractFileName(dirfull);
+           if ((Trim(Filtertxt).IsEmpty) Or (AnsiPos(LowerCase(Filtertxt),LowerCase(dirtmp))>0)) then
+             begin
+               x:=x+1;
+               if ArchiveHasPDFReportIni(dirfull) then PdfReport:='1' else PdfReport:='';
+               StringGrid1.InsertRowWithValues((x),['1','webapps', dirfull, dirtmp, '', '', '', '', '', PdfReport]);
+             end;
+         end;
+     end
+   else
+     begin
+       FindAllDirectories(Directorios,FilePath,false);
+       for i := 0 to Directorios.Count - 1 do
+         begin
+           dirfull:=clearDirPath(Directorios[i]);
+           dirtmp:=LastDirName(dirfull);
+           If ((Trim(Filtertxt).IsEmpty) Or (AnsiPos(LowerCase(Filtertxt),LowerCase(dirtmp))>0)) then
+            Begin
+              If ((varglo.OcultarDirROOT=TRUE)
+              and (LowerCase(dirtmp)<> 'probe')
+              and (LowerCase(dirtmp)<> 'root')
+              and (LowerCase(dirtmp)<> 'docs')
+              and (LowerCase(dirtmp)<> 'manager')
+              and (LowerCase(dirtmp)<> 'host-manager')) Or ((varglo.OcultarDirROOT=FALSE)) then
+              begin
+                x:=x+1;
+                GetClientCfgPathModuleGXVersion(dirfull,ClientCfg,modulo,GxVersion);
+                webXml:=clearFilePath(dirfull+'WEB-INF\web.xml');
+                If Not FileExists(webXml) then webXml:='';
+                MyXml.pathxml:=clearFilePath(dirfull+'WEB-INF\web.xml');
+                Displayname:=myxml.getValueTagTXT('<display-name>','</display-name>',ex);
+                StringGrid1.InsertRowWithValues((x),['1',dirtmp, dirfull, dirtmp, modulo, displayname,ClientCfg,webXml,GxVersion]);
+              end;
             end;
-          end;
-       end;
-   end;
- Directorios.Free;
- myxml.Free;
+         end;
+     end;
+ finally
+   ArchiveEntries.Free;
+   Directorios.Free;
+   myxml.Free;
+ end;
 end;
 
 

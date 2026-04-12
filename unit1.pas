@@ -2211,7 +2211,10 @@ begin
   begin
     linkwar.Visible:=FileExistsUTF8(StringGrid1.Rows[aRow][2]);
     EditWar.Text:=StringGrid1.Rows[aRow][3];
-    EditPDFReport.Text:='NO APLICA';
+    if StringGrid1.Rows[aRow][9]='1' then
+      EditPDFReport.Text:='ENCONTRADO'
+    else
+      EditPDFReport.Text:='NO ENCONTRADO';
     EditClientCfg.Text:='NO APLICA';
     Editwebxml.Text:='NO APLICA';
     linkPDFReport.Visible:=False;
@@ -2522,6 +2525,11 @@ end;
 procedure TForm1.ItemPDFReportIniClick(Sender: TObject);
 var filePDF:String;
 begin
+  if IsArchiveScanMode() then
+  begin
+    ShowMessage('PDFReport.ini está dentro del archivo War/Zip y no se abre directamente.');
+    Exit;
+  end;
   filePDF:=Utils.clearDirPath(StringGrid1.Rows[StringGrid1.Row][2])+'WEB-INF\PDFReport.ini';
   if (Not(FileExists(filePDF))) Then ShowMessage('Archivo PDFReport.ini NO Existe');
   if FileExists(filePDF) then ShellExecute(0,nil, PChar(filePDF),PChar(filePDF),nil,1);
@@ -2598,6 +2606,11 @@ procedure TForm1.LblPdfReportIniClick(Sender: TObject);
 var PdfReport:String;
 begin
   If StringGrid1.RowCount<2 Then exit;
+  if IsArchiveScanMode() then
+  begin
+    ShowMessage('PDFReport.ini está dentro del archivo War/Zip y no se abre directamente.');
+    Exit;
+  end;
   PdfReport:=Utils.clearFilePath(StringGrid1.Rows[StringGrid1.Row][2]+'WEB-INF\PDFReport.ini');
   If FileExists(PdfReport) then ShellExecute(0,nil, PChar(PdfReport),PChar(PdfReport),nil,1) else showMessage('No se Encuentra PdfReport.ini');
 end;
@@ -3856,6 +3869,7 @@ begin
     StringGrid1.Columns[3].ReadOnly:=True;
     ItemCopyWar.Caption:='Copiar archivo';
     BitBtn9.Enabled:=False;
+    LblPdfReportIni.Visible:=False;
   end
   else
   begin
@@ -3864,6 +3878,7 @@ begin
     StringGrid1.Columns[3].ReadOnly:=False;
     ItemCopyWar.Caption:='Copiar [.war]';
     BitBtn9.Enabled:=True;
+    LblPdfReportIni.Visible:=True;
   end;
 end;
 
@@ -3893,6 +3908,11 @@ procedure TForm1.linkPDFReportClick(Sender: TObject);
   var PdfReport:String;
 begin
   If StringGrid1.RowCount<2 Then exit;
+  if IsArchiveScanMode() then
+  begin
+    ShowMessage('PDFReport.ini está dentro del archivo War/Zip y no se abre directamente.');
+    Exit;
+  end;
   PdfReport:=Utils.clearFilePath(StringGrid1.Rows[StringGrid1.Row][2]+'WEB-INF\PDFReport.ini');
   If FileExistsUTF8(PdfReport) Then
   ShellExecute(0,nil, PChar('explorer.exe'),Pchar('/select,'+'"'+PdfReport+'"'),PChar(ExtractFilePath(PdfReport)),1);
@@ -4393,7 +4413,8 @@ end;
 
 procedure TForm1.StringGrid1DrawCell(Sender: TObject; aCol, aRow: Integer;
   aRect: TRect; aState: TGridDrawState);
-var pdfreport:String;
+var
+  pdfreport:String;
   Alto,Ancho,Posicion, posalto, col_PDF,col_Ruta: Integer;
 begin
   col_PDF:=9;
@@ -4403,6 +4424,17 @@ begin
   Alto :=StringGrid1.RowHeights[1] div 2;
   Posicion := Ancho - (Image1.Picture.Width div 2);
   posalto := Alto - (Image1.Picture.Height div 2);
+  if (ACol = col_PDF) and (aRow > 0) and IsArchiveScanMode() then
+  begin
+    with StringGrid1.Canvas do
+    begin
+      FillRect(aRect);
+      if StringGrid1.Rows[aRow][col_PDF]='1' then
+        Draw(aRect.Left+Posicion, aRect.Top+posalto, Image1.Picture.Graphic);
+    end;
+    Exit;
+  end;
+
   pdfreport:=Utils.clearFilePath(StringGrid1.Rows[aRow][col_Ruta]+'WEB-INF\PDFReport.ini');
   If FileExists(pdfreport) Then
   Begin
@@ -4427,6 +4459,14 @@ begin
   //REF_PDFREPORT
   If StringGrid1.Col = col_PDF Then
   Begin
+   if IsArchiveScanMode() then
+   begin
+     if StringGrid1.Rows[StringGrid1.Row][col_PDF]='1' then
+       showMessage('PDFReport.ini está dentro del archivo War/Zip y no se abre directamente.')
+     else
+       showMessage('PdfReport.ini no existe');
+     Exit;
+   end;
    PdfReport:=Utils.clearFilePath(StringGrid1.Rows[StringGrid1.Row][2]+'WEB-INF\PDFReport.ini');
    If FileExists(PdfReport) then ShellExecute(0,nil, PChar(PdfReport),PChar(PdfReport),nil,1) else showMessage('PdfReport.ini no existe');
   end
