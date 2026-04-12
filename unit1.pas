@@ -207,6 +207,7 @@ type
     ItemClientCfg: TMenuItem;
     ItemSeleccionar: TMenuItem;
     ItemSelTodo: TMenuItem;
+    ItemCopiarConsola: TMenuItem;
     ItemSelNada: TMenuItem;
     ItemInvertirSel: TMenuItem;
     MenuItem17: TMenuItem;
@@ -243,6 +244,7 @@ type
     Principal: TPage;
     Panel1: TPanel;
     PopupMenu3: TPopupMenu;
+    PopupMenuConsola: TPopupMenu;
     RichMemo1: TRichMemo;
     RichMemo3: TRichMemo;
     ShapeLine1: TShapeLine;
@@ -443,6 +445,7 @@ type
     procedure ImgApp9MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure ItemClientCfgClick(Sender: TObject);
+    procedure ItemCopiarConsolaClick(Sender: TObject);
     procedure ItemCopyRutaClick(Sender: TObject);
     procedure ItemCopyWarClick(Sender: TObject);
     procedure ItemInvertirSelClick(Sender: TObject);
@@ -2359,7 +2362,15 @@ begin
 end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var
+  ErrorMsg: String;
 begin
+  if not varGlobales.ConservarTmpAlFinalizar then
+  begin
+    ErrorMsg:=DeleteTempDirOnFinish();
+    if not ErrorMsg.IsEmpty then
+      SetStatusMessage(ErrorMsg);
+  end;
   TrayIcon1.Hide;
 end;
 
@@ -2473,6 +2484,12 @@ var dir:String;
 begin
   dir:=Utils.clearFilePath(StringGrid1.Rows[StringGrid1.Row][6]);
   If fileExists(dir) Then if ShellExecute(0,nil, PChar(dir),PChar(dir),nil,1)=0 then;
+end;
+
+procedure TForm1.ItemCopiarConsolaClick(Sender: TObject);
+begin
+  if not RichMemo1.SelText.IsEmpty then
+    Utils.ClipboardCopy(RichMemo1.SelText);
 end;
 
 procedure TForm1.ItemCopyRutaClick(Sender: TObject);
@@ -2952,16 +2969,18 @@ function TForm1.LogArchiveWebAppsRules(const AppDir: String; const ArchiveEntrie
 var
   Doc: TXMLDocument;
   WebAppsNode: TDOMNode;
-  X, Fila, Count: Integer;
+  X, I, Fila, Count: Integer;
   TipoRead, DatoRead, FilaRead, ExactEntry: String;
-  Matches: TStringList;
+  Matches, WorkingEntries: TStringList;
   MsgColor: TColor;
 begin
   Result:=0;
   WebAppsNode:=nil;
   Doc:=TXMLDocument.Create;
   Matches:=TStringList.Create;
+  WorkingEntries:=TStringList.Create;
   try
+    WorkingEntries.Assign(ArchiveEntries);
     ReadXMLFile(Doc,Edit2.Text);
     if (Doc.DocumentElement=nil) or (UpperCase(Trim(Doc.DocumentElement.NodeName))<>'RULES') then
     begin
@@ -3011,7 +3030,7 @@ begin
       case TipoRead of
         'CHKFIL':
           begin
-            if ArchiveHasAnyEntry(ArchiveEntries,DatoRead) then
+            if ArchiveHasAnyEntry(WorkingEntries,DatoRead) then
               LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], ok',MsgColor)
             else
             begin
@@ -3021,7 +3040,7 @@ begin
           end;
         'CHKDIR':
           begin
-            if ArchiveDirExists(ArchiveEntries,DatoRead) then
+            if ArchiveDirExists(WorkingEntries,DatoRead) then
               LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], ok',MsgColor)
             else
             begin
@@ -3033,35 +3052,52 @@ begin
           begin
             Matches.Clear;
             if (Pos('*',DatoRead)>0) or (Pos('?',DatoRead)>0) then
-              AddArchiveMatches(ArchiveEntries,DatoRead,Matches)
-            else if FindArchiveEntry(ArchiveEntries,DatoRead,ExactEntry) then
+              AddArchiveMatches(WorkingEntries,DatoRead,Matches)
+            else if FindArchiveEntry(WorkingEntries,DatoRead,ExactEntry) then
               Matches.Add(ExactEntry);
+            for I:=0 to Matches.Count-1 do
+              if FindArchiveEntry(WorkingEntries,Matches[I],ExactEntry) then
+                WorkingEntries.Delete(WorkingEntries.IndexOf(ExactEntry));
             LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], ok, '+Matches.Count.ToString+' Eliminado(s).',MsgColor);
           end;
         'DELDIR':
           begin
             Matches.Clear;
-            if ArchiveDirExists(ArchiveEntries,DatoRead) then
-              AddArchiveDirEntries(ArchiveEntries,DatoRead,Matches,True);
+            if ArchiveDirExists(WorkingEntries,DatoRead) then
+              AddArchiveDirEntries(WorkingEntries,DatoRead,Matches,True);
+            for I:=0 to Matches.Count-1 do
+              if FindArchiveEntry(WorkingEntries,Matches[I],ExactEntry) then
+                WorkingEntries.Delete(WorkingEntries.IndexOf(ExactEntry));
             LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], ok, '+Matches.Count.ToString+' Eliminado(s).',MsgColor);
           end;
         'CLRDIR':
           begin
             Count:=0;
-            if ArchiveDirExists(ArchiveEntries,DatoRead) then
+            if ArchiveDirExists(WorkingEntries,DatoRead) then
             begin
               Matches.Clear;
-              AddArchiveDirEntries(ArchiveEntries,DatoRead,Matches,False);
+              AddArchiveDirEntries(WorkingEntries,DatoRead,Matches,False);
               Count:=Matches.Count;
+              for I:=0 to Matches.Count-1 do
+                if FindArchiveEntry(WorkingEntries,Matches[I],ExactEntry) then
+                  WorkingEntries.Delete(WorkingEntries.IndexOf(ExactEntry));
+              LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], ok, '+Count.ToString+' Eliminados',MsgColor);
+            end
+            else
+            begin
+              Inc(Result);
+              LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], Directorio no Existe',clRed);
             end;
-            LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], ok, '+Count.ToString+' Eliminados',MsgColor);
           end;
         'CREDIR':
           begin
-            if ArchiveDirExists(ArchiveEntries,DatoRead) then
+            if ArchiveDirExists(WorkingEntries,DatoRead) then
               LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], ok, 0 Creado(s)',MsgColor)
             else
+            begin
+              AddDirWithParents(DatoRead,WorkingEntries);
               LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], ok, 1 Creado(s)',MsgColor);
+            end;
           end;
       else
         begin
@@ -3077,6 +3113,7 @@ begin
       LogWarZipFdeMessage('Error leyendo FDE: '+E.Message,clRed);
     end;
   end;
+  WorkingEntries.Free;
   Matches.Free;
   Doc.Free;
 end;
@@ -3087,8 +3124,9 @@ function TForm1.BuildArchiveSelectivePlan(const AppDir: String; const ArchiveEnt
 var
   Doc: TXMLDocument;
   WebAppsNode, WebXmlNode: TDOMNode;
-  X, BeforeCount: Integer;
+  X, I, BeforeCount: Integer;
   TipoRead, DatoRead, ExactEntry: String;
+  Matches, WorkingEntries: TStringList;
 begin
   Result:='';
   NeedFullExtract:=False;
@@ -3101,7 +3139,10 @@ begin
   WebAppsNode:=nil;
   WebXmlNode:=nil;
   Doc:=TXMLDocument.Create;
+  Matches:=TStringList.Create;
+  WorkingEntries:=TStringList.Create;
   try
+    WorkingEntries.Assign(ArchiveEntries);
     ReadXMLFile(Doc,Edit2.Text);
     if (UpperCase(Trim(Doc.DocumentElement.NodeName))<>'RULES') or
        (Doc.DocumentElement.ChildNodes.Count=0) then
@@ -3154,12 +3195,21 @@ begin
         'DELFIL':
           begin
             BeforeCount:=EntriesToDelete.Count;
-            if ArchiveHasAnyEntry(ArchiveEntries,DatoRead) then
+            if ArchiveHasAnyEntry(WorkingEntries,DatoRead) then
             begin
+              Matches.Clear;
               if (Pos('*',DatoRead)>0) or (Pos('?',DatoRead)>0) then
-                AddArchiveMatches(ArchiveEntries,DatoRead,EntriesToDelete)
-              else if FindArchiveEntry(ArchiveEntries,DatoRead,ExactEntry) then
-                EntriesToDelete.Add(ExactEntry);
+                AddArchiveMatches(WorkingEntries,DatoRead,Matches)
+              else if FindArchiveEntry(WorkingEntries,DatoRead,ExactEntry) then
+                Matches.Add(ExactEntry);
+              for I:=0 to Matches.Count-1 do
+              begin
+                if FindArchiveEntry(ArchiveEntries,Matches[I],ExactEntry) and
+                   (EntriesToDelete.IndexOf(ExactEntry)=-1) then
+                  EntriesToDelete.Add(ExactEntry);
+                if FindArchiveEntry(WorkingEntries,Matches[I],ExactEntry) then
+                  WorkingEntries.Delete(WorkingEntries.IndexOf(ExactEntry));
+              end;
               if BeforeCount<>EntriesToDelete.Count then
               begin
                 NeedsRepack:=True;
@@ -3170,33 +3220,64 @@ begin
           end;
         'DELDIR':
           begin
-            if ArchiveDirExists(ArchiveEntries,DatoRead) then
+            if ArchiveDirExists(WorkingEntries,DatoRead) then
             begin
-              NeedsRepack:=True;
-              AddArchiveDirEntries(ArchiveEntries,DatoRead,EntriesToDelete,True);
-              if Reason='Sin cambios previstos' then
-                Reason:='DELDIR con cambios';
+              BeforeCount:=EntriesToDelete.Count+DirsToCreate.Count;
+              Matches.Clear;
+              AddArchiveDirEntries(WorkingEntries,DatoRead,Matches,True);
+              for I:=0 to Matches.Count-1 do
+              begin
+                if FindArchiveEntry(ArchiveEntries,Matches[I],ExactEntry) and
+                   (EntriesToDelete.IndexOf(ExactEntry)=-1) then
+                  EntriesToDelete.Add(ExactEntry);
+                if FindArchiveEntry(WorkingEntries,Matches[I],ExactEntry) then
+                  WorkingEntries.Delete(WorkingEntries.IndexOf(ExactEntry));
+                if FindArchiveEntry(DirsToCreate,Matches[I],ExactEntry) then
+                  DirsToCreate.Delete(DirsToCreate.IndexOf(ExactEntry));
+              end;
+              if BeforeCount<>EntriesToDelete.Count+DirsToCreate.Count then
+              begin
+                NeedsRepack:=True;
+                if Reason='Sin cambios previstos' then
+                  Reason:='DELDIR con cambios';
+              end;
             end;
           end;
         'CLRDIR':
           begin
-            if ArchiveDirHasFiles(ArchiveEntries,DatoRead) then
+            if ArchiveDirHasFiles(WorkingEntries,DatoRead) then
             begin
-              NeedsRepack:=True;
-              AddArchiveDirEntries(ArchiveEntries,DatoRead,EntriesToDelete,False);
-              if Reason='Sin cambios previstos' then
-                Reason:='CLRDIR con cambios';
+              BeforeCount:=EntriesToDelete.Count+DirsToCreate.Count;
+              Matches.Clear;
+              AddArchiveDirEntries(WorkingEntries,DatoRead,Matches,False);
+              for I:=0 to Matches.Count-1 do
+              begin
+                if FindArchiveEntry(ArchiveEntries,Matches[I],ExactEntry) and
+                   (EntriesToDelete.IndexOf(ExactEntry)=-1) then
+                  EntriesToDelete.Add(ExactEntry);
+                if FindArchiveEntry(WorkingEntries,Matches[I],ExactEntry) then
+                  WorkingEntries.Delete(WorkingEntries.IndexOf(ExactEntry));
+                if FindArchiveEntry(DirsToCreate,Matches[I],ExactEntry) then
+                  DirsToCreate.Delete(DirsToCreate.IndexOf(ExactEntry));
+              end;
+              if BeforeCount<>EntriesToDelete.Count+DirsToCreate.Count then
+              begin
+                NeedsRepack:=True;
+                if Reason='Sin cambios previstos' then
+                  Reason:='CLRDIR con cambios';
+              end;
             end;
             // El borrado se aplica reescribiendo el ZIP; no se simula con carpetas temporales.
           end;
         'CREDIR':
           begin
-            if not ArchiveDirExists(ArchiveEntries,DatoRead) then
+            if not ArchiveDirExists(WorkingEntries,DatoRead) then
             begin
-              NeedFullExtract:=True;
+              AddDirWithParents(DatoRead,DirsToCreate);
+              AddDirWithParents(DatoRead,WorkingEntries);
               NeedsRepack:=True;
-              Reason:='CREDIR con cambios';
-              Exit;
+              if Reason='Sin cambios previstos' then
+                Reason:='CREDIR con cambios';
             end;
             // Si ya existe, no hay nada físico que crear antes del reempaquetado.
           end;
@@ -3209,8 +3290,12 @@ begin
       end;
     end;
 
+    NeedsRepack:=(EntriesToDelete.Count>0) or (DirsToCreate.Count>0);
+    if NeedsRepack and (Reason='Sin cambios previstos') then
+      Reason:='Cambios en ZIP';
+
     if (WebXmlNode<>nil) and
-       FindArchiveEntry(ArchiveEntries,'WEB-INF\web.xml',ExactEntry) and
+       FindArchiveEntry(WorkingEntries,'WEB-INF\web.xml',ExactEntry) and
        (FilesToExtract.IndexOf(ExactEntry)=-1) then
     begin
       FilesToExtract.Add(ExactEntry);
@@ -3225,6 +3310,8 @@ begin
       Result:=E.Message;
     end;
   end;
+  WorkingEntries.Free;
+  Matches.Free;
   Doc.Free;
 end;
 
@@ -3266,8 +3353,11 @@ function TForm1.ExtractArchiveSelectiveToTemp(const ArchivePath, TargetDir: Stri
   FilesToExtract, DirsToCreate, MarkerFilesToCreate, EntriesToDelete: TStrings): String;
 var
   I: Integer;
+  EntriesToUpdate: TStringList;
 begin
   Result:='';
+  EntriesToUpdate:=TStringList.Create;
+  try
   if DirectoryExists(TargetDir) then
     DeleteDirectory(TargetDir,False);
   ForceDirectories(TargetDir);
@@ -3280,10 +3370,21 @@ begin
   end;
 
   for I:=0 to DirsToCreate.Count-1 do
+  begin
     ForceDirectories(Utils.clearDirPath(TargetDir+StringReplace(DirsToCreate[I],'/',PathDelim,[rfReplaceAll])));
+    if EntriesToUpdate.IndexOf(DirsToCreate[I])=-1 then
+      EntriesToUpdate.Add(DirsToCreate[I]);
+  end;
+
+  for I:=0 to FilesToExtract.Count-1 do
+    if EntriesToUpdate.IndexOf(FilesToExtract[I])=-1 then
+      EntriesToUpdate.Add(FilesToExtract[I]);
 
   EntriesToDelete.SaveToFile(Utils.clearFilePath(TargetDir+'.fde_delete_entries.txt'));
-  FilesToExtract.SaveToFile(Utils.clearFilePath(TargetDir+'.fde_update_entries.txt'));
+  EntriesToUpdate.SaveToFile(Utils.clearFilePath(TargetDir+'.fde_update_entries.txt'));
+  finally
+    EntriesToUpdate.Free;
+  end;
 end;
 
 function TForm1.RepackTempToArchive(const SourceDir, ArchivePath: String): String;
@@ -3580,7 +3681,7 @@ begin
       if StringGrid1.Cells[0,I]<>'1' then
         Continue;
       if ProcessedCount>0 then
-        Utils.addToRichMemo('___________________________________',RichMemo1,StatusBar1,clBlue);
+        Utils.addToRichMemo('==================================================',RichMemo1,StatusBar1,clBlue);
       Inc(ProcessedCount);
       ArchivePath:=Utils.clearFilePath(StringGrid1.Cells[2,I]);
       ArchiveLabel:=StringGrid1.Cells[3,I];
@@ -3615,8 +3716,14 @@ begin
         Utils.addToRichMemo('Error en chequeo: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
         Continue;
       end;
-      Utils.addToRichMemo('Validando ZIP .\'+BuildArchiveModuleName(ArchivePath),RichMemo1,StatusBar1,clBlue);
       LogArchiveWebAppsRules(AppDir,ArchiveEntries);
+
+      if (not NeedFullExtract) and (not NeedsRepack) and (FilesToExtract.Count=0) then
+      begin
+        Utils.addToRichMemo('Sin cambios efectivos en ['+ExtractFileName(ArchivePath)+'].',RichMemo1,StatusBar1,clBlue);
+        Application.ProcessMessages;
+        Continue;
+      end;
 
       if NeedFullExtract then
       begin
@@ -3676,7 +3783,6 @@ begin
         TempGrid.Cells[6,NewRow]:='';
         TempGrid.Cells[7,NewRow]:=Utils.clearFilePath(TempDir+'WEB-INF\web.xml');
         TempGrid.Cells[8,NewRow]:='';
-        Utils.addToRichMemo('Aplicando reglas WEBXML sobre archivos extraídos...',RichMemo1,StatusBar1,clBlue);
         SetStatusMessage('Aplicando reglas WEBXML...');
         FdeFile.ProcesarWebXml(TempGrid,RichMemo1,TrayIcon1,StatusBar1);
       end;
@@ -3690,7 +3796,6 @@ begin
 
       StartAt:=Now;
       Utils.addToRichMemo('Inicio reempaquetado ('+TimeToStr(StartAt)+') ['+ExtractFileName(ArchivePath)+']',RichMemo1,StatusBar1,clBlue);
-      Utils.addToRichMemo('Reempaquetando ['+ExtractFileName(ArchivePath)+']...',RichMemo1,StatusBar1,clBlue);
       SetStatusMessage('Reempaquetando '+ExtractFileName(ArchivePath)+'...');
       ErrorMsg:=RepackTempToArchive(TempDir,ArchivePath);
       EndAt:=Now;

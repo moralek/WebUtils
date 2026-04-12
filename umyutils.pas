@@ -695,7 +695,8 @@ begin
       parms.Add('ufM');
       parms.Add(ArchiveFullPath);
       for I:=0 to Entries.Count-1 do
-        if FileExists(clearFilePath(SourceDir+StringReplace(Entries[I],'/',PathDelim,[rfReplaceAll]))) then
+        if FileExists(clearFilePath(SourceDir+StringReplace(Entries[I],'/',PathDelim,[rfReplaceAll]))) or
+           DirectoryExists(clearDirPath(SourceDir+StringReplace(Entries[I],'/',PathDelim,[rfReplaceAll]))) then
         begin
           parms.Add('-C');
           parms.Add(SourceDir);

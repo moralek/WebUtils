@@ -6,21 +6,37 @@ Descarga: <https://github.com/moralek/WebUtils/releases>
 
 ## WebUtils (for GX wars)
 
-*Utilidades para generación de war Gx*
+*Utilidades para generación de archivos WAR de GeneXus*
 
 ## <u>Archivos .fde:</u>
 
-Los archivos .fde son archivos xml con estructura y deben crearse con el editor incluido dentro del mismo programa
+Los archivos `.fde` son archivos XML estructurados. Deben crearse con el editor incluido en el programa.
 
 | Comando    | Descripción                                                  | Ejemplo                           |
 | ---------- | ------------------------------------------------------------ | --------------------------------- |
 | **MSGRUN** | (Message In Run) Muestra un mensaje durante la ejecución.    | MSGRUN=>>Hola Mundo!!             |
-| **DELFIL** | (Delete File) Elimina archivos (permite comodines (* ?).     | DELFIL=*.war                      |
-| **CHKFIL** | (Check File) Informa si el archivo Existe o no. (permite comodines (* ?) | CHKFIL=WEB-INF\PDFReport.ini      |
-| **DELDIR** | (Delete Dir) Borra Una Carpeta(y todo su contenido).         | DELDIR=NOVALIDO                   |
-| **CHKDIR** | (Check Dir) Informa si la Carpeta Existe o no.               | CHKDIR=WEB-INF                    |
-| **CREDIR** | (Create Dir) Crea Una Carpeta.                               | CREDIR=WEB-INF\PrivateTempStorage |
-| **CLRDIR** | (Clean Dir) Elimina el contenido de una carpeta(sin eliminar la carpeta). | CLRDIR=WEB-INF\PrivateTempStorage |
+| **DELFIL** | (Delete File) Elimina archivos. Permite comodines (`*`, `?`). | DELFIL=*.war                      |
+| **CHKFIL** | (Check File) Verifica si existen archivos. Permite comodines (`*`, `?`). | CHKFIL=WEB-INF\PDFReport.ini      |
+| **DELDIR** | (Delete Dir) Elimina una carpeta y su contenido.             | DELDIR=NOVALIDO                   |
+| **CHKDIR** | (Check Dir) Verifica si existe una carpeta.                  | CHKDIR=WEB-INF                    |
+| **CREDIR** | (Create Dir) Crea una carpeta.                               | CREDIR=WEB-INF\PrivateTempStorage |
+| **CLRDIR** | (Clean Dir) Limpia el contenido de una carpeta sin eliminarla. | CLRDIR=WEB-INF\PrivateTempStorage |
+
+### Objetivo final de los comandos
+
+Cada comando se considera correcto cuando, al terminar su ejecución, se cumple el estado esperado. En modo `warzip`, esto permite revisar el contenido del `.war`/`.zip` antes de extraer y reempaquetar solo si hay cambios efectivos.
+
+| Comando    | Objetivo final                                               | Cuándo es error                                             |
+| ---------- | ------------------------------------------------------------ | ----------------------------------------------------------- |
+| **MSGRUN** | Mostrar un mensaje informativo durante la ejecución.         | No aplica.                                                  |
+| **DELFIL** | Que el archivo o los archivos indicados no existan. Permite comodines (`*`, `?`). | Si después de ejecutar el comando aún existen archivos que debían eliminarse. No es error si no existían antes. |
+| **CHKFIL** | Que exista al menos un archivo que coincida con la ruta o patrón indicado. Permite comodines (`*`, `?`). | Si no existe ningún archivo que coincida.                   |
+| **DELDIR** | Que el directorio indicado no exista después de ejecutar el comando. | Si el directorio sigue existiendo después de intentar eliminarlo. No es error si no existía antes. |
+| **CHKDIR** | Que exista el directorio indicado.                           | Si el directorio no existe.                                 |
+| **CREDIR** | Que exista el directorio indicado.                           | Si no se puede crear y el directorio no existe al terminar. No es error si ya existía antes. |
+| **CLRDIR** | Que el directorio indicado exista y quede vacío, sin archivos ni subdirectorios. | Si el directorio no existe, o si no se puede limpiar completamente. |
+
+En modo `warzip`, el reempaquetado se decide por el resultado final neto de los comandos. Por ejemplo, si se crea un directorio y luego se elimina el mismo directorio dentro de la misma ejecución, esos cambios pueden anularse y no requerir reempaquetado.
 
 
 
@@ -56,14 +72,17 @@ Se requirió en algunos casos utilizar comodines con el fin de poder resolver va
 
 ## <u>fde.Ini:</u>
 
-El archivo fde.ini se encuentra junto con el ejecutable posee la configuración de opciones de delfind.exe. En caso de no existir , se creará uno por defecto.
+El archivo `fde.ini` se encuentra junto al ejecutable y contiene la configuración de opciones de `DelFind.exe`. Si no existe, se crea uno por defecto.
 
-ejemplo fde.ini:
+Ejemplo `fde.ini`:
 
 ```ini
 [CONFIG]
 SoloDir=0
 TempDir=.\tmp\
+ScanMode=carpeta
+EnableWarZipMode=0
+ConservarTmpAlFinalizar=0
 
 [MEMO_CONSOLE]
 MostrarOK=1
@@ -80,13 +99,14 @@ TrayRunAPP=1
 Beep=1
 OrderByUso=1
 RecOpcSalir=0
+JAVA_HOME=
 ```
 
-`TempDir` define la carpeta temporal del programa. Por defecto es `.\tmp\` relativa a `DelFind.exe`. Si la clave no existe, la aplicacion la crea automaticamente con ese valor.
+`TempDir` define la carpeta temporal del programa. Por defecto es `.\tmp\` relativa a `DelFind.exe`. Si la clave no existe, la aplicación la crea automáticamente con ese valor.
 
-En modo `warzip`, el contenido de `TempDir` se limpia al iniciar cada ejecucion para evitar reutilizar archivos temporales obsoletos.
+En modo `warzip`, el contenido de `TempDir` se limpia al iniciar cada ejecución para evitar reutilizar archivos temporales obsoletos. Por defecto también se elimina al finalizar; si `ConservarTmpAlFinalizar=1`, la carpeta temporal se conserva para revisión.
 
-Para el modo `warzip`, la carpeta de trabajo se organiza dentro de `TempDir\warzip\` usando la convencion:
+Para el modo `warzip`, la carpeta de trabajo se organiza dentro de `TempDir\warzip\` usando la convención:
 
 ```text
 <nombre>_<tipo>_<id>
@@ -98,7 +118,7 @@ Ejemplo:
 .\tmp\warzip\cgu90ca-tst_war_a13f2c\
 ```
 
-El modo `warzip` revisa el indice del archivo `.war`/`.zip` antes de extraer. Si el script FDE no requiere cambios efectivos, no reempaqueta. Cuando necesita trabajar sobre el archivo, usa `jar.exe` desde `JAVA_HOME\bin` para extraer o actualizar el contenido.
+El modo `warzip` revisa el índice del archivo `.war`/`.zip` antes de extraer. Si el script FDE no requiere cambios efectivos, no reempaqueta. Cuando necesita trabajar sobre el archivo, usa `jar.exe` desde `JAVA_HOME\bin` para extraer o actualizar el contenido.
 
 ------
 
