@@ -4312,7 +4312,7 @@ object Form1: TForm1
     Height = 1133
     Top = 0
     Width = 2080
-    PageIndex = 4
+    PageIndex = 0
     Anchors = [akTop, akLeft, akRight, akBottom]
     TabOrder = 0
     object RunFDE: TPage
@@ -4729,13 +4729,13 @@ object Form1: TForm1
           Height = 1083
           Top = 1
           Width = 1021
-          ActivePage = PRUEBAS
+          ActivePage = TabSheet2
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Left = 3
           BorderSpacing.Right = 16
           BorderSpacing.Bottom = 48
           ParentFont = False
-          TabIndex = 5
+          TabIndex = 1
           TabOrder = 3
           object TabSheet1: TTabSheet
             AnchorSideRight.Side = asrBottom
@@ -7656,6 +7656,16 @@ object Form1: TForm1
           TabOrder = 6
           OnChange = CheckBox13Change
         end
+        object CheckBox14: TCheckBox
+          Left = 627
+          Height = 36
+          Top = 115
+          Width = 402
+          Caption = 'Conservar carpeta tmp al finalizar.'
+          ParentFont = False
+          TabOrder = 7
+          OnChange = CheckBox14Change
+        end
       end
       object GroupBox7: TGroupBox
         Left = 627
@@ -9003,7 +9013,7 @@ object Form1: TForm1
                 Width = 240
               end>
             FixedCols = 0
-            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSizing, goColSizing, goEditing, goRowSelect, goAlwaysShowEditor, goDblClickAutoSize, goThumbTracking, goSmoothScroll, goSelectionActive, goFixedColSizing]
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSizing, goColSizing, goEditing, goRowSelect, goAlwaysShowEditor, goThumbTracking, goDblClickAutoSize, goSmoothScroll, goSelectionActive, goFixedColSizing]
             ParentFont = False
             RowCount = 1
             TabOrder = 0
@@ -9824,7 +9834,7 @@ object Form1: TForm1
     Width = 2080
     Panels = <>
     ParentFont = False
-    SimplePanel = False
+    SimplePanel = True
     OnClick = StatusBar1Click
   end
   object SelectDirectoryDialog1: TSelectDirectoryDialog

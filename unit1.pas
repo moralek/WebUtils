@@ -10,7 +10,7 @@ uses
   Buttons, ExtCtrls, Menus, Grids, LCLType, ComCtrls, IniPropStorage, EditBtn,
   ActnList, UMyApps, LazFileUtils, SynEdit, SynHighlighterXML, UMyGridString,
   UniqueInstance, atshapeline, CalendarLite, ShellApi, UMyXml, lazutf8, UMyWin,
-  DateUtils, DOM, XMLRead, Masks,
+  DateUtils, DOM, XMLRead, Masks, UMyRCS,
 {$IFDEF UNIX}{$IFDEF UseCThreads}
 cthreads,
 {$ENDIF}{$ENDIF}
@@ -82,6 +82,7 @@ type
     CheckBox11: TCheckBox;
     CheckBox12: TCheckBox;
     CheckBox13: TCheckBox;
+    CheckBox14: TCheckBox;
     ComboBox1: TComboBox;
     ComboBoxModo: TComboBox;
     ComboBoxPRUEBA: TComboBox;
@@ -383,6 +384,7 @@ type
     procedure CheckBox11Change(Sender: TObject);
     procedure CheckBox12Change(Sender: TObject);
     procedure CheckBox13Change(Sender: TObject);
+    procedure CheckBox14Change(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);
     procedure CheckBox2Change(Sender: TObject);
     procedure CheckBox3Change(Sender: TObject);
@@ -549,11 +551,13 @@ type
     procedure RefreshAPPS();
     Procedure ChangeStringGrid1();
     procedure ApplyScanModeUI();
+    procedure SetStatusMessage(const Msg: String);
     function IsArchiveScanMode(): Boolean;
     procedure loadMemo3();
     procedure loadComboboxDataSources();
     procedure RefreshScanModeSelector();
     function CleanTempDirContent(): String;
+    function DeleteTempDirOnFinish(): String;
     function BuildArchiveTempRoot(): String;
     function BuildArchiveTempDir(const ArchivePath: String): String;
     function BuildArchiveModuleName(const ArchivePath: String): String;
@@ -578,9 +582,12 @@ type
     function ArchiveDirHasFiles(const ArchiveEntries: TStrings; const DirPath: String): Boolean;
     procedure AddDirWithParents(const DirPath: String; Dirs: TStrings);
     procedure AddArchiveDirMatches(const ArchiveEntries: TStrings; const DirPath: String; Dirs: TStrings);
+    procedure LogWarZipFdeMessage(const Texto: String; MsgColor: TColor = clDefault);
+    function LogArchiveWebAppsRules(const AppDir: String; const ArchiveEntries: TStrings): Integer;
     function BuildArchiveSelectivePlan(const AppDir: String; const ArchiveEntries,
       FilesToExtract, DirsToCreate, MarkerFilesToCreate, EntriesToDelete: TStrings; out NeedFullExtract, NeedsRepack: Boolean;
       out Reason: String): String;
+    procedure ProcesaPDFReportWarZip(CopyFonts:Boolean; PathFonts:String; PDFReportTXT:String);
     procedure ProcesarWarZip();
     { private declarations }
   public
@@ -613,6 +620,7 @@ var
   X:Integer;
 begin
   Firstload:=0;
+  StatusBar1.SimplePanel:=True;
   Label16.Caption:=Utils.versionStr(EditModulo.Text,EditVersion.Text,EditFechaVersion.Text);
   Application.AddOnActivateHandler(@HandleApplicationActivate);
   //TrayIcon1.Hide;
@@ -638,6 +646,7 @@ begin
   OpenDialog1.InitialDir := fdedir;
   Edit2.Text:=fdefilepath;
   CheckBox13.Checked:=varGlobales.EnableWarZipMode;
+  CheckBox14.Checked:=varGlobales.ConservarTmpAlFinalizar;
   RefreshScanModeSelector();
   //Pagina
   CheckBox2.Checked:=varGlobales.MostrarOK;
@@ -670,6 +679,7 @@ begin
   CheckBox10.Caption:='Eliminar *.war antes de generar nuevo war';
   CheckBox12.Caption:='Ocultar plantillas de ejemplo en DataSources.';
   CheckBox13.Caption:='Habilitar modo War/Zip (experimental).';
+  CheckBox14.Caption:='Conservar carpeta tmp al finalizar.';
   CheckBox2.Caption:='Muestra mensajes OK.';
   CheckBox2.Hint:='Muestra mensajes OK.';
   CheckBox3.Caption:='Muestra mensajes de error.';
@@ -1147,7 +1157,10 @@ begin
     ShowMessage('Ingrese Ruta Destino para copiar las fuentes');
     Exit;
   end;
-  Utils.ProcesaPDFReport(StringGrid1, CheckBox11.Checked,EDRutaFonts.Text,Memo2.Text);
+  if IsArchiveScanMode() then
+    ProcesaPDFReportWarZip(CheckBox11.Checked,EDRutaFonts.Text,Memo2.Text)
+  else
+    Utils.ProcesaPDFReport(StringGrid1, CheckBox11.Checked,EDRutaFonts.Text,Memo2.Text);
 end;
 
 procedure TForm1.BitBtn5Click(Sender: TObject);
@@ -2025,6 +2038,11 @@ begin
   ChangeStringGrid1();
 end;
 
+procedure TForm1.CheckBox14Change(Sender: TObject);
+begin
+  varGlobales.ConservarTmpAlFinalizar:=CheckBox14.Checked;
+end;
+
 procedure TForm1.CheckBox1Change(Sender: TObject);
 begin
   varGlobales.OcultarDirROOT:=CheckBox1.Checked;
@@ -2572,6 +2590,13 @@ begin
   Result:=(varGlobales.ScanMode='warzip');
 end;
 
+procedure TForm1.SetStatusMessage(const Msg: String);
+begin
+  StatusBar1.SimplePanel:=True;
+  StatusBar1.SimpleText:=Msg;
+  Application.ProcessMessages;
+end;
+
 function TForm1.CleanTempDirContent(): String;
 var
   TempRoot, DriveRoot: String;
@@ -2582,7 +2607,7 @@ begin
 
   if Trim(TempRoot).IsEmpty then
   begin
-    Result:='TempDir vacio.';
+    Result:='TempDir vacío.';
     Exit;
   end;
   if SameText(TempRoot,IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName))) then
@@ -2592,7 +2617,7 @@ begin
   end;
   if (ExtractFileDrive(TempRoot)<>'') and SameText(TempRoot,DriveRoot) then
   begin
-    Result:='TempDir no puede ser la raiz del disco.';
+    Result:='TempDir no puede ser la raíz del disco.';
     Exit;
   end;
 
@@ -2608,6 +2633,34 @@ begin
   end;
   if not DirectoryExists(TempRoot) then
     ForceDirectories(TempRoot);
+end;
+
+function TForm1.DeleteTempDirOnFinish(): String;
+var
+  TempRoot, DriveRoot: String;
+begin
+  Result:='';
+  TempRoot:=IncludeTrailingPathDelimiter(ExpandFileName(varGlobales.TempDir));
+  DriveRoot:=IncludeTrailingPathDelimiter(ExtractFileDrive(TempRoot)+'\');
+
+  if Trim(TempRoot).IsEmpty then
+  begin
+    Result:='TempDir vacío.';
+    Exit;
+  end;
+  if SameText(TempRoot,IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName))) then
+  begin
+    Result:='TempDir no puede ser la carpeta del ejecutable.';
+    Exit;
+  end;
+  if (ExtractFileDrive(TempRoot)<>'') and SameText(TempRoot,DriveRoot) then
+  begin
+    Result:='TempDir no puede ser la raíz del disco.';
+    Exit;
+  end;
+
+  if DirectoryExists(TempRoot) and (not DeleteDirectory(TempRoot,False)) then
+    Result:='No se pudo eliminar TempDir: '+TempRoot;
 end;
 
 function TForm1.BuildArchiveTempRoot(): String;
@@ -2876,12 +2929,164 @@ begin
     AddDirWithParents(BaseDir,Dirs);
 end;
 
+procedure TForm1.LogWarZipFdeMessage(const Texto: String; MsgColor: TColor);
+var
+  Mostrar: Boolean;
+begin
+  Mostrar:=True;
+  if (MsgColor=clLtGray) and (not varGlobales.MostrarOK) then
+    Mostrar:=False;
+  if (MsgColor=clRed) and (not varGlobales.MostrarERR) then
+    Mostrar:=False;
+  if (MsgColor=clBlack) and (not varGlobales.MostrarMSJ) then
+    Mostrar:=False;
+  if Mostrar then
+    Utils.addToRichMemo(Texto,RichMemo1,StatusBar1,MsgColor);
+
+  TrayIcon1.Hint:=Texto;
+  TrayIcon1.BalloonHint:=Texto;
+  StatusBar1.SimpleText:=Texto;
+end;
+
+function TForm1.LogArchiveWebAppsRules(const AppDir: String; const ArchiveEntries: TStrings): Integer;
+var
+  Doc: TXMLDocument;
+  WebAppsNode: TDOMNode;
+  X, Fila, Count: Integer;
+  TipoRead, DatoRead, FilaRead, ExactEntry: String;
+  Matches: TStringList;
+  MsgColor: TColor;
+begin
+  Result:=0;
+  WebAppsNode:=nil;
+  Doc:=TXMLDocument.Create;
+  Matches:=TStringList.Create;
+  try
+    ReadXMLFile(Doc,Edit2.Text);
+    if (Doc.DocumentElement=nil) or (UpperCase(Trim(Doc.DocumentElement.NodeName))<>'RULES') then
+    begin
+      Inc(Result);
+      LogWarZipFdeMessage('Archivo FDE inválido.',clRed);
+      Exit;
+    end;
+
+    for X:=0 to Doc.DocumentElement.ChildNodes.Count-1 do
+      if UpperCase(Trim(Doc.DocumentElement.ChildNodes.Item[X].NodeName))='WEBAPPSRULES' then
+      begin
+        WebAppsNode:=Doc.DocumentElement.ChildNodes.Item[X];
+        Break;
+      end;
+
+    if WebAppsNode=nil then
+      Exit;
+
+    Fila:=0;
+    for X:=0 to WebAppsNode.ChildNodes.Count-1 do
+    begin
+      Inc(Fila);
+      TipoRead:=UpperCase(Trim(WebAppsNode.ChildNodes.Item[X].NodeName));
+      DatoRead:='';
+      if WebAppsNode.ChildNodes.Item[X].ChildNodes.Count>0 then
+        DatoRead:=WebAppsNode.ChildNodes.Item[X].FirstChild.NodeValue;
+      DatoRead:=DatoRead.Replace('{MOD}',AppDir);
+      FilaRead:=TipoRead+'='+DatoRead;
+
+      if TipoRead='MSGRUN' then
+      begin
+        LogWarZipFdeMessage(Format('%.2d',[Fila])+': '+DatoRead,clBlack);
+        Continue;
+      end;
+
+      if ((TipoRead='CHKFIL') or (TipoRead='DELFIL')) and
+         (not DatoRead.IsEmpty) and
+         ((DatoRead[DatoRead.Length]='\') or (DatoRead[DatoRead.Length]='/')) then
+      begin
+        Inc(Result);
+        LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], Sintaxis incorrecta archivo .fde',clRed);
+        Continue;
+      end;
+
+      DatoRead:=Utils.clearDirPath(DatoRead);
+      MsgColor:=clLtGray;
+      case TipoRead of
+        'CHKFIL':
+          begin
+            if ArchiveHasAnyEntry(ArchiveEntries,DatoRead) then
+              LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], ok',MsgColor)
+            else
+            begin
+              Inc(Result);
+              LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], No Encontrado.',clRed);
+            end;
+          end;
+        'CHKDIR':
+          begin
+            if ArchiveDirExists(ArchiveEntries,DatoRead) then
+              LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], ok',MsgColor)
+            else
+            begin
+              Inc(Result);
+              LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], No Encontrado.',clRed);
+            end;
+          end;
+        'DELFIL':
+          begin
+            Matches.Clear;
+            if (Pos('*',DatoRead)>0) or (Pos('?',DatoRead)>0) then
+              AddArchiveMatches(ArchiveEntries,DatoRead,Matches)
+            else if FindArchiveEntry(ArchiveEntries,DatoRead,ExactEntry) then
+              Matches.Add(ExactEntry);
+            LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], ok, '+Matches.Count.ToString+' Eliminado(s).',MsgColor);
+          end;
+        'DELDIR':
+          begin
+            Matches.Clear;
+            if ArchiveDirExists(ArchiveEntries,DatoRead) then
+              AddArchiveDirEntries(ArchiveEntries,DatoRead,Matches,True);
+            LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], ok, '+Matches.Count.ToString+' Eliminado(s).',MsgColor);
+          end;
+        'CLRDIR':
+          begin
+            Count:=0;
+            if ArchiveDirExists(ArchiveEntries,DatoRead) then
+            begin
+              Matches.Clear;
+              AddArchiveDirEntries(ArchiveEntries,DatoRead,Matches,False);
+              Count:=Matches.Count;
+            end;
+            LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], ok, '+Count.ToString+' Eliminados',MsgColor);
+          end;
+        'CREDIR':
+          begin
+            if ArchiveDirExists(ArchiveEntries,DatoRead) then
+              LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], ok, 0 Creado(s)',MsgColor)
+            else
+              LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], ok, 1 Creado(s)',MsgColor);
+          end;
+      else
+        begin
+          Inc(Result);
+          LogWarZipFdeMessage(Format('%.2d',[Fila])+': ['+FilaRead+'], Sintaxis incorrecta, archivo .fde',clRed);
+        end;
+      end;
+    end;
+  except
+    on E: Exception do
+    begin
+      Inc(Result);
+      LogWarZipFdeMessage('Error leyendo FDE: '+E.Message,clRed);
+    end;
+  end;
+  Matches.Free;
+  Doc.Free;
+end;
+
 function TForm1.BuildArchiveSelectivePlan(const AppDir: String; const ArchiveEntries,
   FilesToExtract, DirsToCreate, MarkerFilesToCreate, EntriesToDelete: TStrings; out NeedFullExtract, NeedsRepack: Boolean;
   out Reason: String): String;
 var
   Doc: TXMLDocument;
-  WebAppsNode: TDOMNode;
+  WebAppsNode, WebXmlNode: TDOMNode;
   X, BeforeCount: Integer;
   TipoRead, DatoRead, ExactEntry: String;
 begin
@@ -2894,6 +3099,7 @@ begin
   MarkerFilesToCreate.Clear;
   EntriesToDelete.Clear;
   WebAppsNode:=nil;
+  WebXmlNode:=nil;
   Doc:=TXMLDocument.Create;
   try
     ReadXMLFile(Doc,Edit2.Text);
@@ -2909,6 +3115,13 @@ begin
       if UpperCase(Trim(Doc.DocumentElement.ChildNodes.Item[X].NodeName))='WEBAPPSRULES' then
       begin
         WebAppsNode:=Doc.DocumentElement.ChildNodes.Item[X];
+        Break;
+      end;
+
+    for X:=0 to Doc.DocumentElement.ChildNodes.Count-1 do
+      if UpperCase(Trim(Doc.DocumentElement.ChildNodes.Item[X].NodeName))='WEBXMLRULES' then
+      begin
+        WebXmlNode:=Doc.DocumentElement.ChildNodes.Item[X];
         Break;
       end;
 
@@ -2932,25 +3145,27 @@ begin
         'MSGRUN': ;
         'CHKFIL':
           begin
-            if (Pos('*',DatoRead)>0) or (Pos('?',DatoRead)>0) then
-              AddFirstArchiveMatch(ArchiveEntries,DatoRead,MarkerFilesToCreate)
-            else if FindArchiveEntry(ArchiveEntries,DatoRead,ExactEntry) then
-              AddMarkerFile(ExactEntry,MarkerFilesToCreate);
+            // En War/Zip se valida contra el índice del ZIP; no necesita archivo temporal.
           end;
         'CHKDIR':
-          AddArchiveDirMatches(ArchiveEntries,DatoRead,DirsToCreate);
+          begin
+            // En War/Zip se valida contra el índice del ZIP; no necesita carpeta temporal.
+          end;
         'DELFIL':
           begin
             BeforeCount:=EntriesToDelete.Count;
             if ArchiveHasAnyEntry(ArchiveEntries,DatoRead) then
             begin
-              NeedsRepack:=True;
               if (Pos('*',DatoRead)>0) or (Pos('?',DatoRead)>0) then
                 AddArchiveMatches(ArchiveEntries,DatoRead,EntriesToDelete)
               else if FindArchiveEntry(ArchiveEntries,DatoRead,ExactEntry) then
                 EntriesToDelete.Add(ExactEntry);
-              if (BeforeCount<>EntriesToDelete.Count) and (Reason='Sin cambios previstos') then
-                Reason:='DELFIL con cambios';
+              if BeforeCount<>EntriesToDelete.Count then
+              begin
+                NeedsRepack:=True;
+                if Reason='Sin cambios previstos' then
+                  Reason:='DELFIL con cambios';
+              end;
             end;
           end;
         'DELDIR':
@@ -2972,8 +3187,7 @@ begin
               if Reason='Sin cambios previstos' then
                 Reason:='CLRDIR con cambios';
             end;
-            if ArchiveDirExists(ArchiveEntries,DatoRead) then
-              AddDirWithParents(DatoRead,DirsToCreate);
+            // El borrado se aplica reescribiendo el ZIP; no se simula con carpetas temporales.
           end;
         'CREDIR':
           begin
@@ -2984,7 +3198,7 @@ begin
               Reason:='CREDIR con cambios';
               Exit;
             end;
-            AddDirWithParents(DatoRead,DirsToCreate);
+            // Si ya existe, no hay nada físico que crear antes del reempaquetado.
           end;
       else
         begin
@@ -2995,9 +3209,14 @@ begin
       end;
     end;
 
-    if FindArchiveEntry(ArchiveEntries,'WEB-INF\web.xml',ExactEntry) and
+    if (WebXmlNode<>nil) and
+       FindArchiveEntry(ArchiveEntries,'WEB-INF\web.xml',ExactEntry) and
        (FilesToExtract.IndexOf(ExactEntry)=-1) then
+    begin
       FilesToExtract.Add(ExactEntry);
+      if Reason='Sin cambios previstos' then
+        Reason:='WEBXML requiere WEB-INF/web.xml';
+    end;
   except
     on E: Exception do
     begin
@@ -3046,9 +3265,7 @@ end;
 function TForm1.ExtractArchiveSelectiveToTemp(const ArchivePath, TargetDir: String;
   FilesToExtract, DirsToCreate, MarkerFilesToCreate, EntriesToDelete: TStrings): String;
 var
-  MarkerPath: String;
   I: Integer;
-  MarkerStream: TFileStream;
 begin
   Result:='';
   if DirectoryExists(TargetDir) then
@@ -3064,31 +3281,6 @@ begin
 
   for I:=0 to DirsToCreate.Count-1 do
     ForceDirectories(Utils.clearDirPath(TargetDir+StringReplace(DirsToCreate[I],'/',PathDelim,[rfReplaceAll])));
-
-  for I:=0 to MarkerFilesToCreate.Count-1 do
-  begin
-    MarkerPath:=Utils.clearFilePath(TargetDir+StringReplace(MarkerFilesToCreate[I],'/',PathDelim,[rfReplaceAll]));
-    if FileExists(MarkerPath) then
-      Continue;
-    ForceDirectories(ExtractFileDir(MarkerPath));
-    MarkerStream:=TFileStream.Create(MarkerPath,fmCreate);
-    MarkerStream.Free;
-  end;
-
-  for I:=0 to EntriesToDelete.Count-1 do
-  begin
-    MarkerPath:=Utils.clearFilePath(TargetDir+StringReplace(EntriesToDelete[I],'/',PathDelim,[rfReplaceAll]));
-    if (Length(EntriesToDelete[I])>0) and (EntriesToDelete[I][Length(EntriesToDelete[I])]='/') then
-    begin
-      ForceDirectories(MarkerPath);
-      Continue;
-    end;
-    if FileExists(MarkerPath) then
-      Continue;
-    ForceDirectories(ExtractFileDir(MarkerPath));
-    MarkerStream:=TFileStream.Create(MarkerPath,fmCreate);
-    MarkerStream.Free;
-  end;
 
   EntriesToDelete.SaveToFile(Utils.clearFilePath(TargetDir+'.fde_delete_entries.txt'));
   FilesToExtract.SaveToFile(Utils.clearFilePath(TargetDir+'.fde_update_entries.txt'));
@@ -3140,25 +3332,224 @@ begin
   Result:=FormatFloat('0.000',ElapsedMs/1000)+' s';
 end;
 
+procedure TForm1.ProcesaPDFReportWarZip(CopyFonts:Boolean; PathFonts:String; PDFReportTXT:String);
+var
+  Entries: TStringList;
+  Lines: TStringList;
+  RCS: TMyRCS;
+  I, DirCount: Integer;
+  ArchivePath, ArchiveLabel, TempDir, ErrorMsg, PdfPath, FontEntryDir: String;
+  StartAt, EndAt: TDateTime;
+  ElapsedMs: Int64;
+
+  function NormalizeInternalFontDir(const Value: String; out ErrorText: String): String;
+  var
+    Parts: TStringArray;
+    Part, PartValue: String;
+    Stack: TStringList;
+  begin
+    ErrorText:='';
+    Result:=Trim(Value);
+    if Result.IsEmpty then
+      Exit;
+    if (ExtractFileDrive(Result)<>'') or (Result[1]='/') or (Result[1]='\') then
+    begin
+      ErrorText:='En modo War/Zip la ruta de fuentes debe ser interna del archivo, no una ruta absoluta.';
+      Result:='';
+      Exit;
+    end;
+    Result:=StringReplace(Result,'\','/',[rfReplaceAll]);
+    while Pos('//',Result)>0 do
+      Result:=StringReplace(Result,'//','/',[rfReplaceAll]);
+    while (Result<>'') and (Result[1]='/') do
+      Delete(Result,1,1);
+    while (Result<>'') and (Result[Length(Result)]='/') do
+      Delete(Result,Length(Result),1);
+
+    Stack:=TStringList.Create;
+    try
+      Stack.Add('WEB-INF');
+      Stack.Add('classes');
+      if (LowerCase(Result)='web-inf') or (Copy(LowerCase(Result),1,8)='web-inf/') then
+        Stack.Clear;
+
+      Parts:=Result.Split('/');
+      for Part in Parts do
+      begin
+        PartValue:=Trim(Part);
+        if PartValue.IsEmpty or (PartValue='.') then
+          Continue;
+        if PartValue='..' then
+        begin
+          if Stack.Count>1 then
+            Stack.Delete(Stack.Count-1)
+          else
+          begin
+            ErrorText:='En modo War/Zip la ruta de fuentes no puede salir de WEB-INF.';
+            Result:='';
+            Exit;
+          end;
+        end
+        else
+          Stack.Add(PartValue);
+      end;
+      Result:=StringReplace(Stack.Text,sLineBreak,'/',[rfReplaceAll]);
+      while (Result<>'') and (Result[Length(Result)]='/') do
+        Delete(Result,Length(Result),1);
+    finally
+      Stack.Free;
+    end;
+    if Result.IsEmpty then
+      Result:='WEB-INF/classes';
+  end;
+
+  function WriteTempFile(const RelativeEntry, TextValue: String): String;
+  var
+    TargetPath: String;
+  begin
+    SetStatusMessage('Preparando '+RelativeEntry+'...');
+    Result:='';
+    TargetPath:=Utils.clearFilePath(TempDir+StringReplace(RelativeEntry,'/',PathDelim,[rfReplaceAll]));
+    if not DirectoryExists(ExtractFilePath(TargetPath)) then
+      ForceDirectories(ExtractFilePath(TargetPath));
+    Lines.Text:=TextValue;
+    Lines.SaveToFile(TargetPath);
+    Entries.Add(RelativeEntry);
+  end;
+
+  function CopyFontToTemp(const FontName: String): String;
+  var
+    SourcePath, RelativeEntry, TargetPath: String;
+  begin
+    Result:='';
+    SetStatusMessage('Copiando fuente '+FontName+'...');
+    SourcePath:=RCS.getRCS(FontName);
+    if not FileExists(SourcePath) then
+    begin
+      Result:='No se encontró la fuente '+FontName;
+      Exit;
+    end;
+    RelativeEntry:=FontEntryDir+'/'+ExtractFileName(SourcePath);
+    TargetPath:=Utils.clearFilePath(TempDir+StringReplace(RelativeEntry,'/',PathDelim,[rfReplaceAll]));
+    if not DirectoryExists(ExtractFilePath(TargetPath)) then
+      ForceDirectories(ExtractFilePath(TargetPath));
+    if not CopyFile(SourcePath,TargetPath,[cffOverwriteFile]) then
+      Result:='No se pudo copiar la fuente '+FontName;
+    if Result.IsEmpty then
+      Entries.Add(RelativeEntry);
+  end;
+
+begin
+  if CopyFonts then
+  begin
+    FontEntryDir:=NormalizeInternalFontDir(PathFonts,ErrorMsg);
+    if not ErrorMsg.IsEmpty then
+    begin
+      ShowMessage(ErrorMsg);
+      Exit;
+    end;
+  end;
+
+  ErrorMsg:=CleanTempDirContent();
+  if not ErrorMsg.IsEmpty then
+  begin
+    Utils.addToRichMemo('Error al limpiar tmp: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
+    Exit;
+  end;
+
+  DirCount:=0;
+  Entries:=TStringList.Create;
+  Lines:=TStringList.Create;
+  RCS:=TMyRCS.Create;
+  try
+    Utils.addToRichMemo('Inicio PDFReport War/Zip ('+TimeToStr(Time)+')',RichMemo1,StatusBar1,clBlue);
+    for I:=1 to StringGrid1.RowCount-1 do
+    begin
+      if StringGrid1.Cells[0,I]<>'1' then
+        Continue;
+      Inc(DirCount);
+      Entries.Clear;
+      ArchivePath:=Utils.clearFilePath(StringGrid1.Cells[2,I]);
+      ArchiveLabel:=StringGrid1.Cells[3,I];
+      if ArchiveLabel.IsEmpty then
+        ArchiveLabel:=ExtractFileName(ArchivePath);
+      Utils.addToRichMemo('Archivo: '+ArchiveLabel,RichMemo1,StatusBar1,clBlue);
+      if not FileExists(ArchivePath) then
+      begin
+        Utils.addToRichMemo('Archivo no encontrado: '+ArchivePath,RichMemo1,StatusBar1,clRed);
+        Continue;
+      end;
+
+      TempDir:=BuildArchiveTempDir(ArchivePath);
+      PdfPath:=Utils.clearFilePath(TempDir+'WEB-INF\PDFReport.ini');
+      SetStatusMessage('Preparando PDFReport.ini para '+ArchiveLabel+'...');
+      WriteTempFile('WEB-INF/PDFReport.ini',PDFReportTXT);
+      if not FileExists(PdfPath) then
+      begin
+        Utils.addToRichMemo('No se pudo crear PDFReport.ini temporal.',RichMemo1,StatusBar1,clRed);
+        Continue;
+      end;
+
+      if CopyFonts then
+      begin
+        ErrorMsg:=CopyFontToTemp(RCS.ARIALN_TTF);
+        if ErrorMsg.IsEmpty then ErrorMsg:=CopyFontToTemp(RCS.COURI_TTF);
+        if ErrorMsg.IsEmpty then ErrorMsg:=CopyFontToTemp(RCS.COUR_TTF);
+        if ErrorMsg.IsEmpty then ErrorMsg:=CopyFontToTemp(RCS.MICROSS_TTF);
+        if ErrorMsg.IsEmpty then ErrorMsg:=CopyFontToTemp(RCS.TIMES_TTF);
+        if ErrorMsg.IsEmpty then ErrorMsg:=CopyFontToTemp(RCS.VERDANA_TTF);
+        if not ErrorMsg.IsEmpty then
+        begin
+          Utils.addToRichMemo(ErrorMsg,RichMemo1,StatusBar1,clRed);
+          Continue;
+        end;
+      end;
+
+      StartAt:=Now;
+      SetStatusMessage('Actualizando '+ArchiveLabel+' con jar...');
+      ErrorMsg:=Utils.UpdateJavaArchiveEntries(ArchivePath,TempDir,varGlobales.JavaHome,Entries);
+      EndAt:=Now;
+      ElapsedMs:=MilliSecondsBetween(EndAt,StartAt);
+      if ErrorMsg.IsEmpty then
+        Utils.addToRichMemo('PDFReport actualizado ('+TimeToStr(StartAt)+' - '+TimeToStr(EndAt)+'): '+FormatElapsedMs(ElapsedMs),RichMemo1,StatusBar1,clBlue)
+      else
+        Utils.addToRichMemo('Error PDFReport: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
+    end;
+  finally
+    RCS.Free;
+    Lines.Free;
+    Entries.Free;
+    if not varGlobales.ConservarTmpAlFinalizar then
+    begin
+      SetStatusMessage('Limpiando tmp...');
+      ErrorMsg:=DeleteTempDirOnFinish();
+      if not ErrorMsg.IsEmpty then
+        Utils.addToRichMemo('Error al limpiar tmp al finalizar: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
+    end;
+  end;
+  if DirCount=0 then
+    ShowMessage('Debe Seleccionar al menos un archivo war/zip')
+  else
+    ShowMessage('Proceso Terminado');
+end;
+
 procedure TForm1.ProcesarWarZip();
 var
   FdeFile: TFdeFile;
   TempGrid: TStringGrid;
-  ArchiveMap: TStringList;
-  RepackMap: TStringList;
+  ArchiveEntries: TStringList;
   FilesToExtract: TStringList;
   DirsToCreate: TStringList;
   MarkerFilesToCreate: TStringList;
   EntriesToDelete: TStringList;
-  I, NewRow: Integer;
+  I, NewRow, ProcessedCount: Integer;
   ArchivePath, TempDir, ErrorMsg, ArchiveLabel, AppDir, Reason: String;
   StartAt, EndAt: TDateTime;
   ElapsedMs: Int64;
   NeedFullExtract, NeedsRepack: Boolean;
 begin
   TempGrid:=TStringGrid.Create(nil);
-  ArchiveMap:=TStringList.Create;
-  RepackMap:=TStringList.Create;
+  ArchiveEntries:=TStringList.Create;
   FilesToExtract:=TStringList.Create;
   DirsToCreate:=TStringList.Create;
   MarkerFilesToCreate:=TStringList.Create;
@@ -3166,6 +3557,7 @@ begin
   try
     Utils.addToRichMemo('Inicio War/Zip ('+TimeToStr(Time)+')',RichMemo1,StatusBar1,clBlue);
     Application.ProcessMessages;
+    SetStatusMessage('Limpiando tmp...');
     ErrorMsg:=CleanTempDirContent();
     if not Trim(ErrorMsg).IsEmpty then
     begin
@@ -3175,11 +3567,21 @@ begin
     TempGrid.ColCount:=StringGrid1.ColCount;
     TempGrid.RowCount:=1;
     TempGrid.FixedRows:=1;
+    ProcessedCount:=0;
+    varGlobales.WebAppsDir:=Edit1.Text;
+    varGlobales.FdeFilePath:=Edit2.Text;
+    FdeFile:=TFdeFile.create(Edit2.Text);
+    try
+      if MinScriptFDE.Checked then
+        MinimizeToTray();
 
     for I:=1 to StringGrid1.RowCount-1 do
     begin
       if StringGrid1.Cells[0,I]<>'1' then
         Continue;
+      if ProcessedCount>0 then
+        Utils.addToRichMemo('___________________________________',RichMemo1,StatusBar1,clBlue);
+      Inc(ProcessedCount);
       ArchivePath:=Utils.clearFilePath(StringGrid1.Cells[2,I]);
       ArchiveLabel:=StringGrid1.Cells[3,I];
       Utils.addToRichMemo('Archivo: '+ArchiveLabel,RichMemo1,StatusBar1,clBlue);
@@ -3193,8 +3595,18 @@ begin
       TempDir:=BuildArchiveTempDir(ArchivePath);
       AppDir:=BuildArchiveModuleName(ArchivePath);
       StartAt:=Now;
-      Application.ProcessMessages;
-      ErrorMsg:=PlanArchiveSelectiveExtraction(ArchivePath,AppDir,FilesToExtract,DirsToCreate,MarkerFilesToCreate,EntriesToDelete,NeedFullExtract,NeedsRepack,Reason);
+      SetStatusMessage('Chequeando '+ArchiveLabel+'...');
+      ArchiveEntries.Clear;
+      FilesToExtract.Clear;
+      DirsToCreate.Clear;
+      MarkerFilesToCreate.Clear;
+      EntriesToDelete.Clear;
+      NeedFullExtract:=False;
+      NeedsRepack:=False;
+      Reason:='';
+      ErrorMsg:=Utils.ListZipEntries(ArchivePath,ArchiveEntries);
+      if Trim(ErrorMsg).IsEmpty then
+        ErrorMsg:=BuildArchiveSelectivePlan(AppDir,ArchiveEntries,FilesToExtract,DirsToCreate,MarkerFilesToCreate,EntriesToDelete,NeedFullExtract,NeedsRepack,Reason);
       EndAt:=Now;
       ElapsedMs:=MilliSecondsBetween(EndAt,StartAt);
       Utils.addToRichMemo('Chequeo ('+TimeToStr(StartAt)+' - '+TimeToStr(EndAt)+'): '+FormatElapsedMs(ElapsedMs),RichMemo1,StatusBar1,clBlue);
@@ -3203,21 +3615,21 @@ begin
         Utils.addToRichMemo('Error en chequeo: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
         Continue;
       end;
+      Utils.addToRichMemo('Validando ZIP .\'+BuildArchiveModuleName(ArchivePath),RichMemo1,StatusBar1,clBlue);
+      LogArchiveWebAppsRules(AppDir,ArchiveEntries);
 
       if NeedFullExtract then
       begin
         if NeedsRepack then
         begin
-          RepackMap.Values[ArchivePath]:='1';
           Utils.addToRichMemo('Extracción completa: '+Reason,RichMemo1,StatusBar1,clBlue);
         end
         else
         begin
-          RepackMap.Values[ArchivePath]:='0';
           Utils.addToRichMemo('Extracción completa sin reempaquetado: '+Reason,RichMemo1,StatusBar1,clBlue);
         end;
         StartAt:=Now;
-        Application.ProcessMessages;
+        SetStatusMessage('Extrayendo completo '+ArchiveLabel+'...');
         ErrorMsg:=ExtractArchiveToTemp(ArchivePath,TempDir);
         EndAt:=Now;
         ElapsedMs:=MilliSecondsBetween(EndAt,StartAt);
@@ -3225,11 +3637,13 @@ begin
       else
       begin
         if NeedsRepack then
-          RepackMap.Values[ArchivePath]:='1'
+        begin
+          Utils.addToRichMemo('Reempaquetado requerido: '+Reason,RichMemo1,StatusBar1,clBlue);
+        end
         else
-          RepackMap.Values[ArchivePath]:='0';
+        Utils.addToRichMemo('Extracción selectiva requerida: '+Reason,RichMemo1,StatusBar1,clBlue);
         StartAt:=Now;
-        Application.ProcessMessages;
+        SetStatusMessage('Extrayendo selectivo '+ArchiveLabel+'...');
         ErrorMsg:=ExtractArchiveSelectiveToTemp(ArchivePath,TempDir,FilesToExtract,DirsToCreate,MarkerFilesToCreate,EntriesToDelete);
         EndAt:=Now;
         ElapsedMs:=MilliSecondsBetween(EndAt,StartAt);
@@ -3248,67 +3662,43 @@ begin
       else
         Utils.addToRichMemo('Extracción selectiva ('+TimeToStr(StartAt)+' - '+TimeToStr(EndAt)+'): '+FormatElapsedMs(ElapsedMs),RichMemo1,StatusBar1,clBlue);
       Application.ProcessMessages;
-
-      if not FileExists(Utils.clearFilePath(TempDir+'WEB-INF\web.xml')) then
+      TempGrid.RowCount:=1;
+      if FileExists(Utils.clearFilePath(TempDir+'WEB-INF\web.xml')) then
       begin
-        Utils.addToRichMemo('No se encontró WEB-INF\\web.xml en ['+ArchiveLabel+']',RichMemo1,StatusBar1,clRed);
-        Continue;
+        NewRow:=TempGrid.RowCount;
+        TempGrid.RowCount:=TempGrid.RowCount+1;
+        TempGrid.Cells[0,NewRow]:='1';
+        TempGrid.Cells[1,NewRow]:=StringGrid1.Cells[1,I];
+        TempGrid.Cells[2,NewRow]:=TempDir;
+        TempGrid.Cells[3,NewRow]:=ArchiveLabel;
+        TempGrid.Cells[4,NewRow]:=AppDir;
+        TempGrid.Cells[5,NewRow]:=StringGrid1.Cells[5,I];
+        TempGrid.Cells[6,NewRow]:='';
+        TempGrid.Cells[7,NewRow]:=Utils.clearFilePath(TempDir+'WEB-INF\web.xml');
+        TempGrid.Cells[8,NewRow]:='';
+        Utils.addToRichMemo('Aplicando reglas WEBXML sobre archivos extraídos...',RichMemo1,StatusBar1,clBlue);
+        SetStatusMessage('Aplicando reglas WEBXML...');
+        FdeFile.ProcesarWebXml(TempGrid,RichMemo1,TrayIcon1,StatusBar1);
       end;
 
-      NewRow:=TempGrid.RowCount;
-      TempGrid.RowCount:=TempGrid.RowCount+1;
-      TempGrid.Cells[0,NewRow]:='1';
-      TempGrid.Cells[1,NewRow]:=StringGrid1.Cells[1,I];
-      TempGrid.Cells[2,NewRow]:=TempDir;
-      TempGrid.Cells[3,NewRow]:=ArchiveLabel;
-      TempGrid.Cells[4,NewRow]:=AppDir;
-      TempGrid.Cells[5,NewRow]:=StringGrid1.Cells[5,I];
-      TempGrid.Cells[6,NewRow]:='';
-      TempGrid.Cells[7,NewRow]:=Utils.clearFilePath(TempDir+'WEB-INF\web.xml');
-      TempGrid.Cells[8,NewRow]:='';
-      ArchiveMap.Add(ArchivePath+'='+TempDir);
-    end;
-
-    if ArchiveMap.Count=0 then
-    begin
-      ShowMessage('No hay archivos war/zip válidos para procesar.');
-      Exit;
-    end;
-
-    varGlobales.WebAppsDir:=Edit1.Text;
-    varGlobales.FdeFilePath:=Edit2.Text;
-    FdeFile:=TFdeFile.create(Edit2.Text);
-    try
-      if MinScriptFDE.Checked then
-        MinimizeToTray();
-      Utils.addToRichMemo('Aplicando script FDE sobre archivos extraídos...',RichMemo1,StatusBar1,clBlue);
-      Application.ProcessMessages;
-      FdeFile.Procesar(TempGrid,RichMemo1,TrayIcon1,StatusBar1);
-    finally
-      FdeFile.Free;
-    end;
-
-    for I:=0 to ArchiveMap.Count-1 do
-    begin
-      ArchivePath:=ArchiveMap.Names[I];
-      TempDir:=ArchiveMap.ValueFromIndex[I];
-      if RepackMap.Values[ArchivePath]<>'1' then
+      if not NeedsRepack then
       begin
         Utils.addToRichMemo('Sin cambios efectivos en ['+ExtractFileName(ArchivePath)+']; no se reempaqueta.',RichMemo1,StatusBar1,clBlue);
         Application.ProcessMessages;
         Continue;
       end;
+
       StartAt:=Now;
       Utils.addToRichMemo('Inicio reempaquetado ('+TimeToStr(StartAt)+') ['+ExtractFileName(ArchivePath)+']',RichMemo1,StatusBar1,clBlue);
       Utils.addToRichMemo('Reempaquetando ['+ExtractFileName(ArchivePath)+']...',RichMemo1,StatusBar1,clBlue);
-      Application.ProcessMessages;
+      SetStatusMessage('Reempaquetando '+ExtractFileName(ArchivePath)+'...');
       ErrorMsg:=RepackTempToArchive(TempDir,ArchivePath);
       EndAt:=Now;
       ElapsedMs:=MilliSecondsBetween(EndAt,StartAt);
       if Trim(ErrorMsg).IsEmpty then
       begin
         Utils.addToRichMemo('Fin reempaquetado ('+TimeToStr(EndAt)+') ['+ExtractFileName(ArchivePath)+'] duración: '+FormatElapsedMs(ElapsedMs),RichMemo1,StatusBar1,clBlue);
-        Utils.addToRichMemo('Archivo actualizado: '+ExtractFileName(ArchivePath),RichMemo1,StatusBar1,clBlue)
+        Utils.addToRichMemo('Archivo actualizado: '+ExtractFileName(ArchivePath),RichMemo1,StatusBar1,clBlue);
       end
       else
       begin
@@ -3317,14 +3707,27 @@ begin
       end;
       Application.ProcessMessages;
     end;
+
+    finally
+      FdeFile.Free;
+    end;
+
+    if ProcessedCount=0 then
+      ShowMessage('No hay archivos war/zip válidos para procesar.');
   finally
     EntriesToDelete.Free;
     MarkerFilesToCreate.Free;
     DirsToCreate.Free;
     FilesToExtract.Free;
-    RepackMap.Free;
-    ArchiveMap.Free;
+    ArchiveEntries.Free;
     TempGrid.Free;
+    if not varGlobales.ConservarTmpAlFinalizar then
+    begin
+      SetStatusMessage('Limpiando tmp...');
+      ErrorMsg:=DeleteTempDirOnFinish();
+      if not ErrorMsg.IsEmpty then
+        Utils.addToRichMemo('Error al limpiar tmp al finalizar: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
+    end;
   end;
 end;
 

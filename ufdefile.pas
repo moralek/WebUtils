@@ -26,6 +26,7 @@ private
   Function  CheckFile(FilePath:String):Boolean;
   Function  CheckDir(DirPath:String):Boolean;
   Procedure ProcesoSubDir(RutaBase,appdir:String;var Memo:TRichMemo;var TrayIcon1:TTrayIcon;var StatusBar1:TStatusBar);
+  Procedure ProcesoSubDirWebXml(RutaBase:String;var Memo:TRichMemo;var TrayIcon1:TTrayIcon;var StatusBar1:TStatusBar);
   Procedure CHKFIL(RutaBase,FilaRead:String; var Mensaje:String; var Color:TColor);
   Procedure CHKDIR(RutaBase,FilaRead:String; var Mensaje:String; var Color:TColor);
   Procedure CLRDIR(RutaBase,FilaRead:String; var Mensaje:String; var Color:TColor);
@@ -49,6 +50,7 @@ public
   fdefilepath:string;
   Constructor create(path:String);
   Procedure Procesar(StringGrid1:TStringGrid;var Memo:TRichMemo;var TrayIcon1:TTrayIcon;var StatusBar1:TStatusBar);
+  Procedure ProcesarWebXml(StringGrid1:TStringGrid;var Memo:TRichMemo;var TrayIcon1:TTrayIcon;var StatusBar1:TStatusBar);
   Procedure toValuelist(var ValueListEditor1:TValueListEditor);
   Procedure SaveFromValueList(ValueListEditor1:TValueListEditor);
   Procedure SaveFromStringGrid(StringGrid:TStringGrid);
@@ -164,6 +166,116 @@ begin
    SENDMSG('___________________________________',Memo,TrayIcon1,StatusBar1,clBlue);
    SENDMSG('Fin ('+TimeToStr(Time)+'), '+QErrores.ToString()+' error(es).',Memo,TrayIcon1,StatusBar1);
    If VarGlo.Beep Then Beep;
+end;
+
+Procedure TFdeFile.ProcesarWebXml(StringGrid1:TStringGrid;var Memo:TRichMemo;var TrayIcon1:TTrayIcon;var StatusBar1:TStatusBar);
+var
+ I,DirCount:Integer;
+begin
+   QErrores:=0;
+   DirCount:=0;
+   SENDMSG('Inicio WEBXML ('+TimeToStr(Time)+')',Memo,TrayIcon1,StatusBar1);
+
+   for I:= 1 to StringGrid1.RowCount - 1 do
+   Begin
+     If StringGrid1.Cells[0,i]='1' then
+      Begin
+        DirCount+=1;
+        ProcesoSubDirWebXml(Utils.clearDirPath(StringGrid1.Cells[2,i]),Memo,TrayIcon1,StatusBar1);
+      end;
+   end;
+
+   If DirCount=0 then
+    begin
+    QErrores:=QErrores+1;
+    SENDMSG('Ningún Directorio Seleccionado.',Memo,TrayIcon1,StatusBar1,clRed);
+    end;
+   SENDMSG('Fin WEBXML ('+TimeToStr(Time)+'), '+QErrores.ToString()+' error(es).',Memo,TrayIcon1,StatusBar1);
+   If VarGlo.Beep Then Beep;
+end;
+
+Procedure TFdeFile.ProcesoSubDirWebXml(RutaBase:String;var Memo:TRichMemo;var TrayIcon1:TTrayIcon;var StatusBar1:TStatusBar);
+var
+ count,i,x,valueX:LongInt;
+ mensaje:String;
+ Color: TColor;
+ webappsNode,webxmlNode:TDOMNode;
+ RutaXMl, rutawebxml, found2:String;
+ tag,value,consider,found,msgtxt,msgcolor,valx,when:AnsiString;
+ Doc:TXMLDocument;
+ ShowMsg:Boolean;
+begin
+   RutaXMl:= VarGlo.FdeFilePath;
+   Color:=clDefault;
+   SENDMSG('Procesando WEBXML .\'+Utils.LastDirName(RutaBase),Memo,TrayIcon1,StatusBar1,clBlue);
+   Doc := TXMLDocument.Create;
+   try
+     ReadXMLFile(Doc, RutaXMl);
+     getNodes(Doc,webappsNode,webxmlNode);
+
+     rutawebxml:=Utils.clearDirPath(RutaBase)+'WEB-INF'+PathDelim+'web.xml';
+     Count:=0;
+     If FileExists(rutawebxml)=FALSE Then
+     begin
+       QErrores:=QErrores+1;
+       SENDMSG('WEBXML['+count.ToString()+']: No se encuentra archivo web.xml',Memo,TrayIcon1,StatusBar1,clRed);
+       exit;
+     end;
+     If webxmlNode<>Nil Then
+         Begin
+             for x := 0 to webxmlNode.ChildNodes.Count-1 do
+              Begin
+                tag:='';value:='';consider:='';found:='';msgtxt:='';msgcolor:='';when:='';
+                valueX:=0;
+                For i:=0 To webxmlNode.ChildNodes.Item[x].ChildNodes.Count-1 do
+                begin
+                   If webxmlNode.ChildNodes.Item[x].ChildNodes.Item[i].ChildNodes.Count>0 Then
+                     If webxmlNode.ChildNodes.Item[x].ChildNodes.Item[i].FirstChild.NodeName='#text' then
+                        case LowerCase(Trim(webxmlNode.ChildNodes.Item[x].ChildNodes.Item[i].NodeName)) of
+                           'tag':     tag:=webxmlNode.ChildNodes.Item[x].ChildNodes.Item[i].FirstChild.NodeValue;
+                           'value':   value:=webxmlNode.ChildNodes.Item[x].ChildNodes.Item[i].FirstChild.NodeValue;
+                           'consider':consider:=webxmlNode.ChildNodes.Item[x].ChildNodes.Item[i].FirstChild.NodeValue;
+                           'found':   found:=webxmlNode.ChildNodes.Item[x].ChildNodes.Item[i].FirstChild.NodeValue;
+                           'x':       valX:=webxmlNode.ChildNodes.Item[x].ChildNodes.Item[i].FirstChild.NodeValue;
+                           'msgtxt':  msgtxt:=webxmlNode.ChildNodes.Item[x].ChildNodes.Item[i].FirstChild.NodeValue;
+                           'msgcolor':msgcolor:=webxmlNode.ChildNodes.Item[x].ChildNodes.Item[i].FirstChild.NodeValue;
+                           'when':    Utils.loadOldVar(webxmlNode.ChildNodes.Item[x].ChildNodes.Item[i].FirstChild.NodeValue,consider,found,valX);
+                           'msg':     msgtxt:=webxmlNode.ChildNodes.Item[x].ChildNodes.Item[i].FirstChild.NodeValue;
+                           'type':    msgcolor:=webxmlNode.ChildNodes.Item[x].ChildNodes.Item[i].FirstChild.NodeValue;
+                        end;
+                end;
+                try Valuex:=StrToInt(valX);except on E: Exception do valuex:=0 end;
+                when:=getTipoValWEBXML(consider,found);
+                Count:=count+1;
+                showMSG:=False;
+                case (when.Substring(0,4)) of
+                   'ETIQ': showMSG:=chkEtiquetaTwice(rutawebxml,tag,when,valueX);
+                   'ETVA': showMSG:=chkEtiquetaValorTwice(rutawebxml,tag,value,when,valueX);
+                end;
+                Color:=clLtGray;
+                mensaje:='ok.';
+                If showMSG then
+                 begin
+                   color:=getColorWEBXML(msgcolor);
+                   If Color=clRed then QErrores:=QErrores+1;
+
+                   found2:=stringReplace(found , '[X]',  valX ,[rfReplaceAll, rfIgnoreCase]);
+                   If (when.Substring(0,4)) = 'ETIQ' then found2:=consider+'<'+tag+'> se encuentra '+found2 else found2:=consider+'(<'+tag+'>'+value+') se encuentra '+found2;
+
+                   mensaje:=msgtxt;
+                   If (Trim(mensaje)).IsEmpty then mensaje:=found2;
+
+                   mensaje:=StringReplace(mensaje,'{M}',found2,[rfReplaceAll]);
+                   mensaje:=StringReplace(mensaje,'{Q}',CountVeces.ToString,[rfReplaceAll]);
+                 end;
+               if (showMSG=True and VarGlo.MostrarERR) Or
+                  (showMSG=False and Varglo.MostrarOK) then
+                   SENDMSG('WEBXML['+count.ToString()+']:'+mensaje,Memo,TrayIcon1,StatusBar1,color);
+              end;
+         end;
+   finally
+     Doc.Free;
+   end;
 end;
 
 Procedure TFdeFile.ProcesoSubDir(RutaBase,appdir:String;var Memo:TRichMemo;var TrayIcon1:TTrayIcon;var StatusBar1:TStatusBar);

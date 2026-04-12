@@ -30,6 +30,8 @@ private
     Function getScanMode():String;
     Procedure setEnableWarZipMode(Valor:Boolean);
     Function getEnableWarZipMode():Boolean;
+    Procedure setConservarTmpAlFinalizar(Valor:Boolean);
+    Function getConservarTmpAlFinalizar():Boolean;
     Procedure setTempDir(Valor:String);
     Function getTempDir():String;
 
@@ -166,6 +168,7 @@ public
     Property WebAppsDir:  String read getWebappsDir write setWebappsDir;
     Property ScanMode: String read getScanMode write setScanMode;
     Property EnableWarZipMode: Boolean read getEnableWarZipMode write setEnableWarZipMode;
+    Property ConservarTmpAlFinalizar: Boolean read getConservarTmpAlFinalizar write setConservarTmpAlFinalizar;
     Property TempDir: String read getTempDir write setTempDir;
     Property JavaHome:   String read getJavaHome write setJavaHome;
     Property OcultarDirROOT: Boolean read getOcultarDirROOT write setOcultarDirROOT;
@@ -322,6 +325,12 @@ begin
    setBoolean('EnableWarZipMode',Valor);
 end;
 
+Procedure TGlobales.setConservarTmpAlFinalizar(Valor:Boolean);
+begin
+   Seccion:='CONFIG';
+   setBoolean('ConservarTmpAlFinalizar',Valor);
+end;
+
 Procedure TGlobales.setTempDir(Valor:String);
 begin
    Seccion:='CONFIG';
@@ -376,6 +385,12 @@ Function TGlobales.getEnableWarZipMode():Boolean;
 begin
    Seccion:='CONFIG';
    Result:=getBoolean('EnableWarZipMode',False);
+end;
+
+Function TGlobales.getConservarTmpAlFinalizar():Boolean;
+begin
+   Seccion:='CONFIG';
+   Result:=getBoolean('ConservarTmpAlFinalizar',False);
 end;
 
 Function TGlobales.getTempDir():String;

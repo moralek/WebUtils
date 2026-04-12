@@ -95,16 +95,17 @@ var
   F: TFileStream;
   ResourceFileName: String;
   RuntimePath: String;
-  CandidatePaths: array[0..4] of String;
+  ResourceTempDir: String;
+  CandidatePaths: array[0..3] of String;
   I: Integer;
 begin
   Result:='';
   ResourceFileName:=getResourceFileName(resource);
-  CandidatePaths[0]:=ExtractFilePath(ParamStr(0))+ResourceFileName;
-  CandidatePaths[1]:=ExtractFilePath(ParamStr(0))+'resources\'+ResourceFileName;
-  CandidatePaths[2]:=ExtractFilePath(ParamStr(0))+'WebUtils2\resources\'+ResourceFileName;
-  CandidatePaths[3]:=GetCurrentDir+'\'+ResourceFileName;
-  CandidatePaths[4]:=GetCurrentDir+'\resources\'+ResourceFileName;
+  ResourceTempDir:=ExtractFilePath(ParamStr(0))+'tmp\resources\';
+  CandidatePaths[0]:=ExtractFilePath(ParamStr(0))+'resources\'+ResourceFileName;
+  CandidatePaths[1]:=ExtractFilePath(ParamStr(0))+'WebUtils2\resources\'+ResourceFileName;
+  CandidatePaths[2]:=GetCurrentDir+'\resources\'+ResourceFileName;
+  CandidatePaths[3]:=ResourceTempDir+ResourceFileName;
 
   for I:=Low(CandidatePaths) to High(CandidatePaths) do
   begin
@@ -112,7 +113,9 @@ begin
     if FileExists(RuntimePath) then Exit(RuntimePath);
   end;
 
-  RuntimePath:=ExpandFileName(ExtractFilePath(ParamStr(0))+ResourceFileName);
+  if not DirectoryExists(ResourceTempDir) then
+    ForceDirectories(ResourceTempDir);
+  RuntimePath:=ExpandFileName(ResourceTempDir+ResourceFileName);
   S := getResourceStream(resource);
   try
     F := TFileStream.Create(RuntimePath, fmCreate);
