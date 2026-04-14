@@ -239,19 +239,35 @@ var
  ex:Boolean;
  ArchiveEntries:TStringList;
 
- function ArchiveHasPDFReportIni(const ArchivePath:String):Boolean;
+ function ArchiveHasEntry(const EntryPattern:String):Boolean;
  var
    J:Integer;
    EntryName:String;
  begin
    Result:=False;
-   ErrorMsg:=ListZipEntries(ArchivePath,ArchiveEntries);
-   if not ErrorMsg.IsEmpty then
-     Exit;
    for J:=0 to ArchiveEntries.Count-1 do
    begin
      EntryName:=StringReplace(ArchiveEntries[J],'/','\',[rfReplaceAll]);
-     if SameText(EntryName,'WEB-INF\PDFReport.ini') then
+     if SameText(EntryName,EntryPattern) then
+     begin
+       Result:=True;
+       Exit;
+     end;
+   end;
+ end;
+
+ function ArchiveHasClientCfg():Boolean;
+ var
+   J:Integer;
+   EntryName, Prefix:String;
+ begin
+   Result:=False;
+   Prefix:='WEB-INF\classes\com\';
+   for J:=0 to ArchiveEntries.Count-1 do
+   begin
+     EntryName:=StringReplace(ArchiveEntries[J],'/','\',[rfReplaceAll]);
+     if SameText(EntryName,'WEB-INF\classes\client.cfg') or
+        (SameText(Copy(EntryName,1,Length(Prefix)),Prefix) and SameText(ExtractFileName(EntryName),'client.cfg')) then
      begin
        Result:=True;
        Exit;
@@ -278,8 +294,15 @@ begin
            if ((Trim(Filtertxt).IsEmpty) Or (AnsiPos(LowerCase(Filtertxt),LowerCase(dirtmp))>0)) then
              begin
                x:=x+1;
-               if ArchiveHasPDFReportIni(dirfull) then PdfReport:='1' else PdfReport:='';
-               StringGrid1.InsertRowWithValues((x),['1','webapps', dirfull, dirtmp, '', '', '', '', '', PdfReport]);
+               PdfReport:='';
+               ClientCfg:='';
+               webXml:='';
+               ArchiveEntries.Clear;
+               ErrorMsg:=ListZipEntries(dirfull,ArchiveEntries);
+               if ErrorMsg.IsEmpty and ArchiveHasEntry('WEB-INF\PDFReport.ini') then PdfReport:='1' else PdfReport:='';
+               if ErrorMsg.IsEmpty and ArchiveHasClientCfg() then ClientCfg:='1' else ClientCfg:='';
+               if ErrorMsg.IsEmpty and ArchiveHasEntry('WEB-INF\web.xml') then webXml:='1' else webXml:='';
+               StringGrid1.InsertRowWithValues((x),['1','webapps', dirfull, dirtmp, '', '', ClientCfg, webXml, '', PdfReport]);
              end;
          end;
      end

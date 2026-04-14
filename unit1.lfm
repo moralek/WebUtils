@@ -6098,7 +6098,7 @@ object Form1: TForm1
                 Anchors = [akLeft]
                 BorderSpacing.Left = 16
                 BorderSpacing.Top = 48
-                Caption = 'Modulo:'
+                Caption = 'Módulo:'
                 ParentColor = False
               end
               object EditModuleName: TEdit

@@ -10,7 +10,7 @@ uses
   Buttons, ExtCtrls, Menus, Grids, LCLType, ComCtrls, IniPropStorage, EditBtn,
   ActnList, UMyApps, LazFileUtils, SynEdit, SynHighlighterXML, UMyGridString,
   UniqueInstance, atshapeline, CalendarLite, ShellApi, UMyXml, lazutf8, UMyWin,
-  DateUtils, DOM, XMLRead, Masks, UMyRCS,
+  DateUtils, DOM, XMLRead, Masks, UMyRCS, IniFiles,
 {$IFDEF UNIX}{$IFDEF UseCThreads}
 cthreads,
 {$ENDIF}{$ENDIF}
@@ -585,6 +585,9 @@ type
     function ArchiveDirHasFiles(const ArchiveEntries: TStrings; const DirPath: String): Boolean;
     procedure AddDirWithParents(const DirPath: String; Dirs: TStrings);
     procedure AddArchiveDirMatches(const ArchiveEntries: TStrings; const DirPath: String; Dirs: TStrings);
+    function FindArchiveClientCfgEntry(const ArchiveEntries: TStrings; out ClientCfgEntry, Module, GxVersion: String): Boolean;
+    procedure LoadArchiveDataSourcePreview(const ARow: Integer);
+    procedure ApplyDataSourceWarZip();
     procedure LogWarZipFdeMessage(const Texto: String; MsgColor: TColor = clDefault);
     function LogArchiveWebAppsRules(const AppDir: String; const ArchiveEntries: TStrings): Integer;
     function BuildArchiveSelectivePlan(const AppDir: String; const ArchiveEntries,
@@ -924,6 +927,11 @@ procedure TForm1.BitBtn27Click(Sender: TObject);
 begin
   varGlobales.DSJdbcDataSource:=EditJdbcDatasource.Text;
   VarGlobales.DSResRefName:=EditResRefName.Text;
+  if IsArchiveScanMode() then
+  begin
+    ApplyDataSourceWarZip();
+    Exit;
+  end;
   Utils.updDataSource(StringGrid1);
   Utils.getDataSource(Utils.clearFilePath(StringGrid1.Rows[StringGrid1.Row][7]),StringGrid1.Rows[StringGrid1.Row][6],StringGrid1.Rows[StringGrid1.Row][8],StringGrid1.Rows[StringGrid1.Row][4],EditEJJdbcDatasource,EditEJResRefName);
 end;
@@ -2209,6 +2217,7 @@ begin
   EditModuleName.Text:=StringGrid1.Rows[aRow][4];
   if IsArchiveScanMode() then
   begin
+    EditModuleName.Text:=StringGrid1.Rows[aRow][3];
     linkwar.Visible:=FileExistsUTF8(StringGrid1.Rows[aRow][2]);
     EditWar.Text:=StringGrid1.Rows[aRow][3];
     if StringGrid1.Rows[aRow][9]='1' then
@@ -2217,12 +2226,36 @@ begin
       EditPDFReport.Text:='NO ENCONTRADO';
     EditClientCfg.Text:='NO APLICA';
     Editwebxml.Text:='NO APLICA';
+    Label29.Visible:=True;
+    EditModuleName.Visible:=True;
+    Label34.Visible:=False;
+    EditDisplayName.Visible:=False;
+    Label32.Visible:=True;
+    EditClientCfg.Visible:=True;
+    Label33.Visible:=True;
+    Editwebxml.Visible:=True;
+    if StringGrid1.Rows[aRow][6]='1' then
+      EditClientCfg.Text:='ENCONTRADO'
+    else
+      EditClientCfg.Text:='NO ENCONTRADO';
+    if StringGrid1.Rows[aRow][7]='1' then
+      Editwebxml.Text:='ENCONTRADO'
+    else
+      Editwebxml.Text:='NO ENCONTRADO';
     linkPDFReport.Visible:=False;
     linkClientCfg.Visible:=False;
     linkwebxml.Visible:=False;
     Exit;
   end;
   //WAR;
+  Label29.Visible:=True;
+  EditModuleName.Visible:=True;
+  Label34.Visible:=True;
+  EditDisplayName.Visible:=True;
+  Label32.Visible:=True;
+  EditClientCfg.Visible:=True;
+  Label33.Visible:=True;
+  Editwebxml.Visible:=True;
   Files:=TStringList.Create;
   FindAllFiles(Files, StringGrid1.Rows[aRow][2], '*.war', true);
   linkwar.Visible:=(Files.Count>0);
@@ -2957,6 +2990,279 @@ begin
 
   if ArchiveDirExists(ArchiveEntries,BaseDir) then
     AddDirWithParents(BaseDir,Dirs);
+end;
+
+function TForm1.FindArchiveClientCfgEntry(const ArchiveEntries: TStrings; out ClientCfgEntry, Module, GxVersion: String): Boolean;
+var
+  I, P: Integer;
+  EntryName, Prefix, Rest: String;
+begin
+  Result:=False;
+  ClientCfgEntry:='';
+  Module:='';
+  GxVersion:='';
+
+  if FindArchiveEntry(ArchiveEntries,'WEB-INF/classes/client.cfg',ClientCfgEntry) then
+  begin
+    GxVersion:='10';
+    Result:=True;
+    Exit;
+  end;
+
+  Prefix:='WEB-INF/classes/com/';
+  for I:=0 to ArchiveEntries.Count-1 do
+  begin
+    EntryName:=NormalizeArchiveEntryPath(ArchiveEntries[I]);
+    if SameText(Copy(EntryName,1,Length(Prefix)),Prefix) and SameText(ExtractFileName(EntryName),'client.cfg') then
+    begin
+      Rest:=Copy(EntryName,Length(Prefix)+1,MaxInt);
+      P:=Pos('/',Rest);
+      if P>1 then
+        Module:=Copy(Rest,1,P-1);
+      ClientCfgEntry:=ArchiveEntries[I];
+      GxVersion:='16';
+      Result:=True;
+      Exit;
+    end;
+  end;
+end;
+
+procedure TForm1.LoadArchiveDataSourcePreview(const ARow: Integer);
+var
+  ArchivePath, TempDir, WebXmlEntry, ClientCfgEntry, Module, GxVersion, ErrorMsg: String;
+  ArchiveEntries, Entries: TStringList;
+begin
+  EditEJJdbcDatasource.Text:='';
+  EditEJResRefName.Text:='';
+  if (ARow<1) or (ARow>=StringGrid1.RowCount) then
+    Exit;
+
+  ArchivePath:=Utils.clearFilePath(StringGrid1.Rows[ARow][2]);
+  if not FileExists(ArchivePath) then
+    Exit;
+
+  ArchiveEntries:=TStringList.Create;
+  Entries:=TStringList.Create;
+  try
+    ErrorMsg:=Utils.ListZipEntries(ArchivePath,ArchiveEntries);
+    if not ErrorMsg.IsEmpty then
+      Exit;
+
+    Module:=BuildArchiveModuleName(ArchivePath);
+    GxVersion:='10';
+    if FindArchiveEntry(ArchiveEntries,'WEB-INF/web.xml',WebXmlEntry) then
+      Entries.Add(WebXmlEntry);
+    if FindArchiveClientCfgEntry(ArchiveEntries,ClientCfgEntry,Module,GxVersion) then
+      Entries.Add(ClientCfgEntry);
+    if Entries.Count=0 then
+      Exit;
+
+    TempDir:=BuildArchiveTempDir(ArchivePath)+'datasource_preview\';
+    ErrorMsg:=Utils.ExtractJavaArchiveEntries(ArchivePath,TempDir,varGlobales.JavaHome,Entries);
+    if not ErrorMsg.IsEmpty then
+      Exit;
+
+    Utils.getDataSource(
+      Utils.clearFilePath(TempDir+StringReplace(WebXmlEntry,'/',PathDelim,[rfReplaceAll])),
+      Utils.clearFilePath(TempDir+StringReplace(ClientCfgEntry,'/',PathDelim,[rfReplaceAll])),
+      GxVersion,
+      Module,
+      EditEJJdbcDatasource,
+      EditEJResRefName);
+  finally
+    Entries.Free;
+    ArchiveEntries.Free;
+  end;
+end;
+
+procedure TForm1.ApplyDataSourceWarZip();
+var
+  ArchiveEntries, EntriesToExtract, EntriesToUpdate: TStringList;
+  ArchivePath, ArchiveLabel, TempDir, WebXmlEntry, ClientCfgEntry, WebXmlPath, ClientCfgPath: String;
+  ErrorMsg, WebXmlContent, Module, GxVersion, SectionINI: String;
+  CS_DBNAME, USER_ID, USER_PASSWORD, JDBC_DRIVER, DB_URL, USE_JDBC_DATASOURCE, JDBC_DATASOURCE: String;
+  I, DirCount, FullCount, PartialCount, NoApplyCount, ErrorCount: Integer;
+  WebXml: TMyXml;
+  ClientCfg: TIniFile;
+  SS: TStringList;
+  Ok, WebOk, ClientOk: Boolean;
+  StartAt, EndAt: TDateTime;
+begin
+  DirCount:=0;
+  FullCount:=0;
+  PartialCount:=0;
+  NoApplyCount:=0;
+  ErrorCount:=0;
+  for I:=1 to StringGrid1.RowCount-1 do
+    if StringGrid1.Cells[0,I]='1' then
+      Inc(DirCount);
+
+  if DirCount<1 then
+  begin
+    MessageDlg('', 'Selecciona al menos un archivo War/Zip', mtError, [mbOK],0);
+    Exit;
+  end;
+
+  WebXmlContent:=#13#10#9#9'<description>'+varGlobales.DSDescription+'</description>'#13#10;
+  WebXmlContent:=WebXmlContent+#9#9'<res-ref-name>'+varGlobales.DSResRefName+'</res-ref-name>'#13#10;
+  WebXmlContent:=WebXmlContent+#9#9'<res-type>'+varGlobales.DSResType+'</res-type>'#13#10;
+  WebXmlContent:=WebXmlContent+#9#9'<res-auth>'+varGlobales.DSResAuth+'</res-auth>'#13#10;
+  CS_DBNAME:='';
+  USER_ID:='';
+  USER_PASSWORD:='';
+  JDBC_DRIVER:='';
+  DB_URL:='';
+  USE_JDBC_DATASOURCE:=IntToStr(varGlobales.DSUseJdbcDatasource);
+  JDBC_DATASOURCE:=varGlobales.DSJdbcDataSource;
+
+  ErrorMsg:=CleanTempDirContent();
+  if not ErrorMsg.IsEmpty then
+  begin
+    Utils.addToRichMemo('Error al limpiar tmp: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
+    Exit;
+  end;
+
+  ArchiveEntries:=TStringList.Create;
+  EntriesToExtract:=TStringList.Create;
+  EntriesToUpdate:=TStringList.Create;
+  try
+    Utils.addToRichMemo('Inicio DataSource War/Zip ('+TimeToStr(Time)+')',RichMemo1,StatusBar1,clBlue);
+    for I:=1 to StringGrid1.RowCount-1 do
+    begin
+      if StringGrid1.Cells[0,I]<>'1' then
+        Continue;
+
+      ArchiveEntries.Clear;
+      EntriesToExtract.Clear;
+      EntriesToUpdate.Clear;
+      WebOk:=False;
+      ClientOk:=False;
+      ArchivePath:=Utils.clearFilePath(StringGrid1.Cells[2,I]);
+      ArchiveLabel:=StringGrid1.Cells[3,I];
+      if ArchiveLabel.IsEmpty then
+        ArchiveLabel:=ExtractFileName(ArchivePath);
+      Utils.addToRichMemo('Archivo: '+ArchiveLabel,RichMemo1,StatusBar1,clBlue);
+
+      ErrorMsg:=Utils.ListZipEntries(ArchivePath,ArchiveEntries);
+      if not ErrorMsg.IsEmpty then
+      begin
+        Inc(ErrorCount);
+        Utils.addToRichMemo('Error leyendo ZIP: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
+        Continue;
+      end;
+
+      Module:=BuildArchiveModuleName(ArchivePath);
+      GxVersion:='10';
+      WebXmlEntry:='';
+      ClientCfgEntry:='';
+      if FindArchiveEntry(ArchiveEntries,'WEB-INF/web.xml',WebXmlEntry) then
+        EntriesToExtract.Add(WebXmlEntry);
+      if FindArchiveClientCfgEntry(ArchiveEntries,ClientCfgEntry,Module,GxVersion) then
+        EntriesToExtract.Add(ClientCfgEntry);
+
+      if EntriesToExtract.Count=0 then
+      begin
+        Inc(NoApplyCount);
+        Utils.addToRichMemo('Sin web.xml ni client.cfg para actualizar.',RichMemo1,StatusBar1,clRed);
+        Continue;
+      end;
+
+      TempDir:=BuildArchiveTempDir(ArchivePath)+'datasource\';
+      SetStatusMessage('Extrayendo DataSource '+ArchiveLabel+'...');
+      ErrorMsg:=Utils.ExtractJavaArchiveEntries(ArchivePath,TempDir,varGlobales.JavaHome,EntriesToExtract);
+      if not ErrorMsg.IsEmpty then
+      begin
+        Inc(ErrorCount);
+        Utils.addToRichMemo('Error al extraer DataSource: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
+        Continue;
+      end;
+
+      if not WebXmlEntry.IsEmpty then
+      begin
+        WebXmlPath:=Utils.clearFilePath(TempDir+StringReplace(WebXmlEntry,'/',PathDelim,[rfReplaceAll]));
+        if FileExists(WebXmlPath) then
+        begin
+          WebXml:=TMyXml.Create(WebXmlPath);
+          Ok:=WebXml.ReplaceValueTXT('<resource-ref>','</resource-ref>',WebXmlContent);
+          if not Ok then
+            Ok:=WebXml.InsertWhitPostRefTXT('</web-app>','<resource-ref>'+WebXmlContent+'</resource-ref>');
+          WebXml.Free;
+          if EntriesToUpdate.IndexOf(WebXmlEntry)=-1 then
+            EntriesToUpdate.Add(WebXmlEntry);
+          WebOk:=True;
+        end;
+      end;
+
+      if not ClientCfgEntry.IsEmpty then
+      begin
+        ClientCfgPath:=Utils.clearFilePath(TempDir+StringReplace(ClientCfgEntry,'/',PathDelim,[rfReplaceAll]));
+        if FileExists(ClientCfgPath) then
+        begin
+          if GxVersion='16' then
+            SectionINI:=Trim(LowerCase('com.'+Trim(Module))+'|DEFAULT')
+          else
+            SectionINI:='default|DEFAULT';
+          ClientCfg:=TIniFile.Create(ClientCfgPath);
+          ClientCfg.WriteString(SectionINI,'CS_DBNAME',CS_DBNAME);
+          ClientCfg.WriteString(SectionINI,'USER_ID',USER_ID);
+          ClientCfg.WriteString(SectionINI,'USER_PASSWORD',USER_PASSWORD);
+          ClientCfg.WriteString(SectionINI,'JDBC_DRIVER',JDBC_DRIVER);
+          ClientCfg.WriteString(SectionINI,'DB_URL',DB_URL);
+          ClientCfg.WriteString(SectionINI,'USE_JDBC_DATASOURCE',USE_JDBC_DATASOURCE);
+          ClientCfg.WriteString(SectionINI,'JDBC_DATASOURCE',JDBC_DATASOURCE);
+          ClientCfg.Free;
+          SS:=TStringList.Create;
+          SS.LoadFromFile(ClientCfgPath);
+          SS.Text:=StringReplace(SS.Text,#13#10#13#10,#13#10,[rfReplaceAll]);
+          SS.SaveToFile(ClientCfgPath);
+          SS.Free;
+          if EntriesToUpdate.IndexOf(ClientCfgEntry)=-1 then
+            EntriesToUpdate.Add(ClientCfgEntry);
+          ClientOk:=True;
+        end;
+      end;
+
+      if EntriesToUpdate.Count=0 then
+      begin
+        Inc(NoApplyCount);
+        Utils.addToRichMemo('Sin cambios DataSource para actualizar.',RichMemo1,StatusBar1,clRed);
+        Continue;
+      end;
+
+      StartAt:=Now;
+      SetStatusMessage('Actualizando DataSource '+ArchiveLabel+'...');
+      ErrorMsg:=Utils.UpdateJavaArchiveEntries(ArchivePath,TempDir,varGlobales.JavaHome,EntriesToUpdate);
+      EndAt:=Now;
+      if ErrorMsg.IsEmpty then
+      begin
+        if WebOk and ClientOk then
+          Inc(FullCount)
+        else
+          Inc(PartialCount);
+        Utils.addToRichMemo('DataSource actualizado ('+TimeToStr(StartAt)+' - '+TimeToStr(EndAt)+'): '+FormatElapsedMs(MilliSecondsBetween(EndAt,StartAt)),RichMemo1,StatusBar1,clBlue);
+      end
+      else
+      begin
+        Inc(ErrorCount);
+        Utils.addToRichMemo('Error DataSource: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
+      end;
+    end;
+
+    if (StringGrid1.Row>0) and (StringGrid1.Row<StringGrid1.RowCount) then
+      LoadArchiveDataSourcePreview(StringGrid1.Row);
+    if FullCount=DirCount then
+      MessageDlg('', 'Actualización Completa', mtInformation, [mbOK],0)
+    else if (FullCount+PartialCount)>0 then
+      MessageDlg('', 'Aplicación parcial. Se actualizó solo web.xml o solo client.cfg en uno o más archivos War/Zip.', mtWarning, [mbOK],0)
+    else if ErrorCount>0 then
+      MessageDlg('', 'No se actualizó DataSource. Revisa la consola de mensajes.', mtError, [mbOK],0)
+    else
+      MessageDlg('', 'No se actualizó DataSource.', mtWarning, [mbOK],0);
+  finally
+    EntriesToUpdate.Free;
+    EntriesToExtract.Free;
+    ArchiveEntries.Free;
+  end;
 end;
 
 procedure TForm1.LogWarZipFdeMessage(const Texto: String; MsgColor: TColor);
@@ -3870,6 +4176,16 @@ begin
     ItemCopyWar.Caption:='Copiar archivo';
     BitBtn9.Enabled:=False;
     LblPdfReportIni.Visible:=False;
+    Label5.Visible:=False;
+    ItemVerArchivos.Visible:=False;
+    Label29.Visible:=True;
+    EditModuleName.Visible:=True;
+    Label34.Visible:=False;
+    EditDisplayName.Visible:=False;
+    Label32.Visible:=True;
+    EditClientCfg.Visible:=True;
+    Label33.Visible:=True;
+    Editwebxml.Visible:=True;
   end
   else
   begin
@@ -3879,6 +4195,16 @@ begin
     ItemCopyWar.Caption:='Copiar [.war]';
     BitBtn9.Enabled:=True;
     LblPdfReportIni.Visible:=True;
+    Label5.Visible:=True;
+    ItemVerArchivos.Visible:=True;
+    Label29.Visible:=True;
+    EditModuleName.Visible:=True;
+    Label34.Visible:=True;
+    EditDisplayName.Visible:=True;
+    Label32.Visible:=True;
+    EditClientCfg.Visible:=True;
+    Label33.Visible:=True;
+    Editwebxml.Visible:=True;
   end;
 end;
 
@@ -4135,6 +4461,7 @@ begin
      war:=Utils.clearDirPath(StringGrid1.Rows[StringGrid1.Row][2])+StringGrid1.Rows[StringGrid1.Row][3]+'.war';
    If FileExists(war) Then ItemCopyWar.Visible:=True else ItemCopyWar.Visible:=False;
    ItemCopyWar.Caption:='Copiar ['+StringGrid1.Rows[row][3]+']';
+   ItemVerArchivos.Visible:=not IsArchiveScanMode();
    popupmenu1.Popup;
   end;
 end;
@@ -4158,8 +4485,8 @@ begin
   begin
     Label9.Caption:='archivo: ['+StringGrid1.Rows[aRow][3]+']';
     EditFolderApp.Text:='webapps';
-    EditEJJdbcDatasource.Text:='';
-    EditEJResRefName.Text:='';
+    EditFolderAppChange(EditFolderApp);
+    LoadArchiveDataSourcePreview(aRow);
   end
   else
   begin
@@ -4246,8 +4573,7 @@ begin
   Label18.Caption:='['+StringGrid1.Rows[StringGrid1.Row][3]+']';
   if IsArchiveScanMode() then
   begin
-    EditEJJdbcDatasource.Text:='';
-    EditEJResRefName.Text:='';
+    LoadArchiveDataSourcePreview(StringGrid1.Row);
   end
   else
     Utils.getDataSource(Utils.clearFilePath(StringGrid1.Rows[StringGrid1.Row][7]),StringGrid1.Rows[StringGrid1.Row][6],StringGrid1.Rows[StringGrid1.Row][8],StringGrid1.Rows[StringGrid1.Row][4],EditEJJdbcDatasource,EditEJResRefName);
