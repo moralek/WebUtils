@@ -120,6 +120,8 @@ Ejemplo:
 
 El modo `warzip` revisa el índice del archivo `.war`/`.zip` antes de extraer. Si el script FDE no requiere cambios efectivos, no reempaqueta. Cuando necesita trabajar sobre el archivo, usa `jar.exe` desde `JAVA_HOME\bin` para extraer o actualizar el contenido.
 
+En las pestañas que muestran información interna del archivo, como `DataSource` y `Web.xml`, el modo `warzip` no lee automáticamente el contenido al cambiar de fila. Para evitar demoras, el enlace `mostrar actual` lee solo el archivo `.war`/`.zip` de la fila seleccionada en la grilla (franja azul). Los archivos activados con ticket se usan al aplicar cambios, pero no determinan qué archivo se lee con `mostrar actual`.
+
 ------
 
 ## links:
