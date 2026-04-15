@@ -455,6 +455,7 @@ type
     procedure ItemWebXmlClick(Sender: TObject);
     procedure Label14Click(Sender: TObject);
     procedure Label15Click(Sender: TObject);
+    procedure Label18Click(Sender: TObject);
     procedure Label22Click(Sender: TObject);
     procedure Label23Click(Sender: TObject);
     procedure Label24Click(Sender: TObject);
@@ -556,6 +557,7 @@ type
     procedure ApplyScanModeUI();
     procedure SetStatusMessage(const Msg: String);
     function IsArchiveScanMode(): Boolean;
+    procedure ResetArchiveDataSourcePreview();
     procedure loadMemo3();
     procedure loadComboboxDataSources();
     procedure RefreshScanModeSelector();
@@ -588,6 +590,8 @@ type
     function FindArchiveClientCfgEntry(const ArchiveEntries: TStrings; out ClientCfgEntry, Module, GxVersion: String): Boolean;
     procedure LoadArchiveDataSourcePreview(const ARow: Integer);
     procedure ApplyDataSourceWarZip();
+    procedure ShowArchiveDisplayName();
+    procedure ApplyDisplayNameWarZip();
     procedure LogWarZipFdeMessage(const Texto: String; MsgColor: TColor = clDefault);
     function LogArchiveWebAppsRules(const AppDir: String; const ArchiveEntries: TStrings): Integer;
     function BuildArchiveSelectivePlan(const AppDir: String; const ArchiveEntries,
@@ -1180,6 +1184,12 @@ var Version:String;
   myxml:TMyXml;
   isok:Boolean;
 begin
+  if IsArchiveScanMode() then
+  begin
+    ApplyDisplayNameWarZip();
+    Exit;
+  end;
+
    Label16.Caption:=Utils.versionStr(EditModulo.Text,EditVersion.Text,EditFechaVersion.Text);
    DirCount:=0;
    for I:= 1 to StringGrid1.RowCount - 1 do
@@ -2241,7 +2251,7 @@ begin
     if StringGrid1.Rows[aRow][7]='1' then
       Editwebxml.Text:='ENCONTRADO'
     else
-      Editwebxml.Text:='NO ENCONTRADO';
+    Editwebxml.Text:='NO ENCONTRADO';
     linkPDFReport.Visible:=False;
     linkClientCfg.Visible:=False;
     linkwebxml.Visible:=False;
@@ -2596,6 +2606,12 @@ begin
   EditFechaVersion.Text:='';
 end;
 
+procedure TForm1.Label18Click(Sender: TObject);
+begin
+  if IsArchiveScanMode() then
+    LoadArchiveDataSourcePreview(StringGrid1.Row);
+end;
+
 procedure TForm1.Label22Click(Sender: TObject);
 begin
   EditDSDescription.Enabled:=Not EditDSDescription.Enabled;
@@ -2625,6 +2641,11 @@ procedure TForm1.Label5Click(Sender: TObject);
 var dir:String;
 begin
   If StringGrid1.RowCount<2 Then exit;
+  if IsArchiveScanMode() then
+  begin
+    ShowArchiveDisplayName();
+    Exit;
+  end;
   dir:=Utils.clearDirPath(StringGrid1.Rows[StringGrid1.Row][2])+'WEB-INF\web.xml';
   If FileExists(dir) then ShellExecute(0,nil, PChar(dir),PChar(dir),nil,1) else showMessage('No se Encuentra web.xml');
 end;
@@ -2651,6 +2672,16 @@ end;
 function TForm1.IsArchiveScanMode(): Boolean;
 begin
   Result:=(varGlobales.ScanMode='warzip');
+end;
+
+procedure TForm1.ResetArchiveDataSourcePreview();
+begin
+  EditEJJdbcDatasource.Text:='';
+  EditEJResRefName.Text:='';
+  Label18.Caption:='mostrar actual';
+  Label18.Cursor:=crHandPoint;
+  Label18.Font.Color:=clBlue;
+  Label18.Font.Style:=[fsUnderline];
 end;
 
 procedure TForm1.SetStatusMessage(const Msg: String);
@@ -3030,6 +3061,7 @@ end;
 procedure TForm1.LoadArchiveDataSourcePreview(const ARow: Integer);
 var
   ArchivePath, TempDir, WebXmlEntry, ClientCfgEntry, Module, GxVersion, ErrorMsg: String;
+  WebXmlPath, ClientCfgPath: String;
   ArchiveEntries, Entries: TStringList;
 begin
   EditEJJdbcDatasource.Text:='';
@@ -3055,20 +3087,38 @@ begin
     if FindArchiveClientCfgEntry(ArchiveEntries,ClientCfgEntry,Module,GxVersion) then
       Entries.Add(ClientCfgEntry);
     if Entries.Count=0 then
+    begin
+      EditEJJdbcDatasource.Text:='NO ENCONTRADO';
+      EditEJResRefName.Text:='NO ENCONTRADO';
+      Label18.Caption:='sin web.xml ni client.cfg';
+      Label18.Cursor:=crDefault;
+      Label18.Font.Color:=clRed;
+      Label18.Font.Style:=[];
       Exit;
+    end;
 
     TempDir:=BuildArchiveTempDir(ArchivePath)+'datasource_preview\';
     ErrorMsg:=Utils.ExtractJavaArchiveEntries(ArchivePath,TempDir,varGlobales.JavaHome,Entries);
     if not ErrorMsg.IsEmpty then
       Exit;
 
+    WebXmlPath:='';
+    ClientCfgPath:='';
+    if not WebXmlEntry.IsEmpty then
+      WebXmlPath:=Utils.clearFilePath(TempDir+StringReplace(WebXmlEntry,'/',PathDelim,[rfReplaceAll]));
+    if not ClientCfgEntry.IsEmpty then
+      ClientCfgPath:=Utils.clearFilePath(TempDir+StringReplace(ClientCfgEntry,'/',PathDelim,[rfReplaceAll]));
     Utils.getDataSource(
-      Utils.clearFilePath(TempDir+StringReplace(WebXmlEntry,'/',PathDelim,[rfReplaceAll])),
-      Utils.clearFilePath(TempDir+StringReplace(ClientCfgEntry,'/',PathDelim,[rfReplaceAll])),
+      WebXmlPath,
+      ClientCfgPath,
       GxVersion,
       Module,
       EditEJJdbcDatasource,
       EditEJResRefName);
+    Label18.Caption:='['+StringGrid1.Rows[ARow][3]+']';
+    Label18.Cursor:=crDefault;
+    Label18.Font.Color:=clBlack;
+    Label18.Font.Style:=[fsBold];
   finally
     Entries.Free;
     ArchiveEntries.Free;
@@ -3262,6 +3312,215 @@ begin
     EntriesToUpdate.Free;
     EntriesToExtract.Free;
     ArchiveEntries.Free;
+  end;
+end;
+
+procedure TForm1.ShowArchiveDisplayName();
+var
+  ArchiveEntries, EntriesToExtract: TStringList;
+  ArchivePath, ArchiveLabel, TempDir, WebXmlEntry, WebXmlPath, ErrorMsg: String;
+  MyXml: TMyXml;
+  Ex: Boolean;
+begin
+  if (StringGrid1.RowCount<2) or (StringGrid1.Row<1) or (StringGrid1.Row>=StringGrid1.RowCount) then
+    Exit;
+
+  ArchivePath:=Utils.clearFilePath(StringGrid1.Rows[StringGrid1.Row][2]);
+  ArchiveLabel:=StringGrid1.Rows[StringGrid1.Row][3];
+  if ArchiveLabel.IsEmpty then
+    ArchiveLabel:=ExtractFileName(ArchivePath);
+
+  ArchiveEntries:=TStringList.Create;
+  EntriesToExtract:=TStringList.Create;
+  try
+    ErrorMsg:=Utils.ListZipEntries(ArchivePath,ArchiveEntries);
+    if not ErrorMsg.IsEmpty then
+    begin
+      ShowMessage('No se pudo leer el archivo War/Zip: '+ErrorMsg);
+      Exit;
+    end;
+
+    if not FindArchiveEntry(ArchiveEntries,'WEB-INF/web.xml',WebXmlEntry) then
+    begin
+      RichMemo3.Clear;
+      ShowMessage('No se encuentra WEB-INF/web.xml en '+ArchiveLabel);
+      Exit;
+    end;
+
+    EntriesToExtract.Add(WebXmlEntry);
+    TempDir:=BuildArchiveTempDir(ArchivePath)+'displayname_preview\';
+    SetStatusMessage('Leyendo display-name '+ArchiveLabel+'...');
+    ErrorMsg:=Utils.ExtractJavaArchiveEntries(ArchivePath,TempDir,varGlobales.JavaHome,EntriesToExtract);
+    if not ErrorMsg.IsEmpty then
+    begin
+      ShowMessage('No se pudo extraer web.xml: '+ErrorMsg);
+      Exit;
+    end;
+
+    WebXmlPath:=Utils.clearFilePath(TempDir+StringReplace(WebXmlEntry,'/',PathDelim,[rfReplaceAll]));
+    MyXml:=TMyXml.Create(WebXmlPath);
+    try
+      RichMemo3.Text:=MyXml.getValueTagTXT('<display-name>','</display-name>',Ex);
+      if not Ex then
+        RichMemo3.Text:='';
+      StringGrid1.Cells[5,StringGrid1.Row]:=RichMemo3.Text;
+      Label9.Caption:='display-name: ['+ArchiveLabel+']';
+    finally
+      MyXml.Free;
+    end;
+  finally
+    EntriesToExtract.Free;
+    ArchiveEntries.Free;
+  end;
+end;
+
+procedure TForm1.ApplyDisplayNameWarZip();
+var
+  ArchiveEntries, EntriesToExtract, EntriesToUpdate: TStringList;
+  ArchivePath, ArchiveLabel, TempDir, WebXmlEntry, WebXmlPath, ErrorMsg, Version: String;
+  I, DirCount, UpdatedCount, ErrorCount, Resp: Integer;
+  MyXml: TMyXml;
+  IsOk: Boolean;
+  StartAt, EndAt: TDateTime;
+begin
+  Label16.Caption:=Utils.versionStr(EditModulo.Text,EditVersion.Text,EditFechaVersion.Text);
+  Version:=Utils.versionStr(EditModulo.Text,EditVersion.Text,EditFechaVersion.Text);
+  DirCount:=0;
+  UpdatedCount:=0;
+  ErrorCount:=0;
+
+  for I:=1 to StringGrid1.RowCount-1 do
+    if StringGrid1.Cells[0,I]='1' then
+      Inc(DirCount);
+
+  if DirCount=0 then
+  begin
+    ShowMessage('Debe seleccionar al menos un archivo War/Zip');
+    Exit;
+  end;
+
+  if DirCount>2 then
+  begin
+    Resp:=Application.MessageBox(PChar('Tiene seleccionados '+DirCount.ToString+' archivos War/Zip'+#13#10+
+      '¿DESEA CONTINUAR?'),'ADVERTENCIA',(MB_ICONEXCLAMATION+MB_OKCANCEL));
+    if Resp=IDCANCEL then
+      Exit;
+  end;
+
+  Utils.addItemListBox(ListBox1,EditModulo.Text);
+  Utils.addItemListBox(ListBox2,EditVersion.Text);
+  varGlobales.ListBoxModuloValues:=ListBox1.Items.CommaText;
+  varGlobales.ListBoxVersionValues:=ListBox2.Items.CommaText;
+
+  ErrorMsg:=CleanTempDirContent();
+  if not ErrorMsg.IsEmpty then
+  begin
+    Utils.addToRichMemo('Error al limpiar tmp: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
+    Exit;
+  end;
+
+  ArchiveEntries:=TStringList.Create;
+  EntriesToExtract:=TStringList.Create;
+  EntriesToUpdate:=TStringList.Create;
+  try
+    Utils.addToRichMemo('Inicio display-name War/Zip ('+TimeToStr(Time)+')',RichMemo1,StatusBar1,clBlue);
+    for I:=1 to StringGrid1.RowCount-1 do
+    begin
+      if StringGrid1.Cells[0,I]<>'1' then
+        Continue;
+
+      ArchiveEntries.Clear;
+      EntriesToExtract.Clear;
+      EntriesToUpdate.Clear;
+      ArchivePath:=Utils.clearFilePath(StringGrid1.Cells[2,I]);
+      ArchiveLabel:=StringGrid1.Cells[3,I];
+      if ArchiveLabel.IsEmpty then
+        ArchiveLabel:=ExtractFileName(ArchivePath);
+      Utils.addToRichMemo('Archivo: '+ArchiveLabel,RichMemo1,StatusBar1,clBlue);
+
+      ErrorMsg:=Utils.ListZipEntries(ArchivePath,ArchiveEntries);
+      if not ErrorMsg.IsEmpty then
+      begin
+        Inc(ErrorCount);
+        Utils.addToRichMemo('Error leyendo ZIP: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
+        Continue;
+      end;
+
+      if not FindArchiveEntry(ArchiveEntries,'WEB-INF/web.xml',WebXmlEntry) then
+      begin
+        Inc(ErrorCount);
+        Utils.addToRichMemo('No se encuentra WEB-INF/web.xml.',RichMemo1,StatusBar1,clRed);
+        Continue;
+      end;
+
+      EntriesToExtract.Add(WebXmlEntry);
+      EntriesToUpdate.Add(WebXmlEntry);
+      TempDir:=BuildArchiveTempDir(ArchivePath)+'displayname\';
+      SetStatusMessage('Extrayendo web.xml '+ArchiveLabel+'...');
+      ErrorMsg:=Utils.ExtractJavaArchiveEntries(ArchivePath,TempDir,varGlobales.JavaHome,EntriesToExtract);
+      if not ErrorMsg.IsEmpty then
+      begin
+        Inc(ErrorCount);
+        Utils.addToRichMemo('Error al extraer web.xml: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
+        Continue;
+      end;
+
+      WebXmlPath:=Utils.clearFilePath(TempDir+StringReplace(WebXmlEntry,'/',PathDelim,[rfReplaceAll]));
+      if not FileExists(WebXmlPath) then
+      begin
+        Inc(ErrorCount);
+        Utils.addToRichMemo('No se pudo obtener web.xml temporal.',RichMemo1,StatusBar1,clRed);
+        Continue;
+      end;
+
+      MyXml:=TMyXml.Create(WebXmlPath);
+      try
+        IsOk:=MyXml.ReplaceValueTXT('<display-name>','</display-name>',Version);
+        if not IsOk then
+          MyXml.InsertWhitPrevRefTXT('metadata-complete="false">','<display-name>'+Version+'</display-name>');
+      finally
+        MyXml.Free;
+      end;
+
+      StartAt:=Now;
+      SetStatusMessage('Actualizando display-name '+ArchiveLabel+'...');
+      ErrorMsg:=Utils.UpdateJavaArchiveEntries(ArchivePath,TempDir,varGlobales.JavaHome,EntriesToUpdate);
+      EndAt:=Now;
+      if ErrorMsg.IsEmpty then
+      begin
+        Inc(UpdatedCount);
+        StringGrid1.Cells[5,I]:=Version;
+        Utils.addToRichMemo('Display-name actualizado ('+TimeToStr(StartAt)+' - '+TimeToStr(EndAt)+'): '+FormatElapsedMs(MilliSecondsBetween(EndAt,StartAt)),RichMemo1,StatusBar1,clBlue);
+      end
+      else
+      begin
+        Inc(ErrorCount);
+        Utils.addToRichMemo('Error display-name: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
+      end;
+    end;
+
+    RichMemo3.Text:=StringGrid1.Rows[StringGrid1.Row][5];
+    Label9.Caption:='archivo: ['+StringGrid1.Rows[StringGrid1.Row][3]+']';
+    Label18.Caption:='['+StringGrid1.Rows[StringGrid1.Row][3]+']';
+    if UpdatedCount=DirCount then
+      MessageDlg('', 'Actualización Completa', mtInformation, [mbOK],0)
+    else if UpdatedCount>0 then
+      MessageDlg('', 'Aplicación parcial. Revisa la consola de mensajes.', mtWarning, [mbOK],0)
+    else if ErrorCount>0 then
+      MessageDlg('', 'No se actualizó display-name. Revisa la consola de mensajes.', mtError, [mbOK],0)
+    else
+      MessageDlg('', 'No se actualizó display-name.', mtWarning, [mbOK],0);
+  finally
+    EntriesToUpdate.Free;
+    EntriesToExtract.Free;
+    ArchiveEntries.Free;
+    if not varGlobales.ConservarTmpAlFinalizar then
+    begin
+      SetStatusMessage('Limpiando tmp...');
+      ErrorMsg:=DeleteTempDirOnFinish();
+      if not ErrorMsg.IsEmpty then
+        Utils.addToRichMemo('Error al limpiar tmp al finalizar: '+ErrorMsg,RichMemo1,StatusBar1,clRed);
+    end;
   end;
 end;
 
@@ -4176,7 +4435,8 @@ begin
     ItemCopyWar.Caption:='Copiar archivo';
     BitBtn9.Enabled:=False;
     LblPdfReportIni.Visible:=False;
-    Label5.Visible:=False;
+    Label5.Visible:=True;
+    Label5.Caption:='mostrar actual';
     ItemVerArchivos.Visible:=False;
     Label29.Visible:=True;
     EditModuleName.Visible:=True;
@@ -4196,6 +4456,7 @@ begin
     BitBtn9.Enabled:=True;
     LblPdfReportIni.Visible:=True;
     Label5.Visible:=True;
+    Label5.Caption:='ver web.xml';
     ItemVerArchivos.Visible:=True;
     Label29.Visible:=True;
     EditModuleName.Visible:=True;
@@ -4486,7 +4747,7 @@ begin
     Label9.Caption:='archivo: ['+StringGrid1.Rows[aRow][3]+']';
     EditFolderApp.Text:='webapps';
     EditFolderAppChange(EditFolderApp);
-    LoadArchiveDataSourcePreview(aRow);
+    ResetArchiveDataSourcePreview();
   end
   else
   begin
@@ -4573,7 +4834,7 @@ begin
   Label18.Caption:='['+StringGrid1.Rows[StringGrid1.Row][3]+']';
   if IsArchiveScanMode() then
   begin
-    LoadArchiveDataSourcePreview(StringGrid1.Row);
+    ResetArchiveDataSourcePreview();
   end
   else
     Utils.getDataSource(Utils.clearFilePath(StringGrid1.Rows[StringGrid1.Row][7]),StringGrid1.Rows[StringGrid1.Row][6],StringGrid1.Rows[StringGrid1.Row][8],StringGrid1.Rows[StringGrid1.Row][4],EditEJJdbcDatasource,EditEJResRefName);

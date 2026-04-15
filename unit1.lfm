@@ -5543,6 +5543,7 @@ object Form1: TForm1
                 Font.Style = [fsBold]
                 ParentColor = False
                 ParentFont = False
+                OnClick = Label18Click
               end
               object Label20: TLabel
                 AnchorSideLeft.Control = EditEJResRefName
