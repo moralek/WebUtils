@@ -2191,6 +2191,7 @@ begin
       StringGrid1.AnchorSideTop.Control:=ListFilterEdit1;
       StringGrid1.BorderSpacing.Top:=16;
     end;
+    ApplyScanModeUI();
   finally
     Firstload:=PrevFirstLoad;
   end;

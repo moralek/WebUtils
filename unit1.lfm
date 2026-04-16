@@ -1,15 +1,22 @@
 object Form1: TForm1
-  Left = 701
+  Left = 771
   Height = 1133
-  Top = 341
+  Top = 342
   Width = 2080
   Anchors = []
   Caption = 'WEB UTILS: [PRINCIPAL] '
   ClientHeight = 1133
   ClientWidth = 2080
+  Color = 16249582
   Constraints.MinHeight = 960
   Constraints.MinWidth = 1600
   DesignTimePPI = 192
+  Font.CharSet = ANSI_CHARSET
+  Font.Color = 4602415
+  Font.Height = -20
+  Font.Name = 'Segoe UI'
+  Font.Pitch = fpVariable
+  Font.Quality = fqCleartypeNatural
   Icon.Data = {
     501702000000010006000000000001002000E291000066000000808000000100
     20002808010048920000404000000100200028420000709A0100303000000100
@@ -4317,16 +4324,17 @@ object Form1: TForm1
     TabOrder = 0
     object RunFDE: TPage
       OnBeforeShow = RunFDEBeforeShow
-      Color = clWhite
+      Color = 16249582
       object Panel2: TPanel
         Left = 0
         Height = 1133
         Top = 0
         Width = 966
         Align = alLeft
+        BevelOuter = bvNone
         ClientHeight = 1133
         ClientWidth = 966
-        Color = clWhite
+        Color = 16579320
         ParentBackground = False
         ParentColor = False
         ParentFont = False
@@ -4336,16 +4344,17 @@ object Form1: TForm1
           AnchorSideTop.Control = Edit2
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = Button2
-          Left = 33
+          Left = 32
           Height = 38
           Hint = 'Ingrese Directorio Webapps'
-          Top = 135
-          Width = 887
+          Top = 134
+          Width = 889
           Anchors = [akTop, akLeft, akRight]
           AutoSize = False
           BorderSpacing.Left = 32
           BorderSpacing.Top = 40
           BorderSpacing.Right = 3
+          Color = 16776699
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
@@ -4356,16 +4365,17 @@ object Form1: TForm1
           AnchorSideLeft.Control = Panel2
           AnchorSideTop.Control = Panel2
           AnchorSideRight.Control = Button1
-          Left = 33
+          Left = 32
           Height = 38
           Hint = 'Ingrese Ruta al Archivo .fde'
-          Top = 57
-          Width = 887
+          Top = 56
+          Width = 889
           Anchors = [akTop, akLeft, akRight]
           AutoSize = False
           BorderSpacing.Left = 32
           BorderSpacing.Top = 56
           BorderSpacing.Right = 3
+          Color = 16776699
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
@@ -4376,9 +4386,9 @@ object Form1: TForm1
           AnchorSideLeft.Control = Edit2
           AnchorSideBottom.Control = Edit2
           AnchorSideBottom.Side = asrBottom
-          Left = 33
+          Left = 32
           Height = 32
-          Top = 23
+          Top = 22
           Width = 132
           Anchors = [akLeft, akBottom]
           BorderSpacing.Bottom = 40
@@ -4391,10 +4401,10 @@ object Form1: TForm1
           AnchorSideBottom.Control = Edit1
           AnchorSideBottom.Side = asrBottom
           Cursor = crHandPoint
-          Left = 33
+          Left = 32
           Height = 32
           Hint = 'Ir a Carpeta'
-          Top = 101
+          Top = 100
           Width = 99
           Anchors = [akLeft, akBottom]
           BorderSpacing.Bottom = 40
@@ -4412,9 +4422,9 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = Edit1
           AnchorSideBottom.Side = asrBottom
-          Left = 923
+          Left = 924
           Height = 38
-          Top = 135
+          Top = 134
           Width = 42
           Anchors = [akTop, akRight, akBottom]
           Caption = '...'
@@ -4423,24 +4433,26 @@ object Form1: TForm1
           OnClick = Button2Click
         end
         object ListFilterEdit1: TListFilterEdit
-          AnchorSideLeft.Control = Panel2
+          AnchorSideLeft.Control = BitBtn3
+          AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = Edit1
           AnchorSideTop.Side = asrBottom
           AnchorSideBottom.Side = asrBottom
-          Left = 161
-          Height = 45
-          Top = 221
+          Left = 88
+          Height = 40
+          Top = 220
           Width = 470
           ButtonWidth = 35
-          BorderSpacing.Left = 160
+          BorderSpacing.Left = 10
           BorderSpacing.Top = 48
           AutoSize = False
+          Color = 16776699
           NumGlyphs = 1
           MaxLength = 0
           ParentFont = False
           ParentShowHint = False
           TabOrder = 5
-          TextHint = '(Filtro Carpeta)'
+          TextHint = '(Filtro)'
           OnChange = ListFilterEdit1Change
         end
         object Label35: TLabel
@@ -4448,7 +4460,7 @@ object Form1: TForm1
           AnchorSideTop.Side = asrCenter
           Left = 654
           Height = 32
-          Top = 227
+          Top = 224
           Width = 69
           BorderSpacing.Left = 20
           Caption = 'Modo:'
@@ -4460,12 +4472,15 @@ object Form1: TForm1
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = Panel2
           AnchorSideRight.Side = asrBottom
-          Left = 771
+          AnchorSideBottom.Control = BitBtn3
+          AnchorSideBottom.Side = asrBottom
+          Left = 772
           Height = 40
-          Top = 221
+          Top = 220
           Width = 194
           Anchors = [akTop, akRight]
           BorderSpacing.Top = 48
+          Color = 16776699
           ItemHeight = 32
           ParentFont = False
           Style = csDropDownList
@@ -4479,9 +4494,9 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = Edit2
           AnchorSideBottom.Side = asrBottom
-          Left = 923
+          Left = 924
           Height = 38
-          Top = 57
+          Top = 56
           Width = 42
           Anchors = [akTop, akRight, akBottom]
           BorderSpacing.Left = 2
@@ -4497,10 +4512,10 @@ object Form1: TForm1
           AnchorSideBottom.Control = Edit2
           AnchorSideBottom.Side = asrBottom
           Cursor = crHandPoint
-          Left = 173
+          Left = 172
           Height = 21
           Hint = 'Editar archivo .fde'
-          Top = 26
+          Top = 25
           Width = 40
           Anchors = [akLeft, akBottom]
           BorderSpacing.Left = 8
@@ -4519,10 +4534,10 @@ object Form1: TForm1
           AnchorSideLeft.Control = Panel2
           AnchorSideTop.Control = ListFilterEdit1
           AnchorSideBottom.Side = asrBottom
-          Left = 33
+          Left = 32
           Height = 45
           Hint = 'Invertir Selección'
-          Top = 221
+          Top = 220
           Width = 46
           BorderSpacing.Left = 32
           Color = clWindow
@@ -4569,16 +4584,18 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = Panel2
           AnchorSideBottom.Side = asrBottom
-          Left = 33
-          Height = 810
+          Left = 32
+          Height = 812
           Hint = 'Subdirectorios (Doble click para ver en Explorador de Windows )'
-          Top = 274
-          Width = 930
+          Top = 273
+          Width = 932
+          AlternateColor = 16513011
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Left = 32
           BorderSpacing.Top = 13
           BorderSpacing.Right = 2
           BorderSpacing.Bottom = 48
+          Color = clWhite
           ColCount = 10
           Columns = <          
             item
@@ -4632,8 +4649,11 @@ object Form1: TForm1
               Title.Caption = 'PDFReport'
               Width = 136
             end>
+          DefaultRowHeight = 42
+          FixedColor = 16183016
           FixedCols = 0
-          Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSizing, goColSizing, goEditing, goRowSelect, goAlwaysShowEditor, goDblClickAutoSize, goSmoothScroll, goSelectionActive, goFixedColSizing]
+          GridLineColor = 15655640
+          Options = [goFixedHorzLine, goHorzLine, goRowSizing, goColSizing, goEditing, goRowSelect, goAlwaysShowEditor, goDblClickAutoSize, goSmoothScroll, goSelectionActive, goFixedColSizing]
           ParentFont = False
           ParentShowHint = False
           RowCount = 1
@@ -4687,9 +4707,12 @@ object Form1: TForm1
         Top = 0
         Width = 1104
         Align = alClient
+        BevelOuter = bvNone
         ClientHeight = 1133
         ClientWidth = 1104
+        Color = 16249582
         ParentBackground = False
+        ParentColor = False
         ParentFont = False
         TabOrder = 2
         object LblAdminRequired: TLabel
@@ -4725,23 +4748,23 @@ object Form1: TForm1
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = Panel4
           AnchorSideBottom.Side = asrBottom
-          Left = 66
-          Height = 1083
-          Top = 1
-          Width = 1021
-          ActivePage = TabSheet2
+          Left = 65
+          Height = 1085
+          Top = 0
+          Width = 1023
+          ActivePage = TabSheet4
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Left = 3
           BorderSpacing.Right = 16
           BorderSpacing.Bottom = 48
           ParentFont = False
-          TabIndex = 1
+          TabIndex = 3
           TabOrder = 3
           object TabSheet1: TTabSheet
             AnchorSideRight.Side = asrBottom
             Caption = 'Consola'
-            ClientHeight = 1025
-            ClientWidth = 1005
+            ClientHeight = 1027
+            ClientWidth = 1007
             ParentFont = False
             object RichMemo1: TRichMemo
               AnchorSideLeft.Control = TabSheet1
@@ -4751,12 +4774,13 @@ object Form1: TForm1
               AnchorSideBottom.Control = TabSheet1
               AnchorSideBottom.Side = asrBottom
               Left = 0
-              Height = 1025
+              Height = 1027
               Top = 0
-              Width = 1005
+              Width = 1007
               Anchors = [akTop, akLeft, akRight, akBottom]
               BorderSpacing.CellAlignHorizontal = ccaCenter
               BorderSpacing.CellAlignVertical = ccaCenter
+              Color = 16776699
               HideSelection = False
               Lines.Strings = (
                 ''
@@ -4773,10 +4797,10 @@ object Form1: TForm1
               AnchorSideRight.Side = asrBottom
               AnchorSideBottom.Control = RichMemo1
               AnchorSideBottom.Side = asrBottom
-              Left = 957
+              Left = 959
               Height = 48
               Hint = 'Limpia el Panel'
-              Top = 977
+              Top = 979
               Width = 48
               Anchors = [akRight, akBottom]
               Color = clWhite
@@ -4866,8 +4890,8 @@ object Form1: TForm1
           end
           object TabSheet2: TTabSheet
             Caption = 'PdfReport.ini'
-            ClientHeight = 1025
-            ClientWidth = 1005
+            ClientHeight = 1027
+            ClientWidth = 1007
             object ComboBox1: TComboBox
               Left = 125
               Height = 40
@@ -4909,9 +4933,9 @@ object Form1: TForm1
               AnchorSideBottom.Control = TabSheet2
               AnchorSideBottom.Side = asrBottom
               Left = 16
-              Height = 855
+              Height = 857
               Top = 154
-              Width = 973
+              Width = 975
               Anchors = [akTop, akLeft, akRight, akBottom]
               BorderSpacing.Left = 16
               BorderSpacing.Right = 16
@@ -4941,7 +4965,7 @@ object Form1: TForm1
             object BitBtn4: TBitBtn
               AnchorSideRight.Control = TabSheet2
               AnchorSideRight.Side = asrBottom
-              Left = 770
+              Left = 772
               Height = 53
               Hint = 'Aplicar/Generar Pdf de las carpetas marcadas'
               Top = 26
@@ -4995,7 +5019,7 @@ object Form1: TForm1
               AnchorSideRight.Side = asrBottom
               AnchorSideBottom.Control = Memo2
               Cursor = crHandPoint
-              Left = 811
+              Left = 813
               Height = 32
               Top = 117
               Width = 178
@@ -5011,8 +5035,8 @@ object Form1: TForm1
           end
           object TabSheet3: TTabSheet
             Caption = 'Web.xml'
-            ClientHeight = 1025
-            ClientWidth = 1005
+            ClientHeight = 1027
+            ClientWidth = 1007
             OnShow = TabSheet3Show
             object EditModulo: TEdit
               Left = 24
@@ -5026,7 +5050,7 @@ object Form1: TForm1
             object EditVersion: TEdit
               AnchorSideLeft.Control = TabSheet3
               AnchorSideLeft.Side = asrCenter
-              Left = 350
+              Left = 351
               Height = 40
               Top = 160
               Width = 304
@@ -5047,7 +5071,7 @@ object Form1: TForm1
             object ListBox2: TListBox
               AnchorSideLeft.Control = TabSheet3
               AnchorSideLeft.Side = asrCenter
-              Left = 350
+              Left = 351
               Height = 320
               Top = 339
               Width = 304
@@ -5060,7 +5084,7 @@ object Form1: TForm1
               AnchorSideLeft.Side = asrBottom
               AnchorSideRight.Control = TabSheet3
               AnchorSideRight.Side = asrBottom
-              Left = 683
+              Left = 685
               Height = 320
               Top = 339
               Width = 306
@@ -5085,7 +5109,7 @@ object Form1: TForm1
             object EditFechaVersion: TEdit
               AnchorSideRight.Control = TabSheet3
               AnchorSideRight.Side = asrBottom
-              Left = 683
+              Left = 685
               Height = 40
               Top = 160
               Width = 306
@@ -5098,7 +5122,7 @@ object Form1: TForm1
             object BitBtn5: TBitBtn
               AnchorSideLeft.Control = TabSheet3
               AnchorSideLeft.Side = asrCenter
-              Left = 386
+              Left = 387
               Height = 64
               Hint = 'Editar Display-Name de las carpetas marcadas'
               Top = 256
@@ -5169,7 +5193,7 @@ object Form1: TForm1
               AnchorSideTop.Side = asrBottom
               AnchorSideRight.Control = CalendarLite1
               AnchorSideRight.Side = asrBottom
-              Left = 683
+              Left = 685
               Height = 40
               Top = 664
               Width = 306
@@ -5273,7 +5297,7 @@ object Form1: TForm1
               AnchorSideTop.Side = asrBottom
               AnchorSideRight.Control = ListBox2
               AnchorSideRight.Side = asrBottom
-              Left = 350
+              Left = 351
               Height = 40
               Top = 664
               Width = 304
@@ -5355,7 +5379,7 @@ object Form1: TForm1
             object Label11: TLabel
               AnchorSideLeft.Control = EditVersion
               AnchorSideBottom.Control = EditVersion
-              Left = 350
+              Left = 351
               Height = 32
               Top = 128
               Width = 83
@@ -5366,7 +5390,7 @@ object Form1: TForm1
             object Label12: TLabel
               AnchorSideLeft.Control = EditFechaVersion
               AnchorSideBottom.Control = EditFechaVersion
-              Left = 683
+              Left = 685
               Height = 32
               Top = 128
               Width = 67
@@ -5399,7 +5423,7 @@ object Form1: TForm1
               AnchorSideRight.Control = EditVersion
               AnchorSideRight.Side = asrBottom
               Cursor = crHandPoint
-              Left = 629
+              Left = 630
               Height = 32
               Top = 200
               Width = 25
@@ -5435,7 +5459,7 @@ object Form1: TForm1
               AnchorSideRight.Control = EditFechaVersion
               AnchorSideRight.Side = asrBottom
               Cursor = crHandPoint
-              Left = 964
+              Left = 966
               Height = 32
               Top = 200
               Width = 25
@@ -5465,7 +5489,7 @@ object Form1: TForm1
               Left = 24
               Height = 37
               Top = 90
-              Width = 965
+              Width = 967
               Anchors = [akTop, akLeft, akRight]
               LineColor = clActiveCaption
               ArrowColor = clBlack
@@ -5474,8 +5498,8 @@ object Form1: TForm1
           end
           object TabSheet4: TTabSheet
             Caption = 'DataSource'
-            ClientHeight = 1025
-            ClientWidth = 1005
+            ClientHeight = 1027
+            ClientWidth = 1007
             OnShow = TabSheet4Show
             object GroupBox3: TGroupBox
               Left = 13
@@ -5485,6 +5509,7 @@ object Form1: TForm1
               Caption = 'Actual (Seleccionado)'
               ClientHeight = 175
               ClientWidth = 866
+              Color = clWhite
               Font.CharSet = ANSI_CHARSET
               Font.Color = clBlack
               Font.Height = -19
@@ -5492,6 +5517,7 @@ object Form1: TForm1
               Font.Pitch = fpVariable
               Font.Quality = fqDraft
               ParentBackground = False
+              ParentColor = False
               ParentFont = False
               TabOrder = 2
               object EditEJJdbcDatasource: TEdit
@@ -5588,7 +5614,9 @@ object Form1: TForm1
               Caption = 'Aplicar Datasource'
               ClientHeight = 257
               ClientWidth = 866
+              Color = clWhite
               ParentBackground = False
+              ParentColor = False
               TabOrder = 0
               object EditJdbcDatasource: TEdit
                 Left = 51
@@ -5778,6 +5806,7 @@ object Form1: TForm1
               Caption = 'Plantillas'
               ClientHeight = 85
               ClientWidth = 866
+              Color = clWhite
               Font.CharSet = ANSI_CHARSET
               Font.Color = clBlack
               Font.Height = -19
@@ -5785,6 +5814,7 @@ object Form1: TForm1
               Font.Pitch = fpVariable
               Font.Quality = fqDraft
               ParentBackground = False
+              ParentColor = False
               ParentFont = False
               TabOrder = 1
               object ComboBoxDsCopyFrom: TComboBox
@@ -5822,7 +5852,7 @@ object Form1: TForm1
               object BitBtn15: TBitBtn
                 AnchorSideLeft.Control = ComboBoxDsCopyFrom
                 AnchorSideLeft.Side = asrBottom
-                AnchorSideTop.Control = ComboBoxDsCopyFrom
+                AnchorSideTop.Control = BitBtn28
                 AnchorSideRight.Control = ComboBoxDsCopyFrom
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Control = BitBtn28
@@ -6028,8 +6058,8 @@ object Form1: TForm1
           end
           object TabSheet6: TTabSheet
             Caption = 'Info'
-            ClientHeight = 1025
-            ClientWidth = 1005
+            ClientHeight = 1027
+            ClientWidth = 1007
             OnShow = TabSheet6Show
             object GroupBoxINFO: TGroupBox
               Left = 13
@@ -6038,7 +6068,9 @@ object Form1: TForm1
               Width = 960
               ClientHeight = 411
               ClientWidth = 956
+              Color = clWhite
               ParentBackground = False
+              ParentColor = False
               TabOrder = 0
               object EditFolderApp: TEdit
                 AnchorSideLeft.Control = EditWar
@@ -6341,8 +6373,8 @@ object Form1: TForm1
           end
           object PRUEBAS: TTabSheet
             Caption = 'PRUEBAS'
-            ClientHeight = 1025
-            ClientWidth = 1005
+            ClientHeight = 1027
+            ClientWidth = 1007
             TabVisible = False
             object BitBtnPRUEBA: TBitBtn
               Left = 397
@@ -6399,7 +6431,7 @@ object Form1: TForm1
           AnchorSideTop.Control = BitBtn1
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrBottom
-          Left = 1
+          Left = 0
           Height = 77
           Hint = 'Generar war de las carpetas marcadas'
           Top = 415
@@ -6550,7 +6582,7 @@ object Form1: TForm1
         object BitBtn1: TBitBtn
           AnchorSideLeft.Control = Panel4
           AnchorSideRight.Side = asrCenter
-          Left = 1
+          Left = 0
           Height = 77
           Hint = 'Ejecuta comandos del archivo fde'
           Top = 314
@@ -6704,7 +6736,7 @@ object Form1: TForm1
           AnchorSideTop.Control = BitBtn9
           AnchorSideTop.Side = asrBottom
           AnchorSideBottom.Side = asrBottom
-          Left = 1
+          Left = 0
           Height = 77
           Hint = 'Buscar y copiar war de las carpetas marcadas'
           Top = 516
@@ -6872,6 +6904,7 @@ object Form1: TForm1
         Caption = 'Accesos directos'
         ClientHeight = 846
         ClientWidth = 649
+        ParentBackground = False
         ParentFont = False
         TabOrder = 0
         object BtnApp1: TBitBtn
@@ -7524,6 +7557,7 @@ object Form1: TForm1
         Top = 26
         Width = 272
         Caption = 'OPCIONES WEB UTILS'
+        ParentBackground = False
         ParentFont = False
         TabOrder = 0
       end
@@ -7535,6 +7569,7 @@ object Form1: TForm1
         Caption = 'Minimiza a la Bandeja de Sistema...'
         ClientHeight = 283
         ClientWidth = 590
+        ParentBackground = False
         ParentFont = False
         TabOrder = 1
         object ToTray: TCheckBox
@@ -7586,6 +7621,7 @@ object Form1: TForm1
         Caption = 'Otras Opciones'
         ClientHeight = 283
         ClientWidth = 1161
+        ParentBackground = False
         ParentFont = False
         TabOrder = 2
         object CheckBox5: TCheckBox
@@ -7677,6 +7713,7 @@ object Form1: TForm1
         Caption = 'Opciones de Consola'
         ClientHeight = 283
         ClientWidth = 559
+        ParentBackground = False
         ParentFont = False
         TabOrder = 3
         object CheckBox2: TCheckBox
@@ -7753,6 +7790,7 @@ object Form1: TForm1
         Caption = 'Parámetros'
         ClientHeight = 283
         ClientWidth = 738
+        ParentBackground = False
         TabOrder = 4
         object EditDSDescription: TEdit
           Left = 13
@@ -8712,6 +8750,7 @@ object Form1: TForm1
         BorderSpacing.Bottom = 46
         ClientHeight = 229
         ClientWidth = 604
+        ParentBackground = False
         ParentFont = False
         TabOrder = 1
         object LblOriginalFilename: TLabel
@@ -8910,6 +8949,7 @@ object Form1: TForm1
         Align = alBottom
         ClientHeight = 349
         ClientWidth = 2080
+        ParentBackground = False
         ParentFont = False
         TabOrder = 0
         object GroupBox9: TGroupBox
@@ -8930,6 +8970,7 @@ object Form1: TForm1
           ClientHeight = 262
           ClientWidth = 1925
           Font.Style = [fsBold]
+          ParentBackground = False
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
@@ -9836,7 +9877,6 @@ object Form1: TForm1
     Width = 2080
     Panels = <>
     ParentFont = False
-    SimplePanel = True
     OnClick = StatusBar1Click
   end
   object SelectDirectoryDialog1: TSelectDirectoryDialog
