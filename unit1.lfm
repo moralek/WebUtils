@@ -1,13 +1,13 @@
 object Form1: TForm1
-  Left = 771
+  Left = 689
   Height = 1133
-  Top = 342
+  Top = 279
   Width = 2080
   Anchors = []
   Caption = 'WEB UTILS: [PRINCIPAL] '
   ClientHeight = 1133
   ClientWidth = 2080
-  Color = 16249582
+  Color = 16382457
   Constraints.MinHeight = 960
   Constraints.MinWidth = 1600
   DesignTimePPI = 192
@@ -4324,7 +4324,7 @@ object Form1: TForm1
     TabOrder = 0
     object RunFDE: TPage
       OnBeforeShow = RunFDEBeforeShow
-      Color = 16249582
+      Color = 16382457
       object Panel2: TPanel
         Left = 0
         Height = 1133
@@ -4334,7 +4334,7 @@ object Form1: TForm1
         BevelOuter = bvNone
         ClientHeight = 1133
         ClientWidth = 966
-        Color = 16579320
+        Color = 16382457
         ParentBackground = False
         ParentColor = False
         ParentFont = False
@@ -4600,7 +4600,7 @@ object Form1: TForm1
           BorderSpacing.Top = 13
           BorderSpacing.Right = 2
           BorderSpacing.Bottom = 48
-          Color = clWhite
+          Color = 16382457
           ColCount = 10
           Columns = <          
             item
@@ -4715,7 +4715,7 @@ object Form1: TForm1
         BevelOuter = bvNone
         ClientHeight = 1133
         ClientWidth = 1104
-        Color = 16249582
+        Color = 16382457
         ParentBackground = False
         ParentColor = False
         ParentFont = False
@@ -6895,12 +6895,15 @@ object Form1: TForm1
         Hint = 'Arrastre para cambiar el tamaño del panel.'
         Top = 0
         Width = 10
+        Color = 16382457
+        ParentColor = False
         ParentShowHint = False
         ShowHint = True
       end
     end
     object Principal: TPage
       OnBeforeShow = PrincipalBeforeShow
+      Color = 16382457
       object GroupBox4: TGroupBox
         Left = 653
         Height = 883
@@ -7556,6 +7559,7 @@ object Form1: TForm1
     end
     object Opciones: TPage
       OnBeforeShow = OpcionesBeforeShow
+      Color = 16382457
       object Panel1: TPanel
         Left = 26
         Height = 42
@@ -7703,7 +7707,7 @@ object Form1: TForm1
           Left = 627
           Height = 36
           Top = 115
-          Width = 402
+          Width = 392
           Caption = 'Conservar carpeta tmp al finalizar.'
           ParentFont = False
           TabOrder = 7
@@ -7793,13 +7797,13 @@ object Form1: TForm1
         Top = 90
         Width = 742
         Caption = 'Parámetros'
-        ClientHeight = 283
+        ClientHeight = 287
         ClientWidth = 738
         ParentBackground = False
         TabOrder = 4
         object EditDSDescription: TEdit
           Left = 13
-          Height = 40
+          Height = 36
           Top = 38
           Width = 346
           Enabled = False
@@ -7827,7 +7831,7 @@ object Form1: TForm1
         end
         object EditDSRestype: TEdit
           Left = 371
-          Height = 40
+          Height = 36
           Top = 38
           Width = 346
           Enabled = False
@@ -7855,7 +7859,7 @@ object Form1: TForm1
         end
         object EditDSResAuth: TEdit
           Left = 13
-          Height = 40
+          Height = 36
           Top = 128
           Width = 346
           Enabled = False
@@ -7883,7 +7887,7 @@ object Form1: TForm1
         end
         object EditDSUseJdbcDataSource: TEdit
           Left = 371
-          Height = 40
+          Height = 36
           Top = 128
           Width = 51
           Enabled = False
@@ -7958,6 +7962,7 @@ object Form1: TForm1
     end
     object About: TPage
       OnBeforeShow = AboutBeforeShow
+      Color = 16382457
       OnExit = AboutExit
       object Image2: TImage
         AnchorSideLeft.Control = About
@@ -8946,6 +8951,7 @@ object Form1: TForm1
     end
     object EditScript: TPage
       OnBeforeShow = EditScriptBeforeShow
+      Color = 16382457
       object Panel5: TPanel
         Left = 0
         Height = 349
@@ -9880,7 +9886,9 @@ object Form1: TForm1
     Height = 44
     Top = 1089
     Width = 2080
+    Color = 16382457
     Panels = <>
+    ParentColor = False
     ParentFont = False
     OnClick = StatusBar1Click
   end
