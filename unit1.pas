@@ -1010,11 +1010,43 @@ begin
    FileVerInfo:=TFileVersionInfo.Create(nil);
    FileVerInfo.ReadFileInfo;
    Timer1.Enabled:=Not Timer1.Enabled;
-   If Timer1.Enabled Then Beep;
+   Timer1.Interval:=85;
+   If Timer1.Enabled Then
+   begin
+     Beep;
+     Timer1.Tag:=0;
+   end;
       BabyMode:='::BABYMODE::';
    If (myw.IsElevated) Then BabyMode:='::FULL ACCESS::';
 
-     Label7.Caption:='     o o o o o o o o o o o o o o o o o o ♫ o o o o o o o ☺ o o   '+LblProductName.Caption+' '+LblProductVersion.Caption+' '+LblOriginalFilename.Caption;
+     if Timer1.Enabled then
+     begin
+       Label7.Caption:='          o o o o o o o o o o o o o o o   BONUS STAGE   '+LblProductName.Caption+' '+LblProductVersion.Caption+'   ';
+       Label7.Font.Style:=[fsBold];
+       Label7.Font.Height:=-24;
+       Label7.Font.Color:=RGBToColor(0,120,215);
+       Label7.Top:=BitBtn10.Top+21;
+       Label7.Height:=34;
+       Label7.BorderSpacing.Top:=21;
+       BitBtn10.Color:=clNone;
+       Shape3.Brush.Color:=RGBToColor(255,230,80);
+       Shape3.Pen.Color:=RGBToColor(0,120,215);
+       Shape3.Brush.Style:=bsSolid;
+     end
+     else
+     begin
+       Label7.Caption:='     BONUS STAGE PAUSADO - click para continuar';
+       Label7.Font.Height:=-24;
+       Label7.Font.Color:=RGBToColor(90,90,90);
+       Label7.Top:=BitBtn10.Top+21;
+       Label7.Height:=34;
+       Label7.BorderSpacing.Top:=21;
+       BitBtn10.Color:=clNone;
+       Shape3.Brush.Color:=RGBToColor(230,230,230);
+       Shape3.Pen.Color:=clSilver;
+       Shape3.Brush.Style:=bsBDiagonal;
+     end;
+
      LblFullInfo.Caption:=
            'IsAdministrator: '        + BoolToStr(myw.IsAdministrator, True) + sLineBreak +
            'IsAdministratorAccount: ' + BoolToStr(myw.IsAdministratorAccount, True) + sLineBreak +
@@ -5159,8 +5191,42 @@ procedure TForm1.Timer1Timer(Sender: TObject);
 var
   txt:String;
 begin
+  Timer1.Tag:=Timer1.Tag+1;
   txt:=Label7.Caption;
-  Label7.Caption:= Copy(txt, 2, length(txt)-1) + Copy(txt,1,1)
+  Label7.Caption:= Copy(txt, 2, length(txt)-1) + Copy(txt,1,1);
+
+  case Timer1.Tag mod 6 of
+    0:
+      begin
+        Label7.Font.Color:=RGBToColor(0,120,215);
+        Shape3.Brush.Color:=RGBToColor(255,230,80);
+      end;
+    1:
+      begin
+        Label7.Font.Color:=RGBToColor(0,153,188);
+        Shape3.Brush.Color:=RGBToColor(255,210,64);
+      end;
+    2:
+      begin
+        Label7.Font.Color:=RGBToColor(16,124,16);
+        Shape3.Brush.Color:=RGBToColor(255,242,0);
+      end;
+    3:
+      begin
+        Label7.Font.Color:=RGBToColor(136,23,152);
+        Shape3.Brush.Color:=RGBToColor(255,196,37);
+      end;
+    4:
+      begin
+        Label7.Font.Color:=RGBToColor(196,43,28);
+        Shape3.Brush.Color:=RGBToColor(255,230,80);
+      end;
+    5:
+      begin
+        Label7.Font.Color:=RGBToColor(0,120,215);
+        Shape3.Brush.Color:=RGBToColor(255,242,0);
+      end;
+  end;
 end;
 
 procedure TForm1.Timer2Timer(Sender: TObject);
