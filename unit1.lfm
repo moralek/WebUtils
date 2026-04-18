@@ -4456,9 +4456,11 @@ object Form1: TForm1
           OnChange = ListFilterEdit1Change
         end
         object Label35: TLabel
+          AnchorSideLeft.Control = ListFilterEdit1
+          AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = ListFilterEdit1
           AnchorSideTop.Side = asrCenter
-          Left = 654
+          Left = 578
           Height = 32
           Top = 224
           Width = 69
@@ -4468,17 +4470,20 @@ object Form1: TForm1
           ParentFont = False
         end
         object ComboBoxModo: TComboBox
+          AnchorSideLeft.Control = Label35
+          AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = Edit1
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = Panel2
           AnchorSideRight.Side = asrBottom
           AnchorSideBottom.Control = BitBtn3
           AnchorSideBottom.Side = asrBottom
-          Left = 772
+          Left = 657
           Height = 40
           Top = 220
-          Width = 194
-          Anchors = [akTop, akRight]
+          Width = 309
+          Anchors = [akTop, akLeft, akRight]
+          BorderSpacing.Left = 10
           BorderSpacing.Top = 48
           Color = 16776699
           ItemHeight = 32
@@ -4615,7 +4620,6 @@ object Form1: TForm1
               Width = 0
             end          
             item
-              MaxSize = 480
               Title.Caption = 'Nombre del war'
               Width = 320
             end          
@@ -4653,7 +4657,7 @@ object Form1: TForm1
           FixedColor = 16183016
           FixedCols = 0
           GridLineColor = 15655640
-          Options = [goFixedHorzLine, goHorzLine, goRowSizing, goColSizing, goEditing, goRowSelect, goAlwaysShowEditor, goDblClickAutoSize, goSmoothScroll, goSelectionActive, goFixedColSizing]
+          Options = [goFixedHorzLine, goHorzLine, goRowSizing, goColSizing, goEditing, goRowSelect, goAlwaysShowEditor, goThumbTracking, goDblClickAutoSize, goSmoothScroll, goSelectionActive, goFixedColSizing]
           ParentFont = False
           ParentShowHint = False
           RowCount = 1
@@ -4662,6 +4666,7 @@ object Form1: TForm1
           OnDblClick = StringGrid1DblClick
           OnDrawCell = StringGrid1DrawCell
           OnMouseDown = StringGrid1MouseDown
+          OnResize = StringGrid1Resize
           OnSelection = StringGrid1Selection
           ColWidths = (
             48
@@ -4752,13 +4757,13 @@ object Form1: TForm1
           Height = 1085
           Top = 0
           Width = 1023
-          ActivePage = TabSheet4
+          ActivePage = TabSheet1
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Left = 3
           BorderSpacing.Right = 16
           BorderSpacing.Bottom = 48
           ParentFont = False
-          TabIndex = 3
+          TabIndex = 0
           TabOrder = 3
           object TabSheet1: TTabSheet
             AnchorSideRight.Side = asrBottom

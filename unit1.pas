@@ -505,6 +505,7 @@ type
       aRect: TRect; aState: TGridDrawState);
     procedure StringGrid1MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure StringGrid1Resize(Sender: TObject);
     procedure StringGrid1Selection(Sender: TObject; aCol, aRow: Integer);
     procedure StringGrid4SelectEditor(Sender: TObject; aCol, aRow: Integer;
       var Editor: TWinControl);
@@ -549,6 +550,7 @@ type
     procedure Iniciar();
     procedure Procesar();
     procedure Refrescar();
+    procedure AdjustStringGrid1Columns();
     Procedure MinimizeToTray();
     Procedure ActivateMainWindow();
     Procedure RestoreFromTray();
@@ -1056,6 +1058,14 @@ end;
 
 procedure TForm1.BitBtn15Click(Sender: TObject);
 begin
+  if IsArchiveScanMode() and (ComboBoxDsCopyFrom.ItemIndex=1) then
+  begin
+    LoadArchiveDataSourcePreview(StringGrid1.Row);
+    if SameText(Trim(EditEJJdbcDatasource.Text),'NO ENCONTRADO') then
+      EditEJJdbcDatasource.Text:='';
+    if SameText(Trim(EditEJResRefName.Text),'NO ENCONTRADO') then
+      EditEJResRefName.Text:='';
+  end;
   Utils.applyDataSource(EditJdbcDatasource,EditResRefName,ComboBoxDsCopyFrom,EditEJJdbcDatasource.Text,EditEJResRefName.Text);
 end;
 
@@ -2069,16 +2079,60 @@ begin
   varGlobales.OcultarDirROOT:=CheckBox1.Checked;
     Utils.FilDirGrid(Utils.clearDirPath(varGlobales.WebAppsDir),
                        ListFilterEdit1.Text,varGlobales.ScanMode,StringGrid1);
-//  StringGrid1.AutoSizeColumn(3);
+  AdjustStringGrid1Columns();
 end;
 
 procedure Tform1.Refrescar();
 begin
   Utils.FilDirGrid(Utils.clearDirPath(varGlobales.WebAppsDir),
   ListFilterEdit1.Text,varGlobales.ScanMode,StringGrid1);
-  //StringGrid1.AutoSizeColumn(1);
+  AdjustStringGrid1Columns();
  // StringGrid1.Cols[1].;
   //StringGrid1.AutoSizeColumn(3);
+end;
+
+procedure TForm1.AdjustStringGrid1Columns();
+const
+  ColCheck = 0;
+  ColFolder = 1;
+  ColWarName = 3;
+  ColPdfReport = 9;
+  FolderPadding = 28;
+  MinFolderWidth = 140;
+  MaxFolderWidth = 480;
+  MinWarNameWidth = 120;
+  MinPdfReportWidth = 104;
+  GridPadding = 28;
+var
+  AvailableWidth, FolderWidth, WarNameWidth, PdfReportWidth: Integer;
+begin
+  if StringGrid1.ColCount<=ColPdfReport then
+    Exit;
+
+  StringGrid1.AutoSizeColumn(ColFolder);
+  FolderWidth:=StringGrid1.ColWidths[ColFolder]+FolderPadding;
+  if FolderWidth<MinFolderWidth then
+    FolderWidth:=MinFolderWidth;
+  if FolderWidth>MaxFolderWidth then
+    FolderWidth:=MaxFolderWidth;
+
+  PdfReportWidth:=StringGrid1.Canvas.TextWidth('PDFReport')+36;
+  if PdfReportWidth<MinPdfReportWidth then
+    PdfReportWidth:=MinPdfReportWidth;
+
+  AvailableWidth:=StringGrid1.ClientWidth-StringGrid1.ColWidths[ColCheck]-PdfReportWidth-GridPadding;
+  if AvailableWidth<MinFolderWidth+MinWarNameWidth then
+    FolderWidth:=AvailableWidth-MinWarNameWidth;
+  if FolderWidth<MinFolderWidth then
+    FolderWidth:=MinFolderWidth;
+
+  WarNameWidth:=AvailableWidth-FolderWidth;
+  if WarNameWidth<MinWarNameWidth then
+    WarNameWidth:=MinWarNameWidth;
+
+  StringGrid1.ColWidths[ColFolder]:=FolderWidth;
+  StringGrid1.ColWidths[ColPdfReport]:=PdfReportWidth;
+  StringGrid1.ColWidths[ColWarName]:=WarNameWidth;
 end;
 
 procedure TForm1.CheckBox2Change(Sender: TObject);
@@ -4728,6 +4782,11 @@ begin
   end;
 end;
 
+procedure TForm1.StringGrid1Resize(Sender: TObject);
+begin
+  AdjustStringGrid1Columns();
+end;
+
 procedure TForm1.StringGrid1Selection(Sender: TObject; aCol, aRow: Integer);
 begin
   ChangeStringGrid1();
@@ -4919,8 +4978,8 @@ procedure TForm1.ListFilterEdit1Change(Sender: TObject);
 begin
   Utils.FilDirGrid(Utils.clearDirPath(varGlobales.WebAppsDir),
                        ListFilterEdit1.Text,varGlobales.ScanMode,StringGrid1);
+  AdjustStringGrid1Columns();
   ChangeStringGrid1();
-  //StringGrid1.AutoSizeColumn(1);
 end;
 
 procedure TForm1.menuBtnClick(Sender: TObject);
@@ -5059,7 +5118,12 @@ begin
    If FileExists(PdfReport) then ShellExecute(0,nil, PChar(PdfReport),PChar(PdfReport),nil,1) else showMessage('PdfReport.ini no existe');
   end
   else
- Utils.MostrarCarpeta(StringGrid1.Rows[StringGrid1.Row][2]);
+  begin
+    if IsArchiveScanMode() then
+      Utils.MostrarCarpeta(ExtractFilePath(StringGrid1.Rows[StringGrid1.Row][2]))
+    else
+      Utils.MostrarCarpeta(StringGrid1.Rows[StringGrid1.Row][2]);
+  end;
 end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
