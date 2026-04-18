@@ -104,6 +104,8 @@ JAVA_HOME=
 
 `TempDir` define la carpeta temporal del programa. Por defecto es `.\tmp\` relativa a `DelFind.exe`. Si la clave no existe, la aplicación la crea automáticamente con ese valor.
 
+`EnableWarZipMode=1` habilita el modo experimental `warzip` en la interfaz. Con `EnableWarZipMode=0`, la aplicación trabaja en modo carpeta.
+
 En modo `warzip`, el contenido de `TempDir` se limpia al iniciar cada ejecución para evitar reutilizar archivos temporales obsoletos. Por defecto también se elimina al finalizar; si `ConservarTmpAlFinalizar=1`, la carpeta temporal se conserva para revisión.
 
 Para el modo `warzip`, la carpeta de trabajo se organiza dentro de `TempDir\warzip\` usando la convención:
@@ -118,7 +120,9 @@ Ejemplo:
 .\tmp\warzip\cgu90ca-tst_war_a13f2c\
 ```
 
-El modo `warzip` revisa el índice del archivo `.war`/`.zip` antes de extraer. Si el script FDE no requiere cambios efectivos, no reempaqueta. Cuando necesita trabajar sobre el archivo, usa `jar.exe` desde `JAVA_HOME\bin` para extraer o actualizar el contenido.
+El modo `warzip` trabaja directamente sobre archivos `.war` y `.zip` ubicados en la carpeta configurada. Revisa el índice del archivo antes de extraer; si el script FDE no requiere cambios efectivos, no reempaqueta. Cuando necesita trabajar sobre el archivo, usa `jar.exe` desde `JAVA_HOME\bin`, por lo que `JAVA_HOME` debe apuntar a un JDK válido.
+
+En modo `warzip` también se pueden actualizar configuraciones internas del archivo, como `WEB-INF/web.xml`, `WEB-INF/PDFReport.ini` y DataSource. Si se copian fuentes para PDFReport, la ruta destino debe ser una ruta interna del `.war`/`.zip`, no una ruta absoluta del sistema.
 
 En las pestañas que muestran información interna del archivo, como `DataSource` y `Web.xml`, el modo `warzip` no lee automáticamente el contenido al cambiar de fila. Para evitar demoras, el enlace `mostrar actual` lee solo el archivo `.war`/`.zip` de la fila seleccionada en la grilla (franja azul). Los archivos activados con ticket se usan al aplicar cambios, pero no determinan qué archivo se lee con `mostrar actual`.
 
