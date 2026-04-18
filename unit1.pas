@@ -550,6 +550,7 @@ type
     procedure Iniciar();
     procedure Procesar();
     procedure Refrescar();
+    procedure ApplyUIFont();
     procedure AdjustStringGrid1Columns();
     Procedure MinimizeToTray();
     Procedure ActivateMainWindow();
@@ -748,9 +749,37 @@ begin
   if (varGlobales.OcultaEjemplosDS) then x:=1 else x:=4;
   BitBtn28.Enabled:=(ComboBoxDsCopyFrom.ItemIndex>X);
   //INFO
+  ApplyUIFont();
   Firstload:=1;
   ChangeStringGrid1();
 end;
+
+procedure TForm1.ApplyUIFont();
+var
+  UiFontName: String;
+
+  procedure ApplyToChildren(AParent: TWinControl);
+  var
+    I: Integer;
+  begin
+    for I:=0 to AParent.ControlCount-1 do
+    begin
+      AParent.Controls[I].Font.Name:=UiFontName;
+      AParent.Controls[I].Font.Quality:=fqCleartypeNatural;
+      if AParent.Controls[I] is TWinControl then
+        ApplyToChildren(TWinControl(AParent.Controls[I]));
+    end;
+  end;
+begin
+  UiFontName:='Segoe UI';
+  if Screen.Fonts.IndexOf(UiFontName)<0 then
+    UiFontName:=Font.Name;
+
+  Font.Name:=UiFontName;
+  Font.Quality:=fqCleartypeNatural;
+  ApplyToChildren(Self);
+end;
+
 procedure TForm1.loadComboboxDataSources();
 var DSSL:TStringList;
   i,x,p:Integer;
